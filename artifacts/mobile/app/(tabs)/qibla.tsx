@@ -129,7 +129,9 @@ export default function QiblaScreen() {
     let sub: { remove: () => void } | null = null;
     (async () => {
       try {
-        const { Magnetometer } = await import('expo-sensors');
+        // Import directly from the Magnetometer module to avoid Pedometer.js
+        // eagerly accessing PermissionStatus.GRANTED (undefined in Expo Go SDK 54).
+        const { Magnetometer } = await import('expo-sensors/build/Magnetometer');
         setSensorAvailable(true);
         Magnetometer.setUpdateInterval(150);
         sub = Magnetometer.addListener(({ x, y }) => {

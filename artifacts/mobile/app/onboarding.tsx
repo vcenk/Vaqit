@@ -285,7 +285,9 @@ export default function OnboardingScreen() {
       >
         <StepDots current={step} />
 
-        <Animated.View style={{ transform: [{ translateY: slideAnim }] }}>
+        {/* width: '100%' only works when the parent does NOT have alignItems: 'center'.
+            We removed that from s.scroll — steps fill the scroll width naturally. */}
+        <Animated.View style={[s.stepWrapper, { transform: [{ translateY: slideAnim }] }]}>
           {step === 0 && <WelcomeStep onNext={() => goTo(1)} />}
           {step === 1 && <LocationStep onNext={() => goTo(2)} />}
           {step === 2 && <NotificationsStep onDone={finish} />}
@@ -297,7 +299,10 @@ export default function OnboardingScreen() {
 
 const s = StyleSheet.create({
   root: { flex: 1 },
-  scroll: { flexGrow: 1, paddingHorizontal: 24, alignItems: 'center' },
+  // Do NOT put alignItems: 'center' here — children with width: '100%' collapse
+  // to zero width on native RN when the scroll container centres its content.
+  scroll: { flexGrow: 1, paddingHorizontal: 24 },
+  stepWrapper: { width: '100%' },
 });
 
 const dot = StyleSheet.create({
