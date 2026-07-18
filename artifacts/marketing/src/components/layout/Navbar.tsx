@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import { VaqitLogo } from "@/components/VaqitLogo";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -11,11 +12,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:border-primary/40 transition-colors">
-            <div className="w-4 h-4 bg-primary rounded-sm" />
-          </div>
-          <span className="font-serif font-bold text-xl tracking-wide text-foreground">Vaqit</span>
+        <Link href="/" className="group">
+          <VaqitLogo size={34} wordmarkClassName="text-xl" />
         </Link>
         <nav className="flex items-center gap-6">
           <Link

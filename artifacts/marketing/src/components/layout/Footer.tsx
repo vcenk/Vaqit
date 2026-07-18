@@ -1,15 +1,13 @@
 import { Link } from "wouter";
+import { VaqitLogo } from "@/components/VaqitLogo";
 
 export function Footer() {
   return (
     <footer className="border-t border-border/50 bg-background py-12 md:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <Link href="/" className="flex items-center gap-2 mb-4 group">
-            <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center border border-primary/20">
-              <div className="w-3 h-3 bg-primary rounded-sm" />
-            </div>
-            <span className="font-serif font-bold text-lg tracking-wide text-foreground">Vaqit</span>
+          <Link href="/" className="mb-4 group inline-block">
+            <VaqitLogo size={28} wordmarkClassName="text-lg" />
           </Link>
           <p className="text-sm text-muted-foreground max-w-xs">
             A quiet, premium prayer companion for practicing Muslims. Zero ads, zero tracking, zero compromise.
