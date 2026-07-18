@@ -168,7 +168,7 @@ export default function TodayScreen() {
               time={time}
               isNext={nextPrayer?.key === key}
               isCurrent={currentPrayerKey === key}
-              status={key !== 'sunrise' ? (dayLog as Record<string, 'ontime' | 'late' | 'missed' | 'jamaah' | null>)[key] : undefined}
+              status={key !== 'sunrise' ? (dayLog as unknown as Record<string, 'ontime' | 'late' | 'missed' | 'jamaah' | null>)[key] : undefined}
             />
             {idx < prayerRows.length - 1 && (
               <View style={[s.divider, { backgroundColor: colors.border }]} />

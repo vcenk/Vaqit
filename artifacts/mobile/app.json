@@ -13,10 +13,41 @@
       "resizeMode": "contain",
       "backgroundColor": "#0C1422"
     },
-    "ios": {
-      "supportsTablet": false
+    "updates": {
+      "url": "https://u.expo.dev/REPLACE-WITH-EAS-PROJECT-ID",
+      "enabled": false,
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
     },
-    "android": {},
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "ios": {
+      "bundleIdentifier": "com.vaqit.app",
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "infoPlist": {
+        "UIBackgroundModes": ["audio", "fetch", "remote-notification"],
+        "NSLocationWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
+        "NSMotionUsageDescription": "Vaqit uses your device's compass to show the Qibla direction."
+      }
+    },
+    "android": {
+      "package": "com.vaqit.app",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
+      ]
+    },
     "web": {
       "favicon": "./assets/images/icon.png"
     },
@@ -28,7 +59,30 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#4ADE80",
+          "sounds": [],
+          "iosDisplayInForeground": true
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
+          "locationAlwaysAndWhenInUsePermission": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city."
+        }
+      ],
+      [
+        "expo-updates",
+        {
+          "launchWaitMs": 0
+        }
+      ],
+      "./plugins/withAthanService"
     ],
     "experiments": {
       "typedRoutes": true,

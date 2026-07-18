@@ -77,6 +77,75 @@ _Populate as you build — explicit user instructions worth remembering across s
 - Never use `npx expo start` directly; use the WorkflowsRestart tool.
 - Never create app.config.ts/js — use app.json only (required for Expo Launch publishing).
 
+## Building & Releasing
+
+### Pre-flight checklist (run before first EAS build)
+
+1. **Create an EAS project** — on a machine with the EAS CLI installed and an Expo account:
+   ```bash
+   cd artifacts/mobile
+   eas init          # creates the project, prints your Project ID
+   ```
+2. **Update app.json** — replace `REPLACE-WITH-EAS-PROJECT-ID` in the `updates.url` field with the Project ID from `eas init`.
+3. **Apple credentials** — log in to your Apple Developer account and let EAS manage provisioning profiles automatically (recommended) or supply your own.
+4. **Android keystore** — EAS can generate one on first build; it stores it securely in EAS secrets.
+
+### iOS Widget — activate before building
+
+The WidgetKit stubs are in `targets/vaqit-widget/index.swift`. To compile them:
+
+```bash
+pnpm add --filter @workspace/mobile @bacons/apple-targets
+```
+
+Then add to the `plugins` array in `app.json` (before the closing bracket):
+```json
+["@bacons/apple-targets"]
+```
+
+The two widgets (`VaqitNextPrayerWidget` + `VaqitAllTimesWidget`) will appear in the iOS widget picker after a development build. Full prayer-time data integration is v1.1 work — stubs show placeholder text.
+
+### Build commands
+
+All commands run from the repo root or `artifacts/mobile/`.
+
+```bash
+# Development build — iOS Simulator (fastest iteration loop)
+eas build --profile development --platform ios
+
+# Development build — physical iOS device (sideloaded via TestFlight internal)
+eas build --profile development --platform ios --no-wait
+
+# Development build — Android APK (install directly on device)
+eas build --profile development --platform android
+
+# Preview build — internal distribution (share via EAS link, no store review)
+eas build --profile preview --platform all
+
+# Production build — App Store + Play Store submission
+eas build --profile production --platform all
+```
+
+### OTA (over-the-air) JS updates
+
+Once your app is live, JS-only fixes can skip store review:
+
+```bash
+eas update --branch production --message "Fix prayer time display bug"
+```
+
+The `runtimeVersion` policy is `appVersion` — a native change (new plugin, new permission, new native module) requires a full store build. Pure JS changes can go OTA.
+
+### Android foreground service
+
+`plugins/withAthanService.js` declares `VaqitAthanService` in the AndroidManifest during `eas build`. It runs only during native builds — Expo Go is unaffected. The service stub allows athan audio to survive battery optimization. Actual `VaqitAthanService.java` implementation is v1.1 work.
+
+### Version bumping
+
+- **iOS**: increment `expo.ios.buildNumber` in `app.json`
+- **Android**: increment `expo.android.versionCode` in `app.json`
+- Both platforms also read `expo.version` for display; bump it on public releases
+
 ## Pointers
 
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details

@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "adhan": "^4.4.4",
-    "expo-notifications": "^57.0.5"
+    "expo-notifications": "~0.32.17",
+    "expo-updates": "~29.0.19"
   }
 }
