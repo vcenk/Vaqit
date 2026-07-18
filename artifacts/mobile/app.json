@@ -68,7 +68,10 @@
         {
           "icon": "./assets/images/icon.png",
           "color": "#4ADE80",
-          "sounds": [],
+          "sounds": [
+            "./assets/sounds/athan.wav",
+            "./assets/sounds/athan_fajr.wav"
+          ],
           "iosDisplayInForeground": true
         }
       ],

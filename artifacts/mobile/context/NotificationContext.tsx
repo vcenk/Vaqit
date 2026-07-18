@@ -114,7 +114,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [scheduledCount, setScheduledCount] = useState(0);
 
-  // Load settings and check permissions
+  // Load settings, check permissions, and create Android notification channels
   useEffect(() => {
     AsyncStorage.getItem(NOTIF_SETTINGS_KEY).then(val => {
       if (val) {
@@ -125,6 +125,36 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       Notifications.getPermissionsAsync().then(p => {
         setPermissionStatus(p.granted ? 'granted' : p.status === 'denied' ? 'denied' : 'undetermined');
       });
+    }
+    // Android API 26+ requires sounds to be declared at the channel level.
+    // Create three channels: full Fajr athan, standard athan, and quiet pre-reminder.
+    if (Platform.OS === 'android') {
+      Promise.all([
+        Notifications.setNotificationChannelAsync('athan_fajr', {
+          name: 'Fajr Athan',
+          importance: Notifications.AndroidImportance.HIGH,
+          sound: 'athan_fajr.wav',
+          vibrationPattern: [0, 250, 250, 250],
+          enableVibrate: true,
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        }),
+        Notifications.setNotificationChannelAsync('athan', {
+          name: 'Athan',
+          importance: Notifications.AndroidImportance.HIGH,
+          sound: 'athan.wav',
+          vibrationPattern: [0, 250, 250, 250],
+          enableVibrate: true,
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        }),
+        Notifications.setNotificationChannelAsync('reminder', {
+          name: 'Prayer Reminders',
+          importance: Notifications.AndroidImportance.DEFAULT,
+          sound: 'default',
+          vibrationPattern: [0, 250],
+          enableVibrate: true,
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        }),
+      ]).catch(() => {});
     }
   }, []);
 
@@ -179,7 +209,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           const prayerTime = times[prayer as keyof PrayerTimesData] as Date;
           if (prayerTime <= now) continue;
 
-          // Pre-reminder
+          // Pre-reminder — uses the quiet 'reminder' channel on Android (sound is channel-level on API 26+)
           if (cfg.preReminder > 0 && count < MAX) {
             const reminderTime = new Date(prayerTime.getTime() - cfg.preReminder * 60 * 1000);
             if (reminderTime > now) {
@@ -188,6 +218,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                   title: `${PRAYER_DISPLAY_NAMES[prayer]} in ${cfg.preReminder} min`,
                   body: 'Time to prepare for prayer',
                   sound: 'default',
+                  // channelId is read by expo-notifications on Android to route to the right channel
+                  ...(Platform.OS === 'android' ? { channelId: 'reminder' } : {}),
                 },
                 trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: reminderTime },
               });
@@ -195,13 +227,19 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             }
           }
 
-          // Athan notification
+          // Athan notification — Fajr gets the full athan file; all others get the shorter clip.
+          // On Android (API 26+) the sound is set at the channel level; channelId routes the
+          // notification to the correct channel so the right WAV file plays.
           if (count < MAX) {
+            const isFajr = prayer === 'fajr';
+            const athanSound = isFajr ? 'athan_fajr.wav' : 'athan.wav';
+            const athanChannelId = isFajr ? 'athan_fajr' : 'athan';
             await Notifications.scheduleNotificationAsync({
               content: {
                 title: PRAYER_DISPLAY_NAMES[prayer] ?? prayer,
                 body: 'Prayer time has begun · Allahu Akbar',
-                sound: 'default',
+                sound: athanSound,
+                ...(Platform.OS === 'android' ? { channelId: athanChannelId } : {}),
               },
               trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: prayerTime },
             });
@@ -225,7 +263,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         content: {
           title: 'Allahu Akbar — Test Athan',
           body: 'Your Vaqit notifications are working correctly',
-          sound: 'default',
+          sound: 'athan.wav',
+          ...(Platform.OS === 'android' ? { channelId: 'athan' } : {}),
         },
         trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 5, repeats: false },
       });
