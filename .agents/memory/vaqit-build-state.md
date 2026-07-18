@@ -33,6 +33,24 @@ description: What is built, what is next, key technical decisions and quirks for
 SafeAreaProvider → ErrorBoundary → QueryClientProvider → GestureHandlerRootView → KeyboardProvider
 → TrackerProvider → MosqueProvider → NotificationProvider → PrayerProvider → NotificationScheduler
 
+## Golden test suite — lib/prayer-core (289 tests, all passing)
+
+Run with: `pnpm test` (root) or `pnpm --filter @workspace/prayer-core test`
+
+- **invariants.test.ts** — fajr<sunrise<dhuhr<asr<maghrib<isha for 21 cities × 4 seasons;
+  seasonal direction uses LOCAL time-of-day comparison (not UTC timestamps — those are
+  months apart and the comparison is meaningless for seasonal analysis)
+- **wrapper.test.ts** — our computePrayerTimes == raw adhan, offset application to-the-ms
+- **high-lat.test.ts** — Oslo/Vancouver/Reykjavik June: all 3 HighLatitudeRule variants
+- **methods.test.ts** — all 7 methods + madhab differentiation; Turkey/Tehran have
+  methodAdjustments (+5 Dhuhr/+7 Maghrib for Turkey, +4 Maghrib for Tehran) — these
+  make Dhuhr/Maghrib method-dependent, only "pure" methods (ISNA/MWL/Egyptian/Karachi) agree
+- **golden.test.ts** — 22 cities × 4 seasons snapshots (88 snapshots in .snap file) +
+  6 spot-checks with adhan-computed reference values (Mecca, Istanbul, NYC, London, Cairo, Vancouver)
+
+Key quirk: adhan `new Date(Y,M,D)` reads year/month/day using LOCAL time → tests set TZ=UTC
+in vitest.config.ts to make date creation deterministic across hosts.
+
 ## Critical bugs fixed
 
 ### expo-sensors removed permanently

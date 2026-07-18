@@ -1,0 +1,969 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Cairo > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T13:14:00.000Z",
+  "dhuhr": "2024-09-22T09:49:00.000Z",
+  "fajr": "2024-09-22T02:17:00.000Z",
+  "isha": "2024-09-22T17:09:00.000Z",
+  "maghrib": "2024-09-22T15:51:00.000Z",
+  "sunrise": "2024-09-22T03:44:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Cairo > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T13:30:00.000Z",
+  "dhuhr": "2025-03-20T10:03:00.000Z",
+  "fajr": "2025-03-20T02:32:00.000Z",
+  "isha": "2025-03-20T17:24:00.000Z",
+  "maghrib": "2025-03-20T16:07:00.000Z",
+  "sunrise": "2025-03-20T03:59:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Cairo > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T13:32:00.000Z",
+  "dhuhr": "2024-06-20T09:58:00.000Z",
+  "fajr": "2024-06-20T01:29:00.000Z",
+  "isha": "2024-06-20T18:24:00.000Z",
+  "maghrib": "2024-06-20T16:59:00.000Z",
+  "sunrise": "2024-06-20T02:54:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Cairo > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T12:41:00.000Z",
+  "dhuhr": "2024-12-21T09:54:00.000Z",
+  "fajr": "2024-12-21T03:14:00.000Z",
+  "isha": "2024-12-21T16:23:00.000Z",
+  "maghrib": "2024-12-21T15:00:00.000Z",
+  "sunrise": "2024-12-21T04:47:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Casablanca > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T15:49:00.000Z",
+  "dhuhr": "2024-09-22T12:24:00.000Z",
+  "fajr": "2024-09-22T04:56:00.000Z",
+  "isha": "2024-09-22T19:45:00.000Z",
+  "maghrib": "2024-09-22T18:27:00.000Z",
+  "sunrise": "2024-09-22T06:19:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Casablanca > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T16:06:00.000Z",
+  "dhuhr": "2025-03-20T12:39:00.000Z",
+  "fajr": "2025-03-20T05:11:00.000Z",
+  "isha": "2025-03-20T20:00:00.000Z",
+  "maghrib": "2025-03-20T18:42:00.000Z",
+  "sunrise": "2025-03-20T06:34:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Casablanca > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T16:16:00.000Z",
+  "dhuhr": "2024-06-20T12:33:00.000Z",
+  "fajr": "2024-06-20T03:58:00.714Z",
+  "isha": "2024-06-20T21:06:00.285Z",
+  "maghrib": "2024-06-20T19:44:00.000Z",
+  "sunrise": "2024-06-20T05:21:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Casablanca > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T15:08:00.000Z",
+  "dhuhr": "2024-12-21T12:30:00.000Z",
+  "fajr": "2024-12-21T06:02:00.000Z",
+  "isha": "2024-12-21T18:51:00.000Z",
+  "maghrib": "2024-12-21T17:26:00.000Z",
+  "sunrise": "2024-12-21T07:31:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dhaka > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T09:16:00.000Z",
+  "dhuhr": "2024-09-22T05:52:00.000Z",
+  "fajr": "2024-09-21T22:32:00.000Z",
+  "isha": "2024-09-22T13:10:00.000Z",
+  "maghrib": "2024-09-22T11:55:00.000Z",
+  "sunrise": "2024-09-21T23:47:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dhaka > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T09:32:00.000Z",
+  "dhuhr": "2025-03-20T06:07:00.000Z",
+  "fajr": "2025-03-19T22:47:00.000Z",
+  "isha": "2025-03-20T13:25:00.000Z",
+  "maghrib": "2025-03-20T12:09:00.000Z",
+  "sunrise": "2025-03-20T00:02:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dhaka > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T09:18:00.000Z",
+  "dhuhr": "2024-06-20T06:01:00.000Z",
+  "fajr": "2024-06-19T21:44:00.000Z",
+  "isha": "2024-06-20T14:16:00.000Z",
+  "maghrib": "2024-06-20T12:48:00.000Z",
+  "sunrise": "2024-06-19T23:12:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dhaka > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T08:57:00.000Z",
+  "dhuhr": "2024-12-21T05:58:00.000Z",
+  "fajr": "2024-12-20T23:16:00.000Z",
+  "isha": "2024-12-21T12:37:00.000Z",
+  "maghrib": "2024-12-21T11:17:00.000Z",
+  "sunrise": "2024-12-21T00:37:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dubai > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T11:37:00.000Z",
+  "dhuhr": "2024-09-22T08:12:00.000Z",
+  "fajr": "2024-09-22T00:49:00.000Z",
+  "isha": "2024-09-22T15:45:00.000Z",
+  "maghrib": "2024-09-22T14:15:00.000Z",
+  "sunrise": "2024-09-22T02:08:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dubai > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T11:53:00.000Z",
+  "dhuhr": "2025-03-20T08:26:00.000Z",
+  "fajr": "2025-03-20T01:05:00.000Z",
+  "isha": "2025-03-20T16:00:00.000Z",
+  "maghrib": "2025-03-20T14:30:00.000Z",
+  "sunrise": "2025-03-20T02:23:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dubai > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T11:43:00.000Z",
+  "dhuhr": "2024-06-20T08:21:00.000Z",
+  "fajr": "2024-06-20T00:01:00.571Z",
+  "isha": "2024-06-20T16:42:00.000Z",
+  "maghrib": "2024-06-20T15:12:00.000Z",
+  "sunrise": "2024-06-20T01:29:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Dubai > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T11:15:00.000Z",
+  "dhuhr": "2024-12-21T08:17:00.000Z",
+  "fajr": "2024-12-21T01:36:00.000Z",
+  "isha": "2024-12-21T15:04:00.000Z",
+  "maghrib": "2024-12-21T13:34:00.000Z",
+  "sunrise": "2024-12-21T03:00:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Istanbul > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T13:25:00.000Z",
+  "dhuhr": "2024-09-22T10:02:00.000Z",
+  "fajr": "2024-09-22T02:19:00.000Z",
+  "isha": "2024-09-22T17:27:00.000Z",
+  "maghrib": "2024-09-22T16:08:00.000Z",
+  "sunrise": "2024-09-22T03:45:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Istanbul > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T13:42:00.000Z",
+  "dhuhr": "2025-03-20T10:16:00.000Z",
+  "fajr": "2025-03-20T02:35:00.000Z",
+  "isha": "2025-03-20T17:43:00.000Z",
+  "maghrib": "2025-03-20T16:23:00.000Z",
+  "sunrise": "2025-03-20T04:00:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Istanbul > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T14:11:00.000Z",
+  "dhuhr": "2024-06-20T10:11:00.000Z",
+  "fajr": "2024-06-20T01:16:00.000Z",
+  "isha": "2024-06-20T18:56:00.000Z",
+  "maghrib": "2024-06-20T17:47:00.000Z",
+  "sunrise": "2024-06-20T02:25:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Istanbul > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T12:25:00.000Z",
+  "dhuhr": "2024-12-21T10:07:00.000Z",
+  "fajr": "2024-12-21T03:46:00.000Z",
+  "isha": "2024-12-21T16:13:00.000Z",
+  "maghrib": "2024-12-21T14:46:00.000Z",
+  "sunrise": "2024-12-21T05:19:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Jakarta > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T07:56:00.000Z",
+  "dhuhr": "2024-09-22T04:46:00.000Z",
+  "fajr": "2024-09-21T21:33:00.000Z",
+  "isha": "2024-09-22T11:54:00.000Z",
+  "maghrib": "2024-09-22T10:49:00.000Z",
+  "sunrise": "2024-09-21T22:42:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Jakarta > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T08:10:00.000Z",
+  "dhuhr": "2025-03-20T05:01:00.000Z",
+  "fajr": "2025-03-19T21:48:00.000Z",
+  "isha": "2025-03-20T12:08:00.000Z",
+  "maghrib": "2025-03-20T11:03:00.000Z",
+  "sunrise": "2025-03-19T22:57:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Jakarta > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T08:16:00.000Z",
+  "dhuhr": "2024-06-20T04:55:00.000Z",
+  "fajr": "2024-06-19T21:46:00.000Z",
+  "isha": "2024-06-20T11:58:00.000Z",
+  "maghrib": "2024-06-20T10:47:00.000Z",
+  "sunrise": "2024-06-19T23:01:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Jakarta > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T08:18:00.000Z",
+  "dhuhr": "2024-12-21T04:52:00.000Z",
+  "fajr": "2024-12-20T21:20:00.000Z",
+  "isha": "2024-12-21T12:17:00.000Z",
+  "maghrib": "2024-12-21T11:05:00.000Z",
+  "sunrise": "2024-12-20T22:36:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Karachi > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T10:50:00.000Z",
+  "dhuhr": "2024-09-22T07:26:00.000Z",
+  "fajr": "2024-09-22T00:05:00.000Z",
+  "isha": "2024-09-22T14:44:00.000Z",
+  "maghrib": "2024-09-22T13:28:00.000Z",
+  "sunrise": "2024-09-22T01:21:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Karachi > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T11:06:00.000Z",
+  "dhuhr": "2025-03-20T07:40:00.000Z",
+  "fajr": "2025-03-20T00:20:00.000Z",
+  "isha": "2025-03-20T14:59:00.000Z",
+  "maghrib": "2025-03-20T13:43:00.000Z",
+  "sunrise": "2025-03-20T01:36:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Karachi > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T10:55:00.000Z",
+  "dhuhr": "2024-06-20T07:35:00.000Z",
+  "fajr": "2024-06-19T23:15:00.571Z",
+  "isha": "2024-06-20T15:53:00.428Z",
+  "maghrib": "2024-06-20T14:24:00.000Z",
+  "sunrise": "2024-06-20T00:43:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Karachi > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T10:28:00.000Z",
+  "dhuhr": "2024-12-21T07:31:00.000Z",
+  "fajr": "2024-12-21T00:51:00.000Z",
+  "isha": "2024-12-21T14:10:00.000Z",
+  "maghrib": "2024-12-21T12:48:00.000Z",
+  "sunrise": "2024-12-21T02:12:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Kuala Lumpur > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T08:11:00.000Z",
+  "dhuhr": "2024-09-22T05:07:00.000Z",
+  "fajr": "2024-09-21T21:54:00.000Z",
+  "isha": "2024-09-22T12:14:00.000Z",
+  "maghrib": "2024-09-22T11:09:00.000Z",
+  "sunrise": "2024-09-21T23:03:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Kuala Lumpur > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T08:27:00.000Z",
+  "dhuhr": "2025-03-20T05:22:00.000Z",
+  "fajr": "2025-03-19T22:09:00.000Z",
+  "isha": "2025-03-20T12:29:00.000Z",
+  "maghrib": "2025-03-20T11:24:00.000Z",
+  "sunrise": "2025-03-19T23:17:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Kuala Lumpur > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T08:42:00.000Z",
+  "dhuhr": "2024-06-20T05:16:00.000Z",
+  "fajr": "2024-06-19T21:50:00.000Z",
+  "isha": "2024-06-20T12:35:00.000Z",
+  "maghrib": "2024-06-20T11:24:00.000Z",
+  "sunrise": "2024-06-19T23:06:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Kuala Lumpur > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T08:36:00.000Z",
+  "dhuhr": "2024-12-21T05:12:00.000Z",
+  "fajr": "2024-12-20T21:58:00.000Z",
+  "isha": "2024-12-21T12:20:00.000Z",
+  "maghrib": "2024-12-21T11:10:00.000Z",
+  "sunrise": "2024-12-20T23:13:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lagos > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T14:50:00.000Z",
+  "dhuhr": "2024-09-22T11:40:00.000Z",
+  "fajr": "2024-09-22T04:27:00.000Z",
+  "isha": "2024-09-22T18:47:00.000Z",
+  "maghrib": "2024-09-22T17:42:00.000Z",
+  "sunrise": "2024-09-22T05:36:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lagos > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T15:05:00.000Z",
+  "dhuhr": "2025-03-20T11:55:00.000Z",
+  "fajr": "2025-03-20T04:42:00.000Z",
+  "isha": "2025-03-20T19:02:00.000Z",
+  "maghrib": "2025-03-20T17:57:00.000Z",
+  "sunrise": "2025-03-20T05:51:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lagos > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T15:16:00.000Z",
+  "dhuhr": "2024-06-20T11:49:00.000Z",
+  "fajr": "2024-06-20T04:17:00.000Z",
+  "isha": "2024-06-20T19:15:00.000Z",
+  "maghrib": "2024-06-20T18:03:00.000Z",
+  "sunrise": "2024-06-20T05:33:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lagos > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T15:07:00.000Z",
+  "dhuhr": "2024-12-21T11:46:00.000Z",
+  "fajr": "2024-12-21T04:37:00.000Z",
+  "isha": "2024-12-21T18:48:00.000Z",
+  "maghrib": "2024-12-21T17:37:00.000Z",
+  "sunrise": "2024-12-21T05:52:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lahore > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T10:22:00.000Z",
+  "dhuhr": "2024-09-22T06:56:00.000Z",
+  "fajr": "2024-09-21T23:30:00.000Z",
+  "isha": "2024-09-22T14:20:00.000Z",
+  "maghrib": "2024-09-22T12:59:00.000Z",
+  "sunrise": "2024-09-22T00:51:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lahore > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T10:38:00.000Z",
+  "dhuhr": "2025-03-20T07:11:00.000Z",
+  "fajr": "2025-03-19T23:45:00.000Z",
+  "isha": "2025-03-20T14:35:00.000Z",
+  "maghrib": "2025-03-20T13:14:00.000Z",
+  "sunrise": "2025-03-20T01:06:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lahore > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T10:44:00.000Z",
+  "dhuhr": "2024-06-20T07:05:00.000Z",
+  "fajr": "2024-06-19T22:34:00.142Z",
+  "isha": "2024-06-20T15:34:00.857Z",
+  "maghrib": "2024-06-20T14:10:00.000Z",
+  "sunrise": "2024-06-19T23:58:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Lahore > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T09:45:00.000Z",
+  "dhuhr": "2024-12-21T07:02:00.000Z",
+  "fajr": "2024-12-21T00:31:00.000Z",
+  "isha": "2024-12-21T13:31:00.000Z",
+  "maghrib": "2024-12-21T12:04:00.000Z",
+  "sunrise": "2024-12-21T01:58:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > London > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T15:10:00.000Z",
+  "dhuhr": "2024-09-22T11:54:00.000Z",
+  "fajr": "2024-09-22T04:06:00.000Z",
+  "isha": "2024-09-22T19:39:00.000Z",
+  "maghrib": "2024-09-22T17:58:00.000Z",
+  "sunrise": "2024-09-22T05:47:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > London > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T15:27:00.000Z",
+  "dhuhr": "2025-03-20T12:09:00.000Z",
+  "fajr": "2025-03-20T04:22:00.428Z",
+  "isha": "2025-03-20T19:55:00.571Z",
+  "maghrib": "2025-03-20T18:14:00.000Z",
+  "sunrise": "2025-03-20T06:03:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > London > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T16:25:00.000Z",
+  "dhuhr": "2024-06-20T12:03:00.000Z",
+  "fajr": "2024-06-20T02:40:00.857Z",
+  "isha": "2024-06-20T21:25:00.142Z",
+  "maghrib": "2024-06-20T20:21:00.000Z",
+  "sunrise": "2024-06-20T03:43:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > London > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T13:38:00.000Z",
+  "dhuhr": "2024-12-21T12:00:00.000Z",
+  "fajr": "2024-12-21T06:00:00.000Z",
+  "isha": "2024-12-21T17:51:00.000Z",
+  "maghrib": "2024-12-21T15:54:00.000Z",
+  "sunrise": "2024-12-21T08:04:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Los Angeles > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T23:11:00.000Z",
+  "dhuhr": "2024-09-22T19:46:00.000Z",
+  "fajr": "2024-09-22T12:33:00.000Z",
+  "isha": "2024-09-23T02:57:00.000Z",
+  "maghrib": "2024-09-23T01:49:00.000Z",
+  "sunrise": "2024-09-22T13:42:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Los Angeles > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T23:29:00.000Z",
+  "dhuhr": "2025-03-20T20:01:00.000Z",
+  "fajr": "2025-03-20T12:47:00.000Z",
+  "isha": "2025-03-21T03:14:00.000Z",
+  "maghrib": "2025-03-21T02:05:00.000Z",
+  "sunrise": "2025-03-20T13:56:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Los Angeles > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T23:40:00.000Z",
+  "dhuhr": "2024-06-20T19:56:00.000Z",
+  "fajr": "2024-06-20T11:20:00.000Z",
+  "isha": "2024-06-21T04:30:00.000Z",
+  "maghrib": "2024-06-21T03:08:00.000Z",
+  "sunrise": "2024-06-20T12:42:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Los Angeles > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T22:30:00.000Z",
+  "dhuhr": "2024-12-21T19:52:00.000Z",
+  "fajr": "2024-12-21T13:40:00.000Z",
+  "isha": "2024-12-22T02:02:00.000Z",
+  "maghrib": "2024-12-22T00:48:00.000Z",
+  "sunrise": "2024-12-21T14:55:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Mecca > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T12:37:00.000Z",
+  "dhuhr": "2024-09-22T09:13:00.000Z",
+  "fajr": "2024-09-22T01:53:00.000Z",
+  "isha": "2024-09-22T16:47:00.000Z",
+  "maghrib": "2024-09-22T15:17:00.000Z",
+  "sunrise": "2024-09-22T03:09:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Mecca > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T12:53:00.000Z",
+  "dhuhr": "2025-03-20T09:28:00.000Z",
+  "fajr": "2025-03-20T02:09:00.000Z",
+  "isha": "2025-03-20T17:02:00.000Z",
+  "maghrib": "2025-03-20T15:32:00.000Z",
+  "sunrise": "2025-03-20T03:25:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Mecca > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T12:42:00.000Z",
+  "dhuhr": "2024-06-20T09:22:00.000Z",
+  "fajr": "2024-06-20T01:11:00.000Z",
+  "isha": "2024-06-20T17:35:00.000Z",
+  "maghrib": "2024-06-20T16:05:00.000Z",
+  "sunrise": "2024-06-20T02:39:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Mecca > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T12:23:00.000Z",
+  "dhuhr": "2024-12-21T09:19:00.000Z",
+  "fajr": "2024-12-21T02:32:00.000Z",
+  "isha": "2024-12-21T16:14:00.000Z",
+  "maghrib": "2024-12-21T14:44:00.000Z",
+  "sunrise": "2024-12-21T03:54:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Medina > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T12:40:00.000Z",
+  "dhuhr": "2024-09-22T09:14:00.000Z",
+  "fajr": "2024-09-22T01:52:00.000Z",
+  "isha": "2024-09-22T16:48:00.000Z",
+  "maghrib": "2024-09-22T15:18:00.000Z",
+  "sunrise": "2024-09-22T03:10:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Medina > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T12:56:00.000Z",
+  "dhuhr": "2025-03-20T09:29:00.000Z",
+  "fajr": "2025-03-20T02:08:00.000Z",
+  "isha": "2025-03-20T17:03:00.000Z",
+  "maghrib": "2025-03-20T15:33:00.000Z",
+  "sunrise": "2025-03-20T03:26:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Medina > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T12:44:00.000Z",
+  "dhuhr": "2024-06-20T09:23:00.000Z",
+  "fajr": "2024-06-20T01:05:00.857Z",
+  "isha": "2024-06-20T17:43:00.000Z",
+  "maghrib": "2024-06-20T16:13:00.000Z",
+  "sunrise": "2024-06-20T02:34:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Medina > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T12:19:00.000Z",
+  "dhuhr": "2024-12-21T09:20:00.000Z",
+  "fajr": "2024-12-21T02:38:00.000Z",
+  "isha": "2024-12-21T16:09:00.000Z",
+  "maghrib": "2024-12-21T14:39:00.000Z",
+  "sunrise": "2024-12-21T04:01:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > New York > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T20:13:00.000Z",
+  "dhuhr": "2024-09-22T16:49:00.000Z",
+  "fajr": "2024-09-22T09:29:00.000Z",
+  "isha": "2024-09-23T00:07:00.000Z",
+  "maghrib": "2024-09-22T22:52:00.000Z",
+  "sunrise": "2024-09-22T10:44:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > New York > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T20:30:00.000Z",
+  "dhuhr": "2025-03-20T17:04:00.000Z",
+  "fajr": "2025-03-20T09:43:00.000Z",
+  "isha": "2025-03-21T00:24:00.000Z",
+  "maghrib": "2025-03-20T23:08:00.000Z",
+  "sunrise": "2025-03-20T10:59:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > New York > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T20:58:00.000Z",
+  "dhuhr": "2024-06-20T16:59:00.000Z",
+  "fajr": "2024-06-20T08:09:00.857Z",
+  "isha": "2024-06-21T01:47:00.142Z",
+  "maghrib": "2024-06-21T00:31:00.000Z",
+  "sunrise": "2024-06-20T09:25:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > New York > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T19:14:00.000Z",
+  "dhuhr": "2024-12-21T16:55:00.000Z",
+  "fajr": "2024-12-21T10:55:00.000Z",
+  "isha": "2024-12-21T22:54:00.000Z",
+  "maghrib": "2024-12-21T21:32:00.000Z",
+  "sunrise": "2024-12-21T12:17:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Oslo > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T14:15:00.000Z",
+  "dhuhr": "2024-09-22T11:11:00.000Z",
+  "fajr": "2024-09-22T03:21:00.714Z",
+  "isha": "2024-09-22T18:57:00.285Z",
+  "maghrib": "2024-09-22T17:16:00.000Z",
+  "sunrise": "2024-09-22T05:02:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Oslo > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T14:33:00.000Z",
+  "dhuhr": "2025-03-20T11:25:00.000Z",
+  "fajr": "2025-03-20T03:38:00.142Z",
+  "isha": "2025-03-20T19:12:00.857Z",
+  "maghrib": "2025-03-20T17:32:00.000Z",
+  "sunrise": "2025-03-20T05:18:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Oslo > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T16:00:00.000Z",
+  "dhuhr": "2024-06-20T11:20:00.000Z",
+  "fajr": "2024-06-20T01:09:00.714Z",
+  "isha": "2024-06-20T21:28:00.285Z",
+  "maghrib": "2024-06-20T20:44:00.000Z",
+  "sunrise": "2024-06-20T01:54:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Oslo > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T12:08:00.000Z",
+  "dhuhr": "2024-12-21T11:16:00.000Z",
+  "fajr": "2024-12-21T05:43:00.428Z",
+  "isha": "2024-12-21T16:47:00.571Z",
+  "maghrib": "2024-12-21T14:12:00.000Z",
+  "sunrise": "2024-12-21T08:18:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Paris > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T15:02:00.000Z",
+  "dhuhr": "2024-09-22T11:44:00.000Z",
+  "fajr": "2024-09-22T03:56:00.714Z",
+  "isha": "2024-09-22T19:28:00.000Z",
+  "maghrib": "2024-09-22T17:48:00.000Z",
+  "sunrise": "2024-09-22T05:38:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Paris > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T15:19:00.000Z",
+  "dhuhr": "2025-03-20T11:59:00.000Z",
+  "fajr": "2025-03-20T04:12:00.142Z",
+  "isha": "2025-03-20T19:44:00.000Z",
+  "maghrib": "2025-03-20T18:04:00.000Z",
+  "sunrise": "2025-03-20T05:53:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Paris > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T16:10:00.000Z",
+  "dhuhr": "2024-06-20T11:53:00.000Z",
+  "fajr": "2024-06-20T02:40:00.857Z",
+  "isha": "2024-06-20T21:05:00.142Z",
+  "maghrib": "2024-06-20T19:58:00.000Z",
+  "sunrise": "2024-06-20T03:47:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Paris > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T13:40:00.000Z",
+  "dhuhr": "2024-12-21T11:50:00.000Z",
+  "fajr": "2024-12-21T05:45:00.000Z",
+  "isha": "2024-12-21T17:46:00.000Z",
+  "maghrib": "2024-12-21T15:56:00.000Z",
+  "sunrise": "2024-12-21T07:42:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Stockholm > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T13:46:00.000Z",
+  "dhuhr": "2024-09-22T10:41:00.000Z",
+  "fajr": "2024-09-22T02:52:00.142Z",
+  "isha": "2024-09-22T18:28:00.857Z",
+  "maghrib": "2024-09-22T16:46:00.000Z",
+  "sunrise": "2024-09-22T04:33:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Stockholm > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T14:04:00.000Z",
+  "dhuhr": "2025-03-20T10:56:00.000Z",
+  "fajr": "2025-03-20T03:09:00.571Z",
+  "isha": "2025-03-20T18:43:00.428Z",
+  "maghrib": "2025-03-20T17:02:00.000Z",
+  "sunrise": "2025-03-20T04:49:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Stockholm > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T15:30:00.000Z",
+  "dhuhr": "2024-06-20T10:50:00.000Z",
+  "fajr": "2024-06-20T00:45:00.714Z",
+  "isha": "2024-06-20T20:54:00.285Z",
+  "maghrib": "2024-06-20T20:08:00.000Z",
+  "sunrise": "2024-06-20T01:31:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Stockholm > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T11:42:00.000Z",
+  "dhuhr": "2024-12-21T10:47:00.000Z",
+  "fajr": "2024-12-21T05:10:00.714Z",
+  "isha": "2024-12-21T16:22:00.000Z",
+  "maghrib": "2024-12-21T13:48:00.000Z",
+  "sunrise": "2024-12-21T07:44:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Sydney > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T05:15:00.000Z",
+  "dhuhr": "2024-09-22T01:49:00.000Z",
+  "fajr": "2024-09-21T18:21:00.000Z",
+  "isha": "2024-09-22T09:10:00.000Z",
+  "maghrib": "2024-09-22T07:52:00.000Z",
+  "sunrise": "2024-09-21T19:45:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Sydney > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T05:30:00.000Z",
+  "dhuhr": "2025-03-20T02:04:00.000Z",
+  "fajr": "2025-03-19T18:35:00.000Z",
+  "isha": "2025-03-20T09:25:00.000Z",
+  "maghrib": "2025-03-20T08:07:00.000Z",
+  "sunrise": "2025-03-19T19:58:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Sydney > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T04:36:00.000Z",
+  "dhuhr": "2024-06-20T01:58:00.000Z",
+  "fajr": "2024-06-19T19:30:00.000Z",
+  "isha": "2024-06-20T08:18:00.000Z",
+  "maghrib": "2024-06-20T06:54:00.000Z",
+  "sunrise": "2024-06-19T21:00:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Sydney > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T05:38:00.000Z",
+  "dhuhr": "2024-12-21T01:54:00.000Z",
+  "fajr": "2024-12-20T17:19:00.571Z",
+  "isha": "2024-12-21T10:28:00.428Z",
+  "maghrib": "2024-12-21T09:06:00.000Z",
+  "sunrise": "2024-12-20T18:41:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Tehran > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T11:53:00.000Z",
+  "dhuhr": "2024-09-22T08:27:00.000Z",
+  "fajr": "2024-09-22T00:59:00.000Z",
+  "isha": "2024-09-22T15:36:00.000Z",
+  "maghrib": "2024-09-22T14:49:00.000Z",
+  "sunrise": "2024-09-22T02:23:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Tehran > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T12:09:00.000Z",
+  "dhuhr": "2025-03-20T08:42:00.000Z",
+  "fajr": "2025-03-20T01:14:00.000Z",
+  "isha": "2025-03-20T15:51:00.000Z",
+  "maghrib": "2025-03-20T15:04:00.000Z",
+  "sunrise": "2025-03-20T02:38:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Tehran > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T12:25:00.000Z",
+  "dhuhr": "2024-06-20T08:36:00.000Z",
+  "fajr": "2024-06-19T23:58:00.000Z",
+  "isha": "2024-06-20T17:14:00.000Z",
+  "maghrib": "2024-06-20T16:15:00.000Z",
+  "sunrise": "2024-06-20T01:19:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Tehran > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T11:07:00.000Z",
+  "dhuhr": "2024-12-21T08:33:00.000Z",
+  "fajr": "2024-12-21T02:10:00.000Z",
+  "isha": "2024-12-21T14:36:00.000Z",
+  "maghrib": "2024-12-21T13:45:00.000Z",
+  "sunrise": "2024-12-21T03:40:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Toronto > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T20:32:00.000Z",
+  "dhuhr": "2024-09-22T17:11:00.000Z",
+  "fajr": "2024-09-22T09:46:00.000Z",
+  "isha": "2024-09-23T00:33:00.000Z",
+  "maghrib": "2024-09-22T23:14:00.000Z",
+  "sunrise": "2024-09-22T11:05:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Toronto > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T20:50:00.000Z",
+  "dhuhr": "2025-03-20T17:26:00.000Z",
+  "fajr": "2025-03-20T10:01:00.000Z",
+  "isha": "2025-03-21T00:50:00.000Z",
+  "maghrib": "2025-03-20T23:30:00.000Z",
+  "sunrise": "2025-03-20T11:20:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Toronto > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-20T21:26:00.000Z",
+  "dhuhr": "2024-06-20T17:20:00.000Z",
+  "fajr": "2024-06-20T08:23:00.428Z",
+  "isha": "2024-06-21T02:16:00.571Z",
+  "maghrib": "2024-06-21T01:03:00.000Z",
+  "sunrise": "2024-06-20T09:36:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Toronto > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T19:26:00.000Z",
+  "dhuhr": "2024-12-21T17:17:00.000Z",
+  "fajr": "2024-12-21T11:21:00.000Z",
+  "isha": "2024-12-21T23:11:00.000Z",
+  "maghrib": "2024-12-21T21:44:00.000Z",
+  "sunrise": "2024-12-21T12:48:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Vancouver > Autumn Equinox 1`] = `
+{
+  "asr": "2024-09-22T23:23:00.000Z",
+  "dhuhr": "2024-09-22T20:06:00.000Z",
+  "fajr": "2024-09-22T12:32:00.000Z",
+  "isha": "2024-09-23T03:37:00.000Z",
+  "maghrib": "2024-09-23T02:09:00.000Z",
+  "sunrise": "2024-09-22T14:00:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Vancouver > Spring Equinox 1`] = `
+{
+  "asr": "2025-03-20T23:42:00.000Z",
+  "dhuhr": "2025-03-20T20:21:00.000Z",
+  "fajr": "2025-03-20T12:46:00.000Z",
+  "isha": "2025-03-21T03:55:00.000Z",
+  "maghrib": "2025-03-21T02:26:00.000Z",
+  "sunrise": "2025-03-20T14:14:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Vancouver > Summer Solstice 1`] = `
+{
+  "asr": "2024-06-21T00:33:00.000Z",
+  "dhuhr": "2024-06-20T20:15:00.000Z",
+  "fajr": "2024-06-20T11:00:00.428Z",
+  "isha": "2024-06-21T05:28:00.571Z",
+  "maghrib": "2024-06-21T04:22:00.000Z",
+  "sunrise": "2024-06-20T12:07:00.000Z",
+}
+`;
+
+exports[`Golden snapshots — 22 cities × 4 seasons > Vancouver > Winter Solstice 1`] = `
+{
+  "asr": "2024-12-21T22:00:00.000Z",
+  "dhuhr": "2024-12-21T20:12:00.000Z",
+  "fajr": "2024-12-21T14:27:00.000Z",
+  "isha": "2024-12-22T01:55:00.000Z",
+  "maghrib": "2024-12-22T00:16:00.000Z",
+  "sunrise": "2024-12-21T16:05:00.000Z",
+}
+`;

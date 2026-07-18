@@ -8,6 +8,7 @@ A prayer app for Muslims in Western countries. Wins on reliability, accuracy, an
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
+- `pnpm test` — run the golden prayer-time test suite (lib/prayer-core)
 
 ## Stack
 
@@ -21,21 +22,33 @@ A prayer app for Muslims in Western countries. Wins on reliability, accuracy, an
 ## Where things live
 
 ```
-artifacts/mobile/
+artifacts/mobile/          — Expo/React Native app
 ├── app/(tabs)/
-│   ├── index.tsx       — Today screen (next prayer countdown, all times)
-│   ├── tracker.tsx     — Prayer journal (log status, streaks)
-│   ├── qibla.tsx       — Qibla compass (expo-sensors magnetometer)
-│   └── settings.tsx    — Calculation method, madhab, location, privacy
+│   ├── index.tsx          — Today screen (countdown, all times, Hijri)
+│   ├── tracker.tsx        — Prayer journal (log status, streaks)
+│   ├── qibla.tsx          — Qibla compass (expo-location heading)
+│   └── settings.tsx       — Method, madhab, offsets, notifications, mosque
 ├── context/
-│   ├── PrayerContext.tsx   — Prayer times, settings, qibla direction
-│   └── TrackerContext.tsx  — Prayer log storage, streak computation
+│   ├── PrayerContext.tsx       — Prayer times, GPS, qibla, travel mode
+│   ├── TrackerContext.tsx      — Prayer log storage, streak computation
+│   ├── NotificationContext.tsx — Athan scheduling (12-day rolling, 60 slots)
+│   └── MosqueContext.tsx       — Mosque name + iqamah offsets
 ├── constants/
-│   ├── colors.ts       — Islamic palette (dark navy + emerald + gold)
-│   └── prayers.ts      — Prayer config, Hijri conversion, status colors
+│   ├── colors.ts              — Islamic palette (dark navy + emerald + gold)
+│   ├── prayers.ts             — Prayer config, Hijri conversion, status colors
+│   └── islamic-dates.ts       — 20 Islamic special dates (Eid, Ramadan nights…)
 └── components/
-    ├── CountdownTimer.tsx  — HH:MM:SS live countdown
-    └── PrayerTimeRow.tsx   — Prayer time row with status indicator
+    ├── CountdownTimer.tsx     — HH:MM:SS live countdown
+    └── PrayerTimeRow.tsx      — Prayer time row with status indicator
+
+lib/prayer-core/           — Pure-TS computation engine + golden test suite
+├── src/compute.ts         — computePrayerTimes, buildParams, applyOffsets, computeQibla
+└── tests/
+    ├── invariants.test.ts — fajr<sunrise<dhuhr<asr<maghrib<isha, seasonal ordering (84 cases)
+    ├── wrapper.test.ts    — Our wrapper vs raw adhan, offset application precision
+    ├── high-lat.test.ts   — Oslo/Vancouver/Reykjavik June edge cases (all 3 rules × 7 cities)
+    ├── methods.test.ts    — All 7 methods + madhab differentiation, Qibla bearings
+    └── golden.test.ts     — 22 cities × 4 seasons snapshot suite + 6 spot-checks
 ```
 
 ## Architecture decisions

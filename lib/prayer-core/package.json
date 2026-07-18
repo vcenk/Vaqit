@@ -1,0 +1,21 @@
+{
+  "name": "@workspace/prayer-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vaqit prayer time computation engine — pure TS, no React Native deps. Includes golden test suite.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "adhan": "^4.4.4"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
