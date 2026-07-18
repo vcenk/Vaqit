@@ -126,25 +126,39 @@ export default function QiblaScreen() {
   useEffect(() => {
     if (Platform.OS === 'web') return;
 
-    let sub: { remove: () => void } | null = null;
+    // expo-sensors@57 crashes during module init in Expo Go SDK 54 because
+    // DeviceSensor.js references PermissionStatus.GRANTED before the enum is
+    // available. Use expo-location watchHeadingAsync instead — it provides
+    // CoreLocation's sensor-fused heading (mag + gyro) and needs no extra perm
+    // beyond what PrayerContext already requests.
+    let cancelled = false;
+    let subscription: { remove: () => void } | null = null;
+
     (async () => {
       try {
-        // Import directly from the Magnetometer module to avoid Pedometer.js
-        // eagerly accessing PermissionStatus.GRANTED (undefined in Expo Go SDK 54).
-        const { Magnetometer } = await import('expo-sensors/build/Magnetometer');
-        setSensorAvailable(true);
-        Magnetometer.setUpdateInterval(150);
-        sub = Magnetometer.addListener(({ x, y }) => {
-          let angle = Math.atan2(y, x) * (180 / Math.PI);
-          if (angle < 0) angle += 360;
-          setHeading(angle);
+        const Location = await import('expo-location');
+        const { status } = await Location.getForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          const req = await Location.requestForegroundPermissionsAsync();
+          if (req.status !== 'granted') return;
+        }
+        if (cancelled) return;
+        subscription = await Location.watchHeadingAsync(({ trueHeading, magHeading }) => {
+          // trueHeading is -1 when a GPS fix hasn't resolved true north yet
+          const h = trueHeading >= 0 ? trueHeading : magHeading;
+          setHeading(h);
         });
+        if (!cancelled) setSensorAvailable(true);
+        else subscription.remove();          // unmounted before sub resolved
       } catch {
-        setSensorAvailable(false);
+        if (!cancelled) setSensorAvailable(false);
       }
     })();
 
-    return () => { sub?.remove(); };
+    return () => {
+      cancelled = true;
+      subscription?.remove();
+    };
   }, []);
 
   useEffect(() => {
