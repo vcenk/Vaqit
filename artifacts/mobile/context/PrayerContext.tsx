@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { AppState, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setWidgetData } from '@/modules/shared-defaults';
 import {
   Coordinates,
   CalculationMethod,
@@ -211,6 +212,25 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
         setTodayTimes(times);
         setNextPrayer(getNextPrayer(times, settings));
         setCurrentPrayerKey(getCurrentPrayerKey(times));
+
+        // Write to the iOS App Group shared container so the WidgetKit
+        // extension can display real prayer times without launching the app.
+        // No-ops on Android, web, and in Expo Go.
+        if (Platform.OS === 'ios') {
+          const now = new Date();
+          const pad = (n: number) => String(n).padStart(2, '0');
+          const dateKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+          setWidgetData({
+            fajr:         times.fajr.toISOString(),
+            sunrise:      times.sunrise.toISOString(),
+            dhuhr:        times.dhuhr.toISOString(),
+            asr:          times.asr.toISOString(),
+            maghrib:      times.maghrib.toISOString(),
+            isha:         times.isha.toISOString(),
+            locationName: settings.locationName,
+            date:         dateKey,
+          });
+        }
       }
       try {
         const coords = new Coordinates(settings.latitude, settings.longitude);

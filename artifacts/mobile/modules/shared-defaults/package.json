@@ -1,0 +1,7 @@
+{
+  "name": "shared-defaults",
+  "version": "1.0.0",
+  "description": "Write prayer times to iOS App Group UserDefaults for WidgetKit",
+  "private": true,
+  "main": "index.ts"
+}

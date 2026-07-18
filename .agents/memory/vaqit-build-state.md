@@ -85,8 +85,17 @@ same file still referenced the old name → runtime crash. Always update interna
 - iOS Widgets / WidgetKit, Live Activities
 - Vendor battery-whitelist deep links
 
+## iOS Widget App Group integration (v1.1)
+- App Group `group.com.vaqit.app` enabled in `app.json` ios.entitlements and `targets/vaqit-widget/expo-target.config.js`
+- Local Expo native module at `modules/shared-defaults/` (expo-modules-core) bridges JS → `UserDefaults(suiteName:)` + triggers `WidgetCenter.shared.reloadAllTimelines()`
+- `PrayerContext.tsx` writes all 6 prayer times as ISO strings + locationName + date key to the App Group on every 30s compute cycle (iOS only, silently no-ops in Expo Go)
+- Widget providers read JSON from App Group; build multi-entry timelines (one entry per prayer transition) so widget text flips automatically; refresh policy is `.after(midnight)`
+- After Isha the widget shows "--:--" until the app is next opened (tomorrow's times not pre-written — follow-up task #9 tracks this)
+- `@bacons/apple-targets` must be installed (`pnpm add --filter @workspace/mobile @bacons/apple-targets`) for EAS prebuild to pick up the widget target
+
 ## Post-MVP roadmap
-- iOS Widgets + Live Activity — EAS build
+- Live Activity / Dynamic Island countdown — task #10
+- Android home screen widget — task #11
 - F7 Quran reader — v1.1
 - RevenueCat + Vaqit Plus — v1.1
 - F9 Qaza tracker (paid) — v1.1

@@ -26,6 +26,9 @@
       "bundleIdentifier": "com.vaqit.app",
       "buildNumber": "1",
       "supportsTablet": false,
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.com.vaqit.app"]
+      },
       "infoPlist": {
         "UIBackgroundModes": ["audio", "fetch", "remote-notification"],
         "NSLocationWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
@@ -82,7 +85,8 @@
           "launchWaitMs": 0
         }
       ],
-      "./plugins/withAthanService"
+      "./plugins/withAthanService",
+      ["@bacons/apple-targets"]
     ],
     "experiments": {
       "typedRoutes": true,

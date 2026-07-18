@@ -17,7 +17,8 @@ module.exports = {
     $background: "#0C1422",
   },
   entitlements: {
-    // App Group for sharing prayer times between the main app and widget (v1.1)
-    // "com.apple.security.application-groups": ["group.com.vaqit.app"],
+    // Shared App Group container — lets the widget read prayer times written
+    // by PrayerContext via SharedDefaultsModule without launching the main app.
+    "com.apple.security.application-groups": ["group.com.vaqit.app"],
   },
 };
