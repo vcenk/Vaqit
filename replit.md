@@ -1,4 +1,4 @@
-# Vakit — Muslim Prayer Companion
+# Vaqit — Muslim Prayer Companion
 
 A prayer app for Muslims in Western countries. Wins on reliability, accuracy, and trust — zero ads, data stays on device, and accurate prayer times at any latitude.
 

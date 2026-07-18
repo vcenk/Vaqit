@@ -17,7 +17,7 @@ import {
 } from 'adhan';
 import { PRAYER_DISPLAY_NAMES, formatDateKey } from '@/constants/prayers';
 
-const SETTINGS_KEY = 'vakit_settings_v1';
+const SETTINGS_KEY = 'vaqit_settings_v1';
 
 export interface PrayerSettings {
   calculationMethod: string;

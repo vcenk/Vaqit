@@ -82,7 +82,7 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
   const [longestStreak, setLongestStreak] = useState(0);
 
   useEffect(() => {
-    AsyncStorage.getItem('vakit_tracker_v1').then((val) => {
+    AsyncStorage.getItem('vaqit_tracker_v1').then((val) => {
       if (val) {
         try {
           const parsed = JSON.parse(val) as Record<string, DayLog>;
@@ -108,7 +108,7 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
       const { current, longest } = computeStreaks(updated);
       setCurrentStreak(current);
       setLongestStreak(longest);
-      await AsyncStorage.setItem('vakit_tracker_v1', JSON.stringify(updated));
+      await AsyncStorage.setItem('vaqit_tracker_v1', JSON.stringify(updated));
     },
     [logs]
   );
