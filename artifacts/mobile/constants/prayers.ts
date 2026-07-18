@@ -38,7 +38,7 @@ export const MADHABS = [
   { id: 'Hanafi', label: 'Hanafi' },
 ];
 
-const HIJRI_MONTHS = [
+export const HIJRI_MONTH_NAMES = [
   'Muharram', 'Safar', "Rabi' al-Awwal", "Rabi' al-Thani",
   "Jumada al-Awwal", "Jumada al-Thani", 'Rajab', "Sha'ban",
   'Ramadan', 'Shawwal', "Dhul Qa'dah", 'Dhul Hijjah',
@@ -87,7 +87,7 @@ export function toHijri(date: Date): {
     day,
     month,
     year,
-    monthName: HIJRI_MONTHS[(month - 1) % 12] ?? '',
+    monthName: HIJRI_MONTH_NAMES[(month - 1) % 12] ?? '',
   };
 }
 

@@ -1,0 +1,1 @@
+- [Vaqit build state](vaqit-build-state.md) — what's done, what's next, key quirks discovered during the build

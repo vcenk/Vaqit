@@ -11,19 +11,59 @@ import {
   Inter_700Bold,
   useFonts,
 } from '@expo-google-fonts/inter';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { PrayerProvider } from '@/context/PrayerContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PrayerProvider, usePrayer } from '@/context/PrayerContext';
 import { TrackerProvider } from '@/context/TrackerContext';
+import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
+import { MosqueProvider } from '@/context/MosqueContext';
+
+/** Sits inside both PrayerProvider and NotificationProvider; reschedules whenever location/method changes. */
+function NotificationScheduler() {
+  const { settings } = usePrayer();
+  const { scheduleAll, permissionStatus } = useNotifications();
+  useEffect(() => {
+    if (permissionStatus === 'granted') {
+      scheduleAll(settings);
+    }
+  }, [settings.latitude, settings.longitude, settings.calculationMethod, settings.madhab, settings.highLatitudeRule, permissionStatus]);
+  return null;
+}
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
 function RootLayoutNav() {
+  useEffect(() => {
+    AsyncStorage.getItem('vaqit_onboarding_done').then((done) => {
+      if (!done) {
+        router.replace('/onboarding');
+      }
+    });
+  }, []);
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="onboarding" options={{ headerShown: false, gestureEnabled: false }} />
+      <Stack.Screen
+        name="notification-health"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="hijri-calendar"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="mosque-timetable"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="privacy"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
     </Stack>
   );
 }
@@ -51,9 +91,14 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
               <TrackerProvider>
-                <PrayerProvider>
-                  <RootLayoutNav />
-                </PrayerProvider>
+                <MosqueProvider>
+                <NotificationProvider>
+                  <PrayerProvider>
+                    <NotificationScheduler />
+                    <RootLayoutNav />
+                  </PrayerProvider>
+                </NotificationProvider>
+                </MosqueProvider>
               </TrackerProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
