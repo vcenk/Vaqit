@@ -18,6 +18,7 @@ import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { CALCULATION_METHODS } from '@/constants/prayers';
+import { useT } from '@/lib/i18n';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const TOTAL_STEPS = 3;
@@ -45,10 +46,11 @@ function StepDots({ current }: { current: number }) {
 // ── Step 1: Welcome ───────────────────────────────────────────────────────────
 function WelcomeStep({ onNext }: { onNext: () => void }) {
   const colors = useColors();
+  const t = useT();
   const principles = [
-    { icon: 'ban-outline' as const, text: 'No ads — ever' },
-    { icon: 'phone-portrait-outline' as const, text: 'Your data stays on your device' },
-    { icon: 'notifications-outline' as const, text: 'Athan that never fails you' },
+    { icon: 'ban-outline' as const, text: t('onboarding.principle.noAds') },
+    { icon: 'phone-portrait-outline' as const, text: t('onboarding.principle.onDevice') },
+    { icon: 'notifications-outline' as const, text: t('onboarding.principle.reliableAthan') },
   ];
   return (
     <View style={step.container}>
@@ -63,7 +65,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
         Vaqit
       </Text>
       <Text style={[step.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        A Muslim prayer companion built on trust
+        {t('onboarding.welcome.subtitle')}
       </Text>
 
       <View style={step.principles}>
@@ -81,7 +83,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
 
       <Pressable style={[step.btn, { backgroundColor: colors.primary }]} onPress={onNext}>
         <Text style={[step.btnText, { color: colors.primaryForeground, fontFamily: 'Inter_700Bold' }]}>
-          Get Started
+          {t('onboarding.getStarted')}
         </Text>
         <Ionicons name="arrow-forward" size={18} color={colors.primaryForeground} />
       </Pressable>
@@ -92,6 +94,7 @@ function WelcomeStep({ onNext }: { onNext: () => void }) {
 // ── Step 2: Location + Method ─────────────────────────────────────────────────
 function LocationStep({ onNext }: { onNext: () => void }) {
   const colors = useColors();
+  const t = useT();
   const { settings, requestLocation, locationLoading, updateSettings } = usePrayer();
   const [showMethods, setShowMethods] = useState(false);
 
@@ -104,10 +107,10 @@ function LocationStep({ onNext }: { onNext: () => void }) {
       </View>
 
       <Text style={[step.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-        Where are you praying?
+        {t('onboarding.location.title')}
       </Text>
       <Text style={[step.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Accurate prayer times need your location
+        {t('onboarding.location.subtitle')}
       </Text>
 
       <View style={step.fieldGroup}>
@@ -118,9 +121,9 @@ function LocationStep({ onNext }: { onNext: () => void }) {
         >
           <Ionicons name={locationLoading ? 'reload-outline' : 'navigate-outline'} size={20} color={colors.primary} />
           <View style={{ flex: 1 }}>
-            <Text style={[step.fieldLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>Current location</Text>
+            <Text style={[step.fieldLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{t('onboarding.currentLocation')}</Text>
             <Text style={[step.fieldVal, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
-              {locationLoading ? 'Detecting…' : settings.locationName}
+              {locationLoading ? t('onboarding.detecting') : settings.locationName}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={16} color={colors.mutedForeground} />
@@ -133,7 +136,7 @@ function LocationStep({ onNext }: { onNext: () => void }) {
         >
           <Ionicons name="calculator-outline" size={20} color={colors.accent} />
           <View style={{ flex: 1 }}>
-            <Text style={[step.fieldLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>Calculation method</Text>
+            <Text style={[step.fieldLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{t('onboarding.calcMethod')}</Text>
             <Text style={[step.fieldVal, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
               {currentMethod?.label ?? settings.calculationMethod}
             </Text>
@@ -166,7 +169,7 @@ function LocationStep({ onNext }: { onNext: () => void }) {
 
       <Pressable style={[step.btn, { backgroundColor: colors.primary }]} onPress={onNext}>
         <Text style={[step.btnText, { color: colors.primaryForeground, fontFamily: 'Inter_700Bold' }]}>
-          Continue
+          {t('onboarding.continue')}
         </Text>
         <Ionicons name="arrow-forward" size={18} color={colors.primaryForeground} />
       </Pressable>
@@ -177,6 +180,7 @@ function LocationStep({ onNext }: { onNext: () => void }) {
 // ── Step 3: Notifications ─────────────────────────────────────────────────────
 function NotificationsStep({ onDone }: { onDone: () => void }) {
   const colors = useColors();
+  const t = useT();
   const { permissionStatus, requestPermission, scheduleAll } = useNotifications();
   const { settings } = usePrayer();
   const [loading, setLoading] = useState(false);
@@ -193,9 +197,9 @@ function NotificationsStep({ onDone }: { onDone: () => void }) {
   };
 
   const features = [
-    { icon: 'alarm-outline' as const, text: 'Athan at every prayer time' },
-    { icon: 'time-outline' as const, text: 'Optional pre-prayer reminders' },
-    { icon: 'settings-outline' as const, text: 'Per-prayer control in settings' },
+    { icon: 'alarm-outline' as const, text: t('onboarding.feature.athanEvery') },
+    { icon: 'time-outline' as const, text: t('onboarding.feature.preReminders') },
+    { icon: 'settings-outline' as const, text: t('onboarding.feature.perPrayer') },
   ];
 
   return (
@@ -205,10 +209,10 @@ function NotificationsStep({ onDone }: { onDone: () => void }) {
       </View>
 
       <Text style={[step.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-        Never miss a prayer
+        {t('onboarding.notif.title')}
       </Text>
       <Text style={[step.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Reliable athan notifications are the heart of Vaqit
+        {t('onboarding.notif.subtitle')}
       </Text>
 
       <View style={step.principles}>
@@ -228,7 +232,7 @@ function NotificationsStep({ onDone }: { onDone: () => void }) {
         <View style={[step.grantedBadge, { backgroundColor: colors.primary + '22', borderRadius: colors.radius }]}>
           <Ionicons name="checkmark-circle" size={22} color={colors.primary} />
           <Text style={[step.grantedText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>
-            Notifications enabled — you're all set
+            {t('onboarding.enabled')}
           </Text>
         </View>
       ) : (
@@ -239,14 +243,14 @@ function NotificationsStep({ onDone }: { onDone: () => void }) {
         >
           <Ionicons name="notifications-outline" size={18} color="#000000" />
           <Text style={[step.btnText, { color: '#000000', fontFamily: 'Inter_700Bold' }]}>
-            {loading ? 'Enabling…' : 'Enable Athan Notifications'}
+            {loading ? t('onboarding.enabling') : t('onboarding.enableAthan')}
           </Text>
         </Pressable>
       )}
 
       <Pressable onPress={onDone}>
         <Text style={[step.skipText, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-          {granted ? 'Done' : 'Skip for now'}
+          {granted ? t('common.done') : t('onboarding.skip')}
         </Text>
       </Pressable>
     </View>

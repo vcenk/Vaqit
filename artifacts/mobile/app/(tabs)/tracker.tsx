@@ -17,10 +17,10 @@ import {
   PRAYER_ICONS,
   TRACKABLE_PRAYERS,
   STATUS_COLORS,
-  STATUS_LABELS,
   formatDateKey,
   type PrayerKey,
 } from '@/constants/prayers';
+import { useT, type TKey } from '@/lib/i18n';
 
 const STATUS_ICONS: Record<string, React.ComponentProps<typeof Ionicons>['name']> = {
   ontime: 'checkmark-circle',
@@ -114,6 +114,7 @@ function PrayerLogRow({ prayerKey, dateKey }: { prayerKey: PrayerKey; dateKey: s
 
 export default function TrackerScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const { currentStreak, longestStreak } = useTracker();
 
@@ -123,8 +124,8 @@ export default function TrackerScreen() {
   const isToday = selectedDay === todayKey;
   const selectedDate = new Date(selectedDay + 'T12:00:00');
   const selectedLabel = isToday
-    ? 'Today'
-    : selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    ? t('common.today')
+    : selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
 
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 120 : insets.bottom + 90;
@@ -137,7 +138,7 @@ export default function TrackerScreen() {
     >
       {/* Title */}
       <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-        Prayer Journal
+        {t('tracker.title')}
       </Text>
 
       {/* Streak Cards */}
@@ -148,7 +149,7 @@ export default function TrackerScreen() {
             {currentStreak}
           </Text>
           <Text style={[s.streakLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            Day Streak
+            {t('tracker.dayStreak')}
           </Text>
         </View>
         <View style={[s.streakCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
@@ -157,7 +158,7 @@ export default function TrackerScreen() {
             {longestStreak}
           </Text>
           <Text style={[s.streakLabel, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            Best Streak
+            {t('tracker.bestStreak')}
           </Text>
         </View>
       </View>
@@ -179,7 +180,7 @@ export default function TrackerScreen() {
             <View key={s2} style={sl.item}>
               <Ionicons name={STATUS_ICONS[s2]!} size={12} color={STATUS_COLORS[s2]} />
               <Text style={[sl.text, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-                {STATUS_LABELS[s2]}
+                {t(`status.${s2}` as TKey)}
               </Text>
             </View>
           ))}

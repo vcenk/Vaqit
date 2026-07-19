@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
+import { useT } from '@/lib/i18n';
 
 const MECCA_LAT = 21.3891;
 const MECCA_LON = 39.8579;
@@ -110,6 +111,7 @@ function CompassRose({ size, colors }: { size: number; colors: ReturnType<typeof
 
 export default function QiblaScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const { settings, qiblaDirection } = usePrayer();
 
@@ -191,9 +193,9 @@ export default function QiblaScreen() {
   return (
     <View style={[s.container, { backgroundColor: colors.background, paddingTop: topPad, paddingBottom: bottomPad }]}>
       {/* Title */}
-      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>Qibla</Text>
+      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('tabs.qibla')}</Text>
       <Text style={[s.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Direction toward the Kaaba
+        {t('qibla.subtitle')}
       </Text>
 
       {/* Compass */}
@@ -238,7 +240,7 @@ export default function QiblaScreen() {
             {bearingToMecca}°
           </Text>
           <Text style={[s.infoLbl, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            from North
+            {t('qibla.fromNorth')}
           </Text>
         </View>
         <View style={[s.infoCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
@@ -247,19 +249,19 @@ export default function QiblaScreen() {
             {distance.toLocaleString()}
           </Text>
           <Text style={[s.infoLbl, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            km to Mecca
+            {t('qibla.kmToMecca')}
           </Text>
         </View>
       </View>
 
       {!sensorAvailable && Platform.OS !== 'web' && (
         <Text style={[s.hint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-          Magnetometer not available on this device
+          {t('qibla.noMagnetometer')}
         </Text>
       )}
       {Platform.OS === 'web' && (
         <Text style={[s.hint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-          Live compass requires a real device via Expo Go
+          {t('qibla.webCompass')}
         </Text>
       )}
     </View>
