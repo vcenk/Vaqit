@@ -17,7 +17,7 @@ import { usePrayer } from '@/context/PrayerContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useMosque } from '@/context/MosqueContext';
 import { useSupporter } from '@/context/SupporterContext';
-import { useLocale, SUPPORTED_LOCALES } from '@/lib/i18n';
+import { useLocale, useT, SUPPORTED_LOCALES } from '@/lib/i18n';
 import {
   CALCULATION_METHODS,
   HIGH_LAT_RULES,
@@ -139,6 +139,7 @@ const PRE_REMINDER_OPTIONS = [0, 5, 10, 15, 30];
 
 function PrayerNotifRow({ prayer }: { prayer: PrayerKey }) {
   const colors = useColors();
+  const t = useT();
   const { notifSettings, updatePrayerNotif, scheduleAll } = useNotifications();
   const { settings } = usePrayer();
   const [showReminder, setShowReminder] = useState(false);
@@ -172,7 +173,7 @@ function PrayerNotifRow({ prayer }: { prayer: PrayerKey }) {
             onPress={() => setShowReminder(!showReminder)}
           >
             <Text style={[pnr.reminderText, { color: cfg.preReminder > 0 ? colors.accent : colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>
-              {cfg.preReminder > 0 ? `−${cfg.preReminder}m` : 'No reminder'}
+              {cfg.preReminder > 0 ? `−${cfg.preReminder}m` : t('settings.notif.noReminder')}
             </Text>
           </Pressable>
         )}
@@ -188,7 +189,7 @@ function PrayerNotifRow({ prayer }: { prayer: PrayerKey }) {
       {showReminder && cfg.enabled && (
         <View style={[pnr.reminderOptions, { backgroundColor: colors.background }]}>
           <Text style={[pnr.reminderLabel, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>
-            Pre-prayer reminder
+            {t('settings.notif.preReminder')}
           </Text>
           <View style={pnr.reminderPills}>
             {PRE_REMINDER_OPTIONS.map(min => (
@@ -198,7 +199,7 @@ function PrayerNotifRow({ prayer }: { prayer: PrayerKey }) {
                 onPress={() => setReminder(min)}
               >
                 <Text style={[pnr.pillText, { color: cfg.preReminder === min ? colors.primary : colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>
-                  {min === 0 ? 'Off' : `${min}m`}
+                  {min === 0 ? t('settings.notif.off') : `${min}m`}
                 </Text>
               </Pressable>
             ))}
@@ -233,8 +234,8 @@ export default function SettingsScreen() {
   const currentHighLat = HIGH_LAT_RULES.find(r => r.id === settings.highLatitudeRule)?.label ?? settings.highLatitudeRule;
 
   const notifStatusLabel = permissionStatus === 'granted'
-    ? scheduledCount > 0 ? `${scheduledCount} scheduled` : 'Enabled'
-    : permissionStatus === 'denied' ? 'Blocked' : 'Not set';
+    ? scheduledCount > 0 ? t('settings.notif.scheduled', { n: scheduledCount }) : t('settings.notif.enabled')
+    : permissionStatus === 'denied' ? t('settings.notif.blocked') : t('settings.notif.notSet');
 
   const notifStatusColor = permissionStatus === 'granted'
     ? colors.primary
@@ -254,7 +255,7 @@ export default function SettingsScreen() {
         <SettingRow
           icon="medkit-outline"
           iconColor={notifStatusColor}
-          label="Notification Health Check"
+          label={t('settings.row.notifHealth')}
           value={notifStatusLabel}
           onPress={() => router.push('/notification-health')}
         />
@@ -281,7 +282,7 @@ export default function SettingsScreen() {
         <Divider />
         <SettingRow
           icon={locationLoading ? 'reload-outline' : 'navigate-outline'}
-          label="Update with GPS"
+          label={t('settings.row.updateGps')}
           onPress={requestLocation}
         />
       </Card>
@@ -289,11 +290,11 @@ export default function SettingsScreen() {
       {/* ── Prayer Calculation ── */}
       <SectionHeader title={t('settings.section.calculation').toUpperCase()} />
       <Card>
-        <SettingRow icon="calculator-outline" label="Calculation Method" value={currentMethod} onPress={() => setPicker('method')} />
+        <SettingRow icon="calculator-outline" label={t('settings.row.calcMethod')} value={currentMethod} onPress={() => setPicker('method')} />
         <Divider />
-        <SettingRow icon="school-outline" iconColor={colors.accent} label="School (Madhab)" value={currentMadhab} onPress={() => setPicker('madhab')} />
+        <SettingRow icon="school-outline" iconColor={colors.accent} label={t('settings.row.school')} value={currentMadhab} onPress={() => setPicker('madhab')} />
         <Divider />
-        <SettingRow icon="compass-outline" label="High Latitude Rule" value={currentHighLat} onPress={() => setPicker('highLat')} />
+        <SettingRow icon="compass-outline" label={t('settings.row.highLat')} value={currentHighLat} onPress={() => setPicker('highLat')} />
       </Card>
 
       {/* ── Advanced / Offsets ── */}
@@ -341,7 +342,7 @@ export default function SettingsScreen() {
             <Ionicons name="calendar-outline" size={18} color={colors.accent} />
           </View>
           <Text style={[sr.label, { color: colors.foreground, fontFamily: 'Inter_500Medium', flex: 1 }]}>
-            Hijri date offset
+            {t('settings.row.hijriOffset')}
           </Text>
           <Pressable
             style={[offsetBtn, { backgroundColor: colors.muted }]}
@@ -365,7 +366,7 @@ export default function SettingsScreen() {
             <Ionicons name="information-circle-outline" size={18} color={colors.mutedForeground} />
           </View>
           <Text style={[s.privacyNote, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', flex: 1 }]}>
-            Some mosques use a ±1 day difference in Hijri date. Adjust here to match your local convention.
+            {t('settings.row.hijriNote')}
           </Text>
         </View>
       </Card>
@@ -390,9 +391,9 @@ export default function SettingsScreen() {
             <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
           </View>
           <View style={{ flex: 1, gap: 4 }}>
-            <Text style={[sr.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>Data stays on your device</Text>
+            <Text style={[sr.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t('settings.row.dataStaysTitle')}</Text>
             <Text style={[s.privacyNote, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-              Your location, prayer times, and tracker data never leave your phone. No analytics, no ads, no third-party data sharing.
+              {t('settings.row.dataStaysBody')}
             </Text>
           </View>
         </View>
@@ -401,7 +402,7 @@ export default function SettingsScreen() {
           <View style={[sr.iconWrap, { backgroundColor: colors.primary + '22' }]}>
             <Ionicons name="ban-outline" size={18} color={colors.primary} />
           </View>
-          <Text style={[sr.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold', flex: 1 }]}>No ads — ever</Text>
+          <Text style={[sr.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold', flex: 1 }]}>{t('settings.row.noAds')}</Text>
         </View>
       </Card>
 
@@ -410,8 +411,8 @@ export default function SettingsScreen() {
       <Card>
         <SettingRow
           icon="business-outline"
-          label="Mosque Timetable"
-          value={mosque.enabled ? (mosque.mosqueName || 'Enabled') : 'Off'}
+          label={t('settings.row.mosqueTimetable')}
+          value={mosque.enabled ? (mosque.mosqueName || t('settings.row.mosqueEnabled')) : t('settings.row.mosqueOff')}
           onPress={() => router.push('/mosque-timetable')}
         />
       </Card>
@@ -422,8 +423,8 @@ export default function SettingsScreen() {
         <SettingRow
           icon={isSupporter ? 'heart' : 'heart-outline'}
           iconColor="#E11D48"
-          label={isSupporter ? 'You’re a Supporter — thank you' : 'Become a Supporter'}
-          value={isSupporter ? undefined : 'Keep it ad-free'}
+          label={isSupporter ? t('settings.row.supporterActive') : t('settings.row.becomeSupporter')}
+          value={isSupporter ? undefined : t('settings.row.keepAdFree')}
           onPress={() => router.push('/supporter')}
         />
       </Card>
@@ -431,27 +432,27 @@ export default function SettingsScreen() {
       {/* ── About ── */}
       <SectionHeader title={t('settings.section.about').toUpperCase()} />
       <Card>
-        <SettingRow icon="information-circle-outline" label="Version" value="1.0.0" />
+        <SettingRow icon="information-circle-outline" label={t('settings.row.version')} value="1.0.0" />
         <Divider />
         <SettingRow
           icon="shield-checkmark-outline"
-          label="Privacy Policy"
+          label={t('settings.row.privacyPolicy')}
           onPress={() => router.push('/privacy')}
         />
         <Divider />
         <SettingRow
           icon="map-outline"
-          label="Public Roadmap"
+          label={t('settings.row.roadmap')}
           onPress={() => { import('react-native').then(({ Linking }) => Linking.openURL('https://vaqit.online/roadmap')); }}
         />
         <Divider />
-        <SettingRow icon="heart-outline" iconColor="#E11D48" label="Worship is free, forever" />
+        <SettingRow icon="heart-outline" iconColor="#E11D48" label={t('settings.row.worshipFree')} />
       </Card>
 
       {/* Pickers */}
-      <PickerModal visible={picker === 'method'} title="Calculation Method" options={CALCULATION_METHODS} selected={settings.calculationMethod} onSelect={id => updateSettings({ calculationMethod: id })} onClose={() => setPicker(null)} />
-      <PickerModal visible={picker === 'madhab'} title="School of Jurisprudence" options={MADHABS} selected={settings.madhab} onSelect={id => updateSettings({ madhab: id })} onClose={() => setPicker(null)} />
-      <PickerModal visible={picker === 'highLat'} title="High Latitude Rule" options={HIGH_LAT_RULES} selected={settings.highLatitudeRule} onSelect={id => updateSettings({ highLatitudeRule: id })} onClose={() => setPicker(null)} />
+      <PickerModal visible={picker === 'method'} title={t('settings.picker.method')} options={CALCULATION_METHODS} selected={settings.calculationMethod} onSelect={id => updateSettings({ calculationMethod: id })} onClose={() => setPicker(null)} />
+      <PickerModal visible={picker === 'madhab'} title={t('settings.picker.madhab')} options={MADHABS} selected={settings.madhab} onSelect={id => updateSettings({ madhab: id })} onClose={() => setPicker(null)} />
+      <PickerModal visible={picker === 'highLat'} title={t('settings.picker.highLat')} options={HIGH_LAT_RULES} selected={settings.highLatitudeRule} onSelect={id => updateSettings({ highLatitudeRule: id })} onClose={() => setPicker(null)} />
       <PickerModal
         visible={picker === 'language'}
         title={t('settings.language.title')}

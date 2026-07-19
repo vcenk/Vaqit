@@ -4,48 +4,27 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
+import { useT, type TKey } from '@/lib/i18n';
 
-const SECTIONS = [
-  {
-    icon: 'phone-portrait-outline' as const,
-    title: 'Everything stays on your device',
-    body: 'Your prayer times, location, tracker logs, and settings are stored only in your phone\'s local storage (AsyncStorage). Nothing is uploaded to any server.',
-  },
-  {
-    icon: 'wifi-outline' as const,
-    title: 'Network requests we make: none',
-    body: 'Vaqit makes zero network requests. Prayer times are calculated on-device using the adhan algorithm. Location is obtained from your phone\'s GPS — it never leaves your device.',
-  },
-  {
-    icon: 'ban-outline' as const,
-    title: 'No ads, no tracking, no analytics',
-    body: 'We do not use any advertising SDKs, analytics libraries, crash reporters, or third-party data brokers. There is nothing phoning home.',
-  },
-  {
-    icon: 'notifications-outline' as const,
-    title: 'Notifications are local',
-    body: 'Athan notifications are scheduled locally on your device using expo-notifications. No push notification servers are involved.',
-  },
-  {
-    icon: 'key-outline' as const,
-    title: 'No account required',
-    body: 'Vaqit does not require or offer accounts, sign-in, or cloud sync. Your data is yours alone.',
-  },
-  {
-    icon: 'eye-off-outline' as const,
-    title: 'Location is used only for prayer times',
-    body: 'When you grant location permission, your GPS coordinates are used solely to calculate prayer times and Qibla direction. They are stored locally in your settings and never transmitted anywhere.',
-  },
-  {
-    icon: 'trash-outline' as const,
-    title: 'Delete your data anytime',
-    body: 'Uninstalling the app deletes all stored data permanently. There is no server copy to request removal of.',
-  },
+const SECTION_ICONS: React.ComponentProps<typeof Ionicons>['name'][] = [
+  'phone-portrait-outline',
+  'wifi-outline',
+  'ban-outline',
+  'notifications-outline',
+  'key-outline',
+  'eye-off-outline',
+  'trash-outline',
 ];
 
 export default function PrivacyScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
+  const sections = SECTION_ICONS.map((icon, i) => ({
+    icon,
+    title: t(`privacy.s${i + 1}.title` as TKey),
+    body: t(`privacy.s${i + 1}.body` as TKey),
+  }));
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 40 : insets.bottom + 24;
 
@@ -57,22 +36,22 @@ export default function PrivacyScreen() {
     >
       <Pressable style={s.back} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
         <Ionicons name="chevron-back" size={20} color={colors.primary} />
-        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>Settings</Text>
+        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>{t('tabs.settings')}</Text>
       </Pressable>
 
-      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>Privacy</Text>
+      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('privacy.title')}</Text>
       <Text style={[s.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Plain language. No lawyers, no loopholes.
+        {t('privacy.subtitle')}
       </Text>
 
       <View style={[s.summaryCard, { backgroundColor: colors.primary + '18', borderRadius: colors.radius }]}>
         <Ionicons name="shield-checkmark" size={24} color={colors.primary} />
         <Text style={[s.summary, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>
-          Vaqit collects no personal data and makes no network requests. Full stop.
+          {t('privacy.summary')}
         </Text>
       </View>
 
-      {SECTIONS.map(({ icon, title, body }, idx) => (
+      {sections.map(({ icon, title, body }, idx) => (
         <View
           key={title}
           style={[s.section, { backgroundColor: colors.card, borderRadius: colors.radius, marginTop: idx === 0 ? 0 : 8 }]}
@@ -92,7 +71,7 @@ export default function PrivacyScreen() {
       ))}
 
       <Text style={[s.footer, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Worship is free, private, and always yours.
+        {t('privacy.footer')}
       </Text>
     </ScrollView>
   );
