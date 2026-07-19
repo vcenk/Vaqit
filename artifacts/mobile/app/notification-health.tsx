@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -18,6 +17,11 @@ import { useNotifications } from '@/context/NotificationContext';
 import { usePrayer } from '@/context/PrayerContext';
 import { PRAYER_DISPLAY_NAMES, formatTime } from '@/constants/prayers';
 import type { RiskFlag } from '@/lib/notificationAssurance';
+import {
+  openExactAlarmSettings,
+  openBatterySettings,
+  openAppNotificationSettings,
+} from '@/lib/androidSettings';
 
 const APP_VERSION = Constants.expoConfig?.version ?? '1.0.0';
 
@@ -77,12 +81,11 @@ export default function NotificationHealthScreen() {
     setScheduling(false);
   };
 
-  const openSettings = () => { if (Platform.OS !== 'web') Linking.openSettings(); };
-
   const runFix = (fix: RiskFlag['fix']) => {
     if (fix === 'permission') requestPermission();
     else if (fix === 'reschedule') handleReschedule();
-    else openSettings();
+    else if (fix === 'battery') openBatterySettings();
+    else openAppNotificationSettings();
   };
 
   const exportDiagnostic = async () => {
@@ -131,6 +134,34 @@ export default function NotificationHealthScreen() {
           <Text style={[s.statusDetail, { color: colors.foreground, fontFamily: 'Inter_400Regular' }]}>{assurance.detail}</Text>
         </View>
       </View>
+
+      {/* Exact alarms — the Android 12+ reliability lever (can't be read from JS,
+          so we guide proactively rather than warn falsely). */}
+      {Platform.OS === 'android' && (
+        <>
+          <SectionLabel>EXACT ALARMS</SectionLabel>
+          <Card>
+            <View style={[row.wrap, { alignItems: 'flex-start' }]}>
+              <View style={[row.icon, { backgroundColor: colors.accent + '22', marginTop: 2 }]}>
+                <Ionicons name="alarm-outline" size={18} color={colors.accent} />
+              </View>
+              <View style={{ flex: 1, gap: 3 }}>
+                <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
+                  Allow “Alarms &amp; reminders”
+                </Text>
+                <Text style={[row.sub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', lineHeight: 18 }]}>
+                  On Android 12+, without this permission the system may deliver the athan minutes — or hours — late, especially overnight for Fajr. Tap to allow exact alarms for Vaqit.
+                </Text>
+              </View>
+            </View>
+            <View style={[s.divider, { backgroundColor: colors.border }]} />
+            <Pressable style={[s.actionBtn, { backgroundColor: colors.accent }]} onPress={openExactAlarmSettings}>
+              <Ionicons name="alarm" size={18} color="#000000" />
+              <Text style={[s.actionBtnText, { color: '#000000', fontFamily: 'Inter_600SemiBold' }]}>Allow Exact Alarms</Text>
+            </Pressable>
+          </Card>
+        </>
+      )}
 
       {/* Risks */}
       {risks.length > 0 && (
@@ -287,7 +318,7 @@ export default function NotificationHealthScreen() {
         {[
           { icon: 'battery-charging-outline' as const, title: 'Disable battery optimization', body: 'On Android, whitelist Vaqit in battery settings so it can schedule notifications overnight — the main cause of missed Fajr.' },
           { icon: 'moon-outline' as const, title: 'Check Do Not Disturb', body: 'Allow Vaqit to bypass DND, or athan will be silenced during DND hours.' },
-          { icon: 'phone-portrait-outline' as const, title: 'Open the app every few days', body: 'Opening Vaqit refreshes the schedule for the next 12 days.' },
+          { icon: 'phone-portrait-outline' as const, title: 'Reboot-safe', body: 'Vaqit re-arms your alarms automatically after a restart — no need to reopen the app.' },
         ].map((tip, idx, arr) => (
           <View key={tip.title}>
             <View style={[row.wrap, { alignItems: 'flex-start', paddingVertical: 14 }]}>
@@ -305,8 +336,8 @@ export default function NotificationHealthScreen() {
         {Platform.OS === 'android' && (
           <>
             <View style={[s.divider, { backgroundColor: colors.border }]} />
-            <Pressable style={[s.actionBtn, { backgroundColor: colors.muted }]} onPress={openSettings}>
-              <Ionicons name="settings-outline" size={18} color={colors.foreground} />
+            <Pressable style={[s.actionBtn, { backgroundColor: colors.muted }]} onPress={openBatterySettings}>
+              <Ionicons name="battery-charging-outline" size={18} color={colors.foreground} />
               <Text style={[s.actionBtnText, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>Open Battery Settings</Text>
             </Pressable>
           </>

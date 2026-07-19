@@ -15,7 +15,16 @@
 - **Supporter tier rails** — RevenueCat-ready billing abstraction, Supporter paywall + sadaqah/tips, cosmetic-only gating (worship stays free). Activates once store products + RevenueCat keys are added.
 - **Health:** 304/304 prayer-core tests pass; mobile + prayer-core typecheck clean.
 
-> ⚠️ **Native notification module still pending** (needs a physical device): boot-completed receiver, foreground service, Android exact-alarm flow, iOS background refresh. Until then, rescheduling happens on app open. This is the docs' "gate" and the deepest moat — verify on Samsung/Pixel/iPhone before launch claims.
+- **Reboot + exact-alarm reliability (Android)** — investigated `expo-notifications@0.32.17`: it **already ships a boot receiver** that re-arms scheduled notifications after reboot / app-update (so we did NOT hand-write one). Its real gap is that on **Android 12+ without the "Alarms & reminders" permission it falls back to *inexact* alarms** (late Fajr). Added `lib/androidSettings.ts` (via `expo-intent-launcher`) with precise deep-links to the exact-alarm, battery-optimization, and app-notification screens, plus an **"Allow Exact Alarms" guidance card** and rewired every risk-fix button to the correct OEM settings screen.
+
+> ⚠️ **Still needs a physical device to verify** (the docs' "gate"): confirm on Samsung One UI (battery-saver ON) / Pixel / iPhone that the athan fires on time across reboot, force-kill, Doze, and DST change. Optional native polish still open: full-athan **foreground service** (`withAthanService.js` is still a stub) and **background top-up** of the rolling window (`expo-background-task`) for users who neither open the app nor reboot for >12 days.
+>
+> **Device-test checklist (run on an EAS dev build, not Expo Go):**
+> 1. Grant notifications + tap "Allow Exact Alarms" → confirm it opens the Alarms & reminders screen.
+> 2. Schedule, force-kill the app → athan still fires at the exact minute.
+> 3. Reboot the phone, don't reopen the app → next athan still fires (expo boot receiver).
+> 4. Enable Samsung battery saver / add to Deep Sleep → verify (this is the OEM-kill case the guidance cards address).
+> 5. Change timezone / cross a DST boundary → times + alarms update.
 
 ### Mobile App (`artifacts/mobile`)
 - **Four-tab shell** — Today, Tracker, Qibla, Settings

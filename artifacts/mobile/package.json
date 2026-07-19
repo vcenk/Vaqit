@@ -58,6 +58,8 @@
   "dependencies": {
     "@bacons/apple-targets": "^4.0.7",
     "adhan": "^4.4.4",
+    "expo-application": "~7.0.8",
+    "expo-intent-launcher": "~13.0.8",
     "expo-notifications": "~0.32.17",
     "expo-updates": "~29.0.19",
     "shared-defaults": "file:./modules/shared-defaults"
