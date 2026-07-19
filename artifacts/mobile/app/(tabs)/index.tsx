@@ -19,9 +19,11 @@ import { PrayerTimeRow } from '@/components/PrayerTimeRow';
 import { PrayerSourceCard } from '@/components/PrayerSourceCard';
 import { AssuranceBanner } from '@/components/AssuranceBanner';
 import { toHijri, formatDateKey } from '@/constants/prayers';
+import { useT } from '@/lib/i18n';
 
 export default function TodayScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const {
     todayTimes,
@@ -119,14 +121,14 @@ export default function TodayScreen() {
           <Ionicons name="airplane-outline" size={18} color={colors.accent} />
           <View style={{ flex: 1 }}>
             <Text style={[s.travelTitle, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
-              Traveling?
+              {t('today.traveling')}
             </Text>
             <Text style={[s.travelBody, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-              You appear to be far from your saved location. Update prayer times?
+              {t('today.travelBody')}
             </Text>
           </View>
           <Pressable style={[s.travelBtn, { backgroundColor: colors.accent }]} onPress={requestLocation}>
-            <Text style={[s.travelBtnText, { color: '#000000', fontFamily: 'Inter_600SemiBold' }]}>Update</Text>
+            <Text style={[s.travelBtnText, { color: '#000000', fontFamily: 'Inter_600SemiBold' }]}>{t('today.update')}</Text>
           </Pressable>
           <Pressable onPress={dismissTravelAlert}>
             <Ionicons name="close" size={18} color={colors.mutedForeground} />
@@ -142,7 +144,7 @@ export default function TodayScreen() {
           end={{ x: 1, y: 1 }}
           style={[s.hero, { borderRadius: colors.radius + 4 }]}
         >
-          <Text style={[s.nextLabel, { fontFamily: 'Inter_500Medium' }]}>Next Prayer</Text>
+          <Text style={[s.nextLabel, { fontFamily: 'Inter_500Medium' }]}>{t('today.nextPrayer')}</Text>
           <Text style={[s.prayerName, { fontFamily: 'Inter_700Bold' }]}>{nextPrayer.name}</Text>
           <CountdownTimer targetTime={nextPrayer.time} textColor="#FFFFFF" fontSize={44} onComplete={refresh} />
           <View style={s.progressTrack}>
@@ -150,16 +152,16 @@ export default function TodayScreen() {
             <View style={{ flex: 1 - progress }} />
           </View>
           <Text style={[s.progressLabel, { fontFamily: 'Inter_400Regular' }]}>
-            {Math.round(progress * 100)}% of interval elapsed
+            {t('today.intervalElapsed', { pct: Math.round(progress * 100) })}
           </Text>
         </LinearGradient>
       ) : (
         <View style={[s.hero, { borderRadius: colors.radius + 4, backgroundColor: colors.card, alignItems: 'center', justifyContent: 'center' }]}>
           <Text style={[s.prayerName, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-            All prayers complete
+            {t('today.allComplete')}
           </Text>
           <Text style={[s.nextLabel, { color: colors.mutedForeground }]}>
-            Fajr tomorrow at dawn
+            {t('today.fajrTomorrow')}
           </Text>
         </View>
       )}
@@ -167,7 +169,7 @@ export default function TodayScreen() {
       {/* Prayer times list */}
       <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
         <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-          PRAYER TIMES
+          {t('today.prayerTimes').toUpperCase()}
         </Text>
         {prayerRows.map(({ key, time }, idx) => (
           <View key={key}>
@@ -188,7 +190,7 @@ export default function TodayScreen() {
       </View>
 
       <Text style={[s.tapHint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Tap any prayer to see how its time is calculated
+        {t('today.tapHint')}
       </Text>
 
       <PrayerSourceCard

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '@/hooks/useColors';
 import { PRAYER_DISPLAY_NAMES, PRAYER_ICONS, formatTime, STATUS_COLORS } from '@/constants/prayers';
 import type { PrayerStatus } from '@/context/TrackerContext';
+import { useT } from '@/lib/i18n';
 
 interface PrayerTimeRowProps {
   prayerKey: string;
@@ -19,6 +20,7 @@ interface PrayerTimeRowProps {
 
 export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, approximated, onPress }: PrayerTimeRowProps) {
   const colors = useColors();
+  const t = useT();
   const name = PRAYER_DISPLAY_NAMES[prayerKey] ?? prayerKey;
   const icon = (PRAYER_ICONS[prayerKey] ?? 'time-outline') as React.ComponentProps<typeof Ionicons>['name'];
   const isSunrise = prayerKey === 'sunrise';
@@ -58,7 +60,7 @@ export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, appr
           <View style={[styles.approxBadge, { backgroundColor: colors.accent + '22' }]}>
             <Ionicons name="alert-circle-outline" size={11} color={colors.accent} />
             <Text style={[styles.approxLabel, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
-              Estimated
+              {t('today.estimated')}
             </Text>
           </View>
         )}

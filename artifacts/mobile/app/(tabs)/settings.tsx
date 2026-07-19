@@ -17,6 +17,7 @@ import { usePrayer } from '@/context/PrayerContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useMosque } from '@/context/MosqueContext';
 import { useSupporter } from '@/context/SupporterContext';
+import { useLocale, SUPPORTED_LOCALES } from '@/lib/i18n';
 import {
   CALCULATION_METHODS,
   HIGH_LAT_RULES,
@@ -216,8 +217,13 @@ export default function SettingsScreen() {
   const { permissionStatus, scheduledCount } = useNotifications();
   const { mosque } = useMosque();
   const { isSupporter } = useSupporter();
+  const { locale, setLocale, isSystemDefault, clearOverride, t } = useLocale();
 
-  const [picker, setPicker] = useState<'method' | 'madhab' | 'highLat' | null>(null);
+  const [picker, setPicker] = useState<'method' | 'madhab' | 'highLat' | 'language' | null>(null);
+
+  const currentLanguage = isSystemDefault
+    ? t('settings.language.systemDefault')
+    : SUPPORTED_LOCALES.find(l => l.code === locale)?.label ?? locale;
 
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 120 : insets.bottom + 90;
@@ -240,10 +246,10 @@ export default function SettingsScreen() {
       contentContainerStyle={{ paddingTop: topPad + 12, paddingBottom: bottomPad }}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>Settings</Text>
+      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('settings.title')}</Text>
 
       {/* ── Notifications ── */}
-      <SectionHeader title="NOTIFICATIONS" />
+      <SectionHeader title={t('settings.section.notifications').toUpperCase()} />
       <Card>
         <SettingRow
           icon="medkit-outline"
@@ -264,7 +270,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Location ── */}
-      <SectionHeader title="LOCATION" />
+      <SectionHeader title={t('settings.section.location').toUpperCase()} />
       <Card>
         <SettingRow
           icon="location-outline"
@@ -281,7 +287,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Prayer Calculation ── */}
-      <SectionHeader title="PRAYER CALCULATION" />
+      <SectionHeader title={t('settings.section.calculation').toUpperCase()} />
       <Card>
         <SettingRow icon="calculator-outline" label="Calculation Method" value={currentMethod} onPress={() => setPicker('method')} />
         <Divider />
@@ -291,7 +297,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Advanced / Offsets ── */}
-      <SectionHeader title="FINE-TUNE TIMES" />
+      <SectionHeader title={t('settings.section.fineTune').toUpperCase()} />
       <Card>
         {TRACKABLE_PRAYERS.map((p, idx) => {
           const offset = settings.offsets?.[p] ?? 0;
@@ -328,7 +334,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Hijri Calendar ── */}
-      <SectionHeader title="HIJRI CALENDAR" />
+      <SectionHeader title={t('settings.section.hijri').toUpperCase()} />
       <Card>
         <View style={[sr.row, { paddingVertical: 10 }]}>
           <View style={[sr.iconWrap, { backgroundColor: colors.accent + '22' }]}>
@@ -364,8 +370,20 @@ export default function SettingsScreen() {
         </View>
       </Card>
 
+      {/* ── Language ── */}
+      <SectionHeader title={t('settings.section.language').toUpperCase()} />
+      <Card>
+        <SettingRow
+          icon="language-outline"
+          iconColor={colors.accent}
+          label={t('settings.language.title')}
+          value={currentLanguage}
+          onPress={() => setPicker('language')}
+        />
+      </Card>
+
       {/* ── Privacy ── */}
-      <SectionHeader title="PRIVACY" />
+      <SectionHeader title={t('settings.section.privacy').toUpperCase()} />
       <Card>
         <View style={[sr.row, { alignItems: 'flex-start' }]}>
           <View style={[sr.iconWrap, { backgroundColor: colors.primary + '22' }]}>
@@ -388,7 +406,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Mosque ── */}
-      <SectionHeader title="MOSQUE" />
+      <SectionHeader title={t('settings.section.mosque').toUpperCase()} />
       <Card>
         <SettingRow
           icon="business-outline"
@@ -399,7 +417,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── Support ── */}
-      <SectionHeader title="SUPPORT VAQIT" />
+      <SectionHeader title={t('settings.section.support').toUpperCase()} />
       <Card>
         <SettingRow
           icon={isSupporter ? 'heart' : 'heart-outline'}
@@ -411,7 +429,7 @@ export default function SettingsScreen() {
       </Card>
 
       {/* ── About ── */}
-      <SectionHeader title="ABOUT" />
+      <SectionHeader title={t('settings.section.about').toUpperCase()} />
       <Card>
         <SettingRow icon="information-circle-outline" label="Version" value="1.0.0" />
         <Divider />
@@ -434,6 +452,17 @@ export default function SettingsScreen() {
       <PickerModal visible={picker === 'method'} title="Calculation Method" options={CALCULATION_METHODS} selected={settings.calculationMethod} onSelect={id => updateSettings({ calculationMethod: id })} onClose={() => setPicker(null)} />
       <PickerModal visible={picker === 'madhab'} title="School of Jurisprudence" options={MADHABS} selected={settings.madhab} onSelect={id => updateSettings({ madhab: id })} onClose={() => setPicker(null)} />
       <PickerModal visible={picker === 'highLat'} title="High Latitude Rule" options={HIGH_LAT_RULES} selected={settings.highLatitudeRule} onSelect={id => updateSettings({ highLatitudeRule: id })} onClose={() => setPicker(null)} />
+      <PickerModal
+        visible={picker === 'language'}
+        title={t('settings.language.title')}
+        options={[
+          { id: 'system', label: t('settings.language.systemDefault') },
+          ...SUPPORTED_LOCALES.map(l => ({ id: l.code, label: l.label })),
+        ]}
+        selected={isSystemDefault ? 'system' : locale}
+        onSelect={id => (id === 'system' ? clearOverride() : setLocale(id as 'en' | 'tr' | 'ar'))}
+        onClose={() => setPicker(null)}
+      />
     </ScrollView>
   );
 }

@@ -19,6 +19,7 @@ import { TrackerProvider } from '@/context/TrackerContext';
 import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
 import { MosqueProvider } from '@/context/MosqueContext';
 import { SupporterProvider } from '@/context/SupporterContext';
+import { LocaleProvider } from '@/context/LocaleContext';
 
 /** Sits inside both PrayerProvider and NotificationProvider; reschedules whenever location/method changes. */
 function NotificationScheduler() {
@@ -95,6 +96,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
+              <LocaleProvider>
               <SupporterProvider>
                 <TrackerProvider>
                   <MosqueProvider>
@@ -107,6 +109,7 @@ export default function RootLayout() {
                   </MosqueProvider>
                 </TrackerProvider>
               </SupporterProvider>
+              </LocaleProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>

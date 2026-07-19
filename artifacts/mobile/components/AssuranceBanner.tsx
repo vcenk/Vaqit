@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { useNotifications } from '@/context/NotificationContext';
+import { useT } from '@/lib/i18n';
 
 /**
  * The home-screen proof that the next athan is actually armed — the visible
@@ -11,7 +12,9 @@ import { useNotifications } from '@/context/NotificationContext';
  */
 export function AssuranceBanner() {
   const colors = useColors();
+  const t = useT();
   const { assurance } = useNotifications();
+  const headline = assurance.level === 'ok' ? t('assurance.ready') : t('assurance.actionRequired');
 
   const config =
     assurance.level === 'ok'
@@ -24,7 +27,7 @@ export function AssuranceBanner() {
     <Pressable
       onPress={() => router.push('/notification-health')}
       accessibilityRole="button"
-      accessibilityLabel={`Notification status: ${assurance.headline}. ${assurance.detail}. Tap to open Health Check.`}
+      accessibilityLabel={`Notification status: ${headline}. ${assurance.detail}. Tap to open Health Check.`}
       style={({ pressed }) => [
         s.wrap,
         {
@@ -37,7 +40,7 @@ export function AssuranceBanner() {
       <Ionicons name={config.icon} size={20} color={config.tint} />
       <View style={{ flex: 1 }}>
         <Text style={[s.headline, { color: config.tint, fontFamily: 'Inter_700Bold' }]}>
-          {assurance.headline}
+          {headline}
         </Text>
         <Text style={[s.detail, { color: colors.foreground, fontFamily: 'Inter_400Regular' }]}>
           {assurance.detail}

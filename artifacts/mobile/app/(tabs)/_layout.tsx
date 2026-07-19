@@ -8,25 +8,27 @@ import { Tabs } from 'expo-router';
 import { Icon, Label, NativeTabs } from 'expo-router/unstable-native-tabs';
 import { SymbolView } from 'expo-symbols';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useT } from '@/lib/i18n';
 
 function NativeTabLayout() {
+  const t = useT();
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
         <Icon sf={{ default: 'sun.max', selected: 'sun.max.fill' }} />
-        <Label>Today</Label>
+        <Label>{t('tabs.today')}</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="tracker">
         <Icon sf={{ default: 'checklist', selected: 'checklist' }} />
-        <Label>Tracker</Label>
+        <Label>{t('tabs.tracker')}</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="qibla">
         <Icon sf={{ default: 'location.north.line', selected: 'location.north.line.fill' }} />
-        <Label>Qibla</Label>
+        <Label>{t('tabs.qibla')}</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="settings">
         <Icon sf={{ default: 'gearshape', selected: 'gearshape.fill' }} />
-        <Label>Settings</Label>
+        <Label>{t('tabs.settings')}</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );
@@ -34,6 +36,7 @@ function NativeTabLayout() {
 
 function ClassicTabLayout() {
   const colors = useColors();
+  const t = useT();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const isIOS = Platform.OS === 'ios';
@@ -70,7 +73,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Today',
+          title: t('tabs.today'),
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="sun.max" tintColor={color} size={24} />
@@ -82,7 +85,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="tracker"
         options={{
-          title: 'Tracker',
+          title: t('tabs.tracker'),
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="checklist" tintColor={color} size={24} />
@@ -94,7 +97,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="qibla"
         options={{
-          title: 'Qibla',
+          title: t('tabs.qibla'),
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="location.north.line" tintColor={color} size={24} />
@@ -106,7 +109,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: t('tabs.settings'),
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="gearshape" tintColor={color} size={24} />
