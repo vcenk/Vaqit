@@ -19,19 +19,57 @@ export const PRAYER_ICONS: Record<string, string> = {
 export const CALCULATION_METHODS = [
   { id: 'NorthAmerica', label: 'ISNA – North America' },
   { id: 'MuslimWorldLeague', label: 'Muslim World League' },
+  { id: 'MoonsightingCommittee', label: 'Moonsighting Committee' },
   { id: 'Egyptian', label: 'Egyptian General Authority' },
   { id: 'Karachi', label: 'Univ. of Islamic Sciences, Karachi' },
   { id: 'UmmAlQura', label: 'Umm al-Qura (Makkah)' },
+  { id: 'Dubai', label: 'Dubai / UAE' },
   { id: 'Turkey', label: 'Turkey (Diyanet)' },
+  { id: 'France', label: 'UOIF – France (12°)' },
   { id: 'Tehran', label: 'Institute of Geophysics, Tehran' },
-  { id: 'Other', label: 'Other / Custom' },
 ];
+
+/** Region hint shown in the method picker to help users pick confidently (P10). */
+export const METHOD_REGIONS: Record<string, string> = {
+  NorthAmerica: 'North America',
+  MuslimWorldLeague: 'Europe, Far East',
+  MoonsightingCommittee: 'North America, UK',
+  Egyptian: 'Africa, Levant',
+  Karachi: 'South Asia',
+  UmmAlQura: 'Saudi Arabia',
+  Dubai: 'Gulf',
+  Turkey: 'Turkey, diaspora',
+  France: 'France',
+  Tehran: 'Iran',
+};
 
 export const HIGH_LAT_RULES = [
   { id: 'MiddleOfTheNight', label: 'Middle of the Night' },
   { id: 'SeventhOfTheNight', label: 'Seventh of the Night' },
   { id: 'TwilightAngle', label: 'Twilight Angle' },
 ];
+
+/**
+ * Plain-language explanation of each high-latitude rule — shown when a time had
+ * to be approximated because the sun never reached the twilight angle.
+ */
+export const HIGH_LAT_RULE_INFO: Record<string, { label: string; explanation: string }> = {
+  MiddleOfTheNight: {
+    label: 'Middle of the Night',
+    explanation:
+      'The night (sunset → sunrise) is split in half. Fajr is placed no earlier, and Isha no later, than that midpoint.',
+  },
+  SeventhOfTheNight: {
+    label: 'One-Seventh of the Night',
+    explanation:
+      'The night is divided into seven parts. Isha begins after the first seventh; Fajr begins at the start of the last seventh.',
+  },
+  TwilightAngle: {
+    label: 'Angle-Based (Twilight Angle)',
+    explanation:
+      'The night is divided in proportion to your method’s twilight angle, giving an estimate that tracks the seasons.',
+  },
+};
 
 export const MADHABS = [
   { id: 'Shafi', label: 'Shafi (Standard)' },

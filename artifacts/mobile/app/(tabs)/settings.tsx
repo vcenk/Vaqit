@@ -16,6 +16,7 @@ import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useMosque } from '@/context/MosqueContext';
+import { useSupporter } from '@/context/SupporterContext';
 import {
   CALCULATION_METHODS,
   HIGH_LAT_RULES,
@@ -214,6 +215,7 @@ export default function SettingsScreen() {
   const { settings, updateSettings, requestLocation, locationLoading } = usePrayer();
   const { permissionStatus, scheduledCount } = useNotifications();
   const { mosque } = useMosque();
+  const { isSupporter } = useSupporter();
 
   const [picker, setPicker] = useState<'method' | 'madhab' | 'highLat' | null>(null);
 
@@ -396,6 +398,18 @@ export default function SettingsScreen() {
         />
       </Card>
 
+      {/* ── Support ── */}
+      <SectionHeader title="SUPPORT VAQIT" />
+      <Card>
+        <SettingRow
+          icon={isSupporter ? 'heart' : 'heart-outline'}
+          iconColor="#E11D48"
+          label={isSupporter ? 'You’re a Supporter — thank you' : 'Become a Supporter'}
+          value={isSupporter ? undefined : 'Keep it ad-free'}
+          onPress={() => router.push('/supporter')}
+        />
+      </Card>
+
       {/* ── About ── */}
       <SectionHeader title="ABOUT" />
       <Card>
@@ -410,7 +424,7 @@ export default function SettingsScreen() {
         <SettingRow
           icon="map-outline"
           label="Public Roadmap"
-          onPress={() => { import('react-native').then(({ Linking }) => Linking.openURL('https://vaqit.app/roadmap')); }}
+          onPress={() => { import('react-native').then(({ Linking }) => Linking.openURL('https://vaqit.online/roadmap')); }}
         />
         <Divider />
         <SettingRow icon="heart-outline" iconColor="#E11D48" label="Worship is free, forever" />

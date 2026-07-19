@@ -17,6 +17,7 @@ import {
   Qibla,
 } from 'adhan';
 import { PRAYER_DISPLAY_NAMES, formatDateKey } from '@/constants/prayers';
+import { analyzeDay, type DayMeta } from '@/lib/prayerMeta';
 
 const SETTINGS_KEY = 'vaqit_settings_v1';
 
@@ -58,6 +59,7 @@ interface PrayerContextValue {
   settings: PrayerSettings;
   updateSettings: (partial: Partial<PrayerSettings>) => Promise<void>;
   todayTimes: PrayerTimesData | null;
+  todayMeta: DayMeta | null;
   nextPrayer: NextPrayerInfo | null;
   currentPrayerKey: string | null;
   qiblaDirection: number;
@@ -169,6 +171,7 @@ const PrayerContext = createContext<PrayerContextValue>({
   settings: DEFAULT_SETTINGS,
   updateSettings: async () => {},
   todayTimes: null,
+  todayMeta: null,
   nextPrayer: null,
   currentPrayerKey: null,
   qiblaDirection: 0,
@@ -182,6 +185,7 @@ const PrayerContext = createContext<PrayerContextValue>({
 export function PrayerProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<PrayerSettings>(DEFAULT_SETTINGS);
   const [todayTimes, setTodayTimes] = useState<PrayerTimesData | null>(null);
+  const [todayMeta, setTodayMeta] = useState<DayMeta | null>(null);
   const [nextPrayer, setNextPrayer] = useState<NextPrayerInfo | null>(null);
   const [currentPrayerKey, setCurrentPrayerKey] = useState<string | null>(null);
   const [qiblaDirection, setQiblaDirection] = useState(0);
@@ -207,9 +211,11 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
   // Recompute times
   useEffect(() => {
     const compute = () => {
-      const times = computePrayerTimes(settings, new Date());
+      const now = new Date();
+      const times = computePrayerTimes(settings, now);
       if (times) {
         setTodayTimes(times);
+        setTodayMeta(analyzeDay(settings, now));
         setNextPrayer(getNextPrayer(times, settings));
         setCurrentPrayerKey(getCurrentPrayerKey(times));
 
@@ -217,7 +223,6 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
         // extension can display real prayer times without launching the app.
         // No-ops on Android, web, and in Expo Go.
         if (Platform.OS === 'ios') {
-          const now = new Date();
           const pad = (n: number) => String(n).padStart(2, '0');
           const dateKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
           setWidgetData({
@@ -306,7 +311,7 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <PrayerContext.Provider value={{
-      settings, updateSettings, todayTimes, nextPrayer, currentPrayerKey,
+      settings, updateSettings, todayTimes, todayMeta, nextPrayer, currentPrayerKey,
       qiblaDirection, locationLoading, travelAlert, dismissTravelAlert,
       requestLocation, refresh,
     }}>

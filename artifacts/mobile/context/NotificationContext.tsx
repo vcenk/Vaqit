@@ -21,8 +21,21 @@ import {
   Madhab,
   PrayerTimes,
 } from 'adhan';
+import {
+  computeAssurance,
+  computeRisks,
+  buildDiagnosticText,
+  reliabilityStats,
+  type LedgerEntry,
+  type FiredEntry,
+  type RiskFlag,
+  type AssuranceStatus,
+} from '@/lib/notificationAssurance';
 
 const NOTIF_SETTINGS_KEY = 'vaqit_notif_settings_v1';
+const LEDGER_KEY = 'vaqit_notif_ledger_v1';
+const FIRED_KEY = 'vaqit_notif_fired_v1';
+const MAX_FIRED_LOG = 100;
 
 export interface PrayerNotifConfig {
   enabled: boolean;
@@ -96,6 +109,14 @@ interface NotifContextValue {
   sendTestNotification: () => Promise<void>;
   scheduledCount: number;
   refreshScheduledCount: () => Promise<void>;
+  // ── Assurance ──
+  ledger: LedgerEntry[];
+  fired: FiredEntry[];
+  nextScheduled: { key: string; time: string } | null;
+  assurance: AssuranceStatus;
+  risks: RiskFlag[];
+  reliability: { expected: number; confirmed: number };
+  buildDiagnostic: (prayerSettings: PrayerSettings, appVersion: string) => string;
 }
 
 const NotifContext = createContext<NotifContextValue>({
@@ -107,12 +128,23 @@ const NotifContext = createContext<NotifContextValue>({
   sendTestNotification: async () => {},
   scheduledCount: 0,
   refreshScheduledCount: async () => {},
+  ledger: [],
+  fired: [],
+  nextScheduled: null,
+  assurance: { level: 'warn', headline: 'Action required', detail: 'Not set up yet' },
+  risks: [],
+  reliability: { expected: 0, confirmed: 0 },
+  buildDiagnostic: () => '',
 });
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifSettings, setNotifSettings] = useState<NotificationSettings>(DEFAULT);
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [scheduledCount, setScheduledCount] = useState(0);
+  const [ledger, setLedger] = useState<LedgerEntry[]>([]);
+  const [fired, setFired] = useState<FiredEntry[]>([]);
+  const [channelImportance, setChannelImportance] = useState<number | null>(null);
+  const [channelSoundDisabled, setChannelSoundDisabled] = useState(false);
 
   // Load settings, check permissions, and create Android notification channels
   useEffect(() => {
@@ -158,6 +190,35 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     }
   }, []);
 
+  // Load ledger + fired log; subscribe to received notifications; read channel health.
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    AsyncStorage.getItem(LEDGER_KEY).then(v => { if (v) { try { setLedger(JSON.parse(v)); } catch {} } });
+    AsyncStorage.getItem(FIRED_KEY).then(v => { if (v) { try { setFired(JSON.parse(v)); } catch {} } });
+
+    const sub = Notifications.addNotificationReceivedListener(n => {
+      const title = n.request?.content?.title ?? 'Notification';
+      const entry: FiredEntry = { firedAt: new Date().toISOString(), title };
+      setFired(prev => {
+        const next = [entry, ...prev].slice(0, MAX_FIRED_LOG);
+        AsyncStorage.setItem(FIRED_KEY, JSON.stringify(next)).catch(() => {});
+        return next;
+      });
+    });
+
+    if (Platform.OS === 'android') {
+      Notifications.getNotificationChannelAsync('athan_fajr').then(ch => {
+        if (ch) {
+          setChannelImportance(ch.importance ?? null);
+          // We declare the channel with an athan sound; null means the user cleared it.
+          setChannelSoundDisabled(ch.sound == null);
+        }
+      }).catch(() => {});
+    }
+
+    return () => sub.remove();
+  }, []);
+
   const refreshScheduledCount = useCallback(async () => {
     if (Platform.OS === 'web') return;
     try {
@@ -194,6 +255,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       const now = new Date();
       let count = 0;
       const MAX = 60; // safely under iOS 64-notification limit
+      const newLedger: LedgerEntry[] = [];
 
       for (let dayOffset = 0; dayOffset < 12 && count < MAX; dayOffset++) {
         const d = new Date(now);
@@ -223,6 +285,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                 },
                 trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: reminderTime },
               });
+              newLedger.push({ key: prayer, time: reminderTime.toISOString(), kind: 'reminder' });
               count++;
             }
           }
@@ -243,11 +306,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
               },
               trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: prayerTime },
             });
+            newLedger.push({ key: prayer, time: prayerTime.toISOString(), kind: 'athan' });
             count++;
           }
         }
       }
       setScheduledCount(count);
+      setLedger(newLedger);
+      await AsyncStorage.setItem(LEDGER_KEY, JSON.stringify(newLedger));
       return count;
     } catch { return 0; }
   }, [notifSettings, permissionStatus]);
@@ -271,6 +337,55 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     } catch {}
   }, [permissionStatus, requestPermission]);
 
+  const nextScheduled = React.useMemo(() => {
+    const nowMs = Date.now();
+    const upcoming = ledger
+      .filter(e => e.kind === 'athan' && new Date(e.time).getTime() > nowMs)
+      .sort((a, b) => a.time.localeCompare(b.time));
+    return upcoming[0] ? { key: upcoming[0].key, time: upcoming[0].time } : null;
+  }, [ledger]);
+
+  const assuranceInputs = {
+    permission: permissionStatus,
+    scheduledCount,
+    nextScheduled,
+    channelImportance,
+    channelSoundDisabled,
+  };
+
+  const assurance = React.useMemo(
+    () => computeAssurance(assuranceInputs),
+    [permissionStatus, scheduledCount, nextScheduled, channelImportance, channelSoundDisabled],
+  );
+  const risks = React.useMemo(
+    () => computeRisks(assuranceInputs),
+    [permissionStatus, scheduledCount, nextScheduled, channelImportance, channelSoundDisabled],
+  );
+  const reliability = React.useMemo(() => reliabilityStats(ledger, fired), [ledger, fired]);
+
+  const buildDiagnostic = useCallback(
+    (prayerSettings: PrayerSettings, appVersion: string): string =>
+      buildDiagnosticText({
+        permission: permissionStatus,
+        scheduledCount,
+        nextScheduled,
+        channelImportance,
+        channelSoundDisabled,
+        ledger,
+        fired,
+        appVersion,
+        settingsSummary: {
+          location: prayerSettings.locationName,
+          method: prayerSettings.calculationMethod,
+          madhab: prayerSettings.madhab,
+          highLatitudeRule: prayerSettings.highLatitudeRule,
+          latitude: prayerSettings.latitude.toFixed(3),
+          longitude: prayerSettings.longitude.toFixed(3),
+        },
+      }),
+    [permissionStatus, scheduledCount, nextScheduled, channelImportance, channelSoundDisabled, ledger, fired],
+  );
+
   return (
     <NotifContext.Provider value={{
       notifSettings,
@@ -281,6 +396,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       sendTestNotification,
       scheduledCount,
       refreshScheduledCount,
+      ledger,
+      fired,
+      nextScheduled,
+      assurance,
+      risks,
+      reliability,
+      buildDiagnostic,
     }}>
       {children}
     </NotifContext.Provider>

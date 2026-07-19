@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '@/hooks/useColors';
 import { PRAYER_DISPLAY_NAMES, PRAYER_ICONS, formatTime, STATUS_COLORS } from '@/constants/prayers';
@@ -11,9 +11,13 @@ interface PrayerTimeRowProps {
   isNext?: boolean;
   isCurrent?: boolean;
   status?: PrayerStatus | null;
+  /** True when this time was estimated by a high-latitude rule (see source card). */
+  approximated?: boolean;
+  /** When provided, the row becomes tappable and opens the source card. */
+  onPress?: () => void;
 }
 
-export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status }: PrayerTimeRowProps) {
+export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, approximated, onPress }: PrayerTimeRowProps) {
   const colors = useColors();
   const name = PRAYER_DISPLAY_NAMES[prayerKey] ?? prayerKey;
   const icon = (PRAYER_ICONS[prayerKey] ?? 'time-outline') as React.ComponentProps<typeof Ionicons>['name'];
@@ -32,14 +36,33 @@ export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status }: Pr
   const statusDotColor = status ? STATUS_COLORS[status] : undefined;
 
   return (
-    <View style={[styles.row, { backgroundColor: rowBg, borderRadius: colors.radius - 4 }]}>
+    <Pressable
+      onPress={onPress}
+      disabled={!onPress}
+      accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityLabel={onPress ? `${name} at ${formatTime(time)}. Tap to see how this time is calculated.` : undefined}
+      style={({ pressed }) => [
+        styles.row,
+        { backgroundColor: pressed && onPress ? colors.muted : rowBg, borderRadius: colors.radius - 4 },
+      ]}
+    >
       <View style={[styles.iconWrap, { backgroundColor: iconColor + '22' }]}>
         <Ionicons name={icon} size={18} color={iconColor} />
       </View>
 
-      <Text style={[styles.name, { color: nameColor, fontFamily: isNext ? 'Inter_600SemiBold' : 'Inter_500Medium', flex: 1 }]}>
-        {name}
-      </Text>
+      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <Text style={[styles.name, { color: nameColor, fontFamily: isNext ? 'Inter_600SemiBold' : 'Inter_500Medium' }]}>
+          {name}
+        </Text>
+        {approximated && (
+          <View style={[styles.approxBadge, { backgroundColor: colors.accent + '22' }]}>
+            <Ionicons name="alert-circle-outline" size={11} color={colors.accent} />
+            <Text style={[styles.approxLabel, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
+              Estimated
+            </Text>
+          </View>
+        )}
+      </View>
 
       {isNext && (
         <View style={[styles.nextBadge, { backgroundColor: colors.primary + '22' }]}>
@@ -56,7 +79,11 @@ export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status }: Pr
       <Text style={[styles.time, { color: timeColor, fontFamily: isNext ? 'Inter_700Bold' : 'Inter_500Medium' }]}>
         {formatTime(time)}
       </Text>
-    </View>
+
+      {onPress && (
+        <Ionicons name="information-circle-outline" size={15} color={colors.mutedForeground} style={{ marginLeft: 2 }} />
+      )}
+    </Pressable>
   );
 }
 
@@ -82,6 +109,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
+  },
+  approxBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  approxLabel: {
+    fontSize: 10,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
   },
   nextLabel: {
     fontSize: 11,

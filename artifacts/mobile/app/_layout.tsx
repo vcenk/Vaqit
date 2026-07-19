@@ -18,6 +18,7 @@ import { PrayerProvider, usePrayer } from '@/context/PrayerContext';
 import { TrackerProvider } from '@/context/TrackerContext';
 import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
 import { MosqueProvider } from '@/context/MosqueContext';
+import { SupporterProvider } from '@/context/SupporterContext';
 
 /** Sits inside both PrayerProvider and NotificationProvider; reschedules whenever location/method changes. */
 function NotificationScheduler() {
@@ -64,6 +65,10 @@ function RootLayoutNav() {
         name="privacy"
         options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
       />
+      <Stack.Screen
+        name="supporter"
+        options={{ headerShown: false, presentation: 'modal', animation: 'slide_from_bottom' }}
+      />
     </Stack>
   );
 }
@@ -90,16 +95,18 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <KeyboardProvider>
-              <TrackerProvider>
-                <MosqueProvider>
-                <NotificationProvider>
-                  <PrayerProvider>
-                    <NotificationScheduler />
-                    <RootLayoutNav />
-                  </PrayerProvider>
-                </NotificationProvider>
-                </MosqueProvider>
-              </TrackerProvider>
+              <SupporterProvider>
+                <TrackerProvider>
+                  <MosqueProvider>
+                  <NotificationProvider>
+                    <PrayerProvider>
+                      <NotificationScheduler />
+                      <RootLayoutNav />
+                    </PrayerProvider>
+                  </NotificationProvider>
+                  </MosqueProvider>
+                </TrackerProvider>
+              </SupporterProvider>
             </KeyboardProvider>
           </GestureHandlerRootView>
         </QueryClientProvider>

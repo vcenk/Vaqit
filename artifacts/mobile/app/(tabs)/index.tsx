@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -16,6 +16,8 @@ import { usePrayer } from '@/context/PrayerContext';
 import { useTracker } from '@/context/TrackerContext';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { PrayerTimeRow } from '@/components/PrayerTimeRow';
+import { PrayerSourceCard } from '@/components/PrayerSourceCard';
+import { AssuranceBanner } from '@/components/AssuranceBanner';
 import { toHijri, formatDateKey } from '@/constants/prayers';
 
 export default function TodayScreen() {
@@ -23,6 +25,7 @@ export default function TodayScreen() {
   const insets = useSafeAreaInsets();
   const {
     todayTimes,
+    todayMeta,
     nextPrayer,
     currentPrayerKey,
     settings,
@@ -33,6 +36,8 @@ export default function TodayScreen() {
     refresh,
   } = usePrayer();
   const { getDay } = useTracker();
+
+  const [selectedPrayer, setSelectedPrayer] = useState<{ key: string; time: Date } | null>(null);
 
   const today = new Date();
   const todayKey = formatDateKey(today);
@@ -105,6 +110,9 @@ export default function TodayScreen() {
         </Pressable>
       </View>
 
+      {/* Notification assurance status — the moat, made visible */}
+      <AssuranceBanner />
+
       {/* Travel alert banner */}
       {travelAlert && (
         <View style={[s.travelBanner, { backgroundColor: colors.accent + '22', borderRadius: colors.radius - 4 }]}>
@@ -169,6 +177,8 @@ export default function TodayScreen() {
               isNext={nextPrayer?.key === key}
               isCurrent={currentPrayerKey === key}
               status={key !== 'sunrise' ? (dayLog as unknown as Record<string, 'ontime' | 'late' | 'missed' | 'jamaah' | null>)[key] : undefined}
+              approximated={(key === 'fajr' && todayMeta?.fajrApproximated) || (key === 'isha' && todayMeta?.ishaApproximated) || false}
+              onPress={() => setSelectedPrayer({ key, time })}
             />
             {idx < prayerRows.length - 1 && (
               <View style={[s.divider, { backgroundColor: colors.border }]} />
@@ -176,6 +186,16 @@ export default function TodayScreen() {
           </View>
         ))}
       </View>
+
+      <Text style={[s.tapHint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
+        Tap any prayer to see how its time is calculated
+      </Text>
+
+      <PrayerSourceCard
+        prayerKey={selectedPrayer?.key ?? null}
+        time={selectedPrayer?.time ?? null}
+        onClose={() => setSelectedPrayer(null)}
+      />
     </ScrollView>
   );
 }
@@ -229,4 +249,5 @@ const s = StyleSheet.create({
   card: { marginHorizontal: 16, paddingVertical: 8, overflow: 'hidden' },
   sectionLabel: { fontSize: 11, letterSpacing: 1, paddingHorizontal: 16, paddingBottom: 8, paddingTop: 4 },
   divider: { height: StyleSheet.hairlineWidth, marginHorizontal: 16 },
+  tapHint: { fontSize: 12, textAlign: 'center', marginTop: 12, paddingHorizontal: 20 },
 });

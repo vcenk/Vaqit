@@ -24,7 +24,10 @@ export type CalcMethodKey =
   | 'Karachi'
   | 'UmmAlQura'
   | 'Turkey'
-  | 'Tehran';
+  | 'Tehran'
+  | 'MoonsightingCommittee'
+  | 'France'
+  | 'Dubai';
 
 export type MadhabKey = 'Shafi' | 'Hanafi';
 
@@ -65,13 +68,23 @@ export interface PrayerTimesResult {
 export function buildParams(settings: Pick<ComputeSettings, 'calculationMethod' | 'madhab' | 'highLatitudeRule'>): CalculationParameters {
   let params: CalculationParameters;
   switch (settings.calculationMethod) {
-    case 'MuslimWorldLeague': params = CalculationMethod.MuslimWorldLeague(); break;
-    case 'Egyptian':          params = CalculationMethod.Egyptian();          break;
-    case 'Karachi':           params = CalculationMethod.Karachi();           break;
-    case 'UmmAlQura':         params = CalculationMethod.UmmAlQura();         break;
-    case 'Turkey':            params = CalculationMethod.Turkey();            break;
-    case 'Tehran':            params = CalculationMethod.Tehran();            break;
-    default:                  params = CalculationMethod.NorthAmerica();
+    case 'MuslimWorldLeague':     params = CalculationMethod.MuslimWorldLeague();     break;
+    case 'Egyptian':              params = CalculationMethod.Egyptian();              break;
+    case 'Karachi':               params = CalculationMethod.Karachi();               break;
+    case 'UmmAlQura':             params = CalculationMethod.UmmAlQura();             break;
+    case 'Turkey':                params = CalculationMethod.Turkey();                break;
+    case 'Tehran':                params = CalculationMethod.Tehran();                break;
+    case 'MoonsightingCommittee': params = CalculationMethod.MoonsightingCommittee(); break;
+    case 'Dubai':                 params = CalculationMethod.Dubai();                 break;
+    // UOIF / France: 12° Fajr and Isha. Not a built-in adhan method — build from
+    // Other() and set the angles explicitly. (The exact setting a competitor got
+    // wrong; covered by a golden regression test.)
+    case 'France':
+      params = CalculationMethod.Other();
+      params.fajrAngle = 12;
+      params.ishaAngle = 12;
+      break;
+    default:                      params = CalculationMethod.NorthAmerica();
   }
 
   params.madhab = settings.madhab === 'Hanafi' ? Madhab.Hanafi : Madhab.Shafi;
@@ -84,6 +97,47 @@ export function buildParams(settings: Pick<ComputeSettings, 'calculationMethod' 
 
   return params;
 }
+
+/** The twilight angles / interval a method actually uses, read from adhan. */
+export interface MethodAngles {
+  /** Fajr solar depression angle in degrees. */
+  fajrAngle: number;
+  /** Isha solar depression angle in degrees (0 when interval-based). */
+  ishaAngle: number;
+  /** Minutes after Maghrib for interval-based Isha (0 when angle-based). */
+  ishaInterval: number;
+}
+
+/**
+ * Extract the real angles a method uses, straight from adhan's parameters —
+ * so the source card and high-latitude detection never drift from the engine.
+ */
+export function getMethodAngles(
+  settings: Pick<ComputeSettings, 'calculationMethod' | 'madhab' | 'highLatitudeRule'>,
+): MethodAngles {
+  const p = buildParams(settings);
+  return { fajrAngle: p.fajrAngle, ishaAngle: p.ishaAngle, ishaInterval: p.ishaInterval };
+}
+
+/** Human-facing metadata for each method: label, region, and Isha description. */
+export interface MethodInfo {
+  key: CalcMethodKey;
+  label: string;
+  region: string;
+}
+
+export const METHOD_INFO: Record<CalcMethodKey, MethodInfo> = {
+  NorthAmerica:         { key: 'NorthAmerica',         label: 'ISNA — North America',              region: 'North America' },
+  MuslimWorldLeague:    { key: 'MuslimWorldLeague',    label: 'Muslim World League',               region: 'Europe, Far East' },
+  Egyptian:             { key: 'Egyptian',             label: 'Egyptian General Authority',        region: 'Africa, Levant' },
+  Karachi:              { key: 'Karachi',              label: 'Univ. of Islamic Sciences, Karachi',region: 'South Asia' },
+  UmmAlQura:            { key: 'UmmAlQura',            label: 'Umm al-Qura (Makkah)',              region: 'Saudi Arabia' },
+  Turkey:               { key: 'Turkey',               label: 'Diyanet (Turkey)',                  region: 'Turkey, diaspora' },
+  Tehran:               { key: 'Tehran',               label: 'Institute of Geophysics, Tehran',   region: 'Iran' },
+  MoonsightingCommittee:{ key: 'MoonsightingCommittee',label: 'Moonsighting Committee',            region: 'North America, UK' },
+  France:               { key: 'France',               label: 'UOIF — France (12°)',               region: 'France' },
+  Dubai:                { key: 'Dubai',                label: 'Dubai / UAE',                        region: 'Gulf' },
+};
 
 /** Apply per-prayer minute offsets to a computed result. */
 export function applyOffsets(

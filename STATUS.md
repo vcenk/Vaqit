@@ -7,6 +7,16 @@
 
 ## ✅ Done
 
+### 🟢 Differentiators (built Jul 2026 — the "verification" wedge)
+- **High-latitude transparency** — `prayer-core` detects when Fajr/Isha are astronomically undefined and labels them **"Estimated"**, naming the rule that produced them (no more silent invention). Golden-tested (Vancouver/London/Oslo). New methods added: Moonsighting Committee, UOIF/France (12°), Dubai.
+- **Tap-any-time source card** — tap any prayer on Today → method, angle, on-device source, your adjustment, and an approximation warning with the high-latitude rule explained.
+- **Calc-vs-mosque diff (P10)** — enter your mosque's real start times → per-prayer difference vs the calculation with a plain-language "why you differ", plus provenance (source type + last-updated). Surfaced in the mosque screen and the source card.
+- **Notification Assurance (JS-first)** — home-screen ✅/⚠️ "Alerts ready — next: Fajr 4:12" banner; Health screen with risk scan (permission/schedule/Android channel), **next-alerts-armed** list, **delivery ledger**, and a **shareable diagnostic export**.
+- **Supporter tier rails** — RevenueCat-ready billing abstraction, Supporter paywall + sadaqah/tips, cosmetic-only gating (worship stays free). Activates once store products + RevenueCat keys are added.
+- **Health:** 304/304 prayer-core tests pass; mobile + prayer-core typecheck clean.
+
+> ⚠️ **Native notification module still pending** (needs a physical device): boot-completed receiver, foreground service, Android exact-alarm flow, iOS background refresh. Until then, rescheduling happens on app open. This is the docs' "gate" and the deepest moat — verify on Samsung/Pixel/iPhone before launch claims.
+
 ### Mobile App (`artifacts/mobile`)
 - **Four-tab shell** — Today, Tracker, Qibla, Settings
 - **Prayer calculation** — `adhan` library, fully on-device, no network calls
