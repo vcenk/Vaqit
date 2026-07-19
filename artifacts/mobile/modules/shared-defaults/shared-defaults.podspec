@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.summary        = package['description']
   s.license        = 'MIT'
   s.authors        = 'Vaqit'
-  s.homepage       = 'https://vaqit.app'
+  s.homepage       = 'https://vaqit.online'
   s.platforms      = { :ios => '16.0' }
   s.source         = { :git => '' }
   s.static_framework = true

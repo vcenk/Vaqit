@@ -1,6 +1,6 @@
 kind = "mobile"
 previewPath = "/"
-title = "Vakit — Prayer Companion"
+title = "Vaqit — Prayer Companion"
 version = "1.0.0"
 id = "artifacts/mobile"
 router = "expo-domain"
