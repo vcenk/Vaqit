@@ -36,10 +36,10 @@ export function WaitlistForm() {
     <div className="w-full max-w-md mx-auto" id="waitlist">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-serif font-bold tracking-tight text-foreground mb-4">
-          The last prayer app you'll ever need.
+          Be first to pray with confidence.
         </h2>
         <p className="text-muted-foreground text-lg">
-          Join {countData?.count ? <span className="text-accent font-medium">{countData.count}</span> : "the"} others waiting for a better standard.
+          Join {countData?.count ? <span className="text-accent font-medium">{countData.count}</span> : "the"} others waiting for a prayer app that shows its work.
         </p>
       </div>
 

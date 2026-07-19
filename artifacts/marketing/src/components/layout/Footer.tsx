@@ -10,7 +10,7 @@ export function Footer() {
             <VaqitLogo size={28} wordmarkClassName="text-lg" />
           </Link>
           <p className="text-sm text-muted-foreground max-w-xs">
-            A quiet, premium prayer companion for practicing Muslims. Zero ads, zero tracking, zero compromise.
+            The verification-first prayer companion — every time explained, every alert you can check. No ads, no tracking.
           </p>
         </div>
         
