@@ -18,6 +18,7 @@ import { PrayerProvider, usePrayer } from '@/context/PrayerContext';
 import { TrackerProvider } from '@/context/TrackerContext';
 import { NotificationProvider, useNotifications } from '@/context/NotificationContext';
 import { MosqueProvider } from '@/context/MosqueContext';
+import { RamadanProvider } from '@/context/RamadanContext';
 import { SupporterProvider } from '@/context/SupporterContext';
 import { LocaleProvider } from '@/context/LocaleContext';
 
@@ -70,6 +71,10 @@ function RootLayoutNav() {
         name="supporter"
         options={{ headerShown: false, presentation: 'modal', animation: 'slide_from_bottom' }}
       />
+      <Stack.Screen
+        name="ramadan"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
     </Stack>
   );
 }
@@ -99,6 +104,7 @@ export default function RootLayout() {
               <LocaleProvider>
               <SupporterProvider>
                 <TrackerProvider>
+                  <RamadanProvider>
                   <MosqueProvider>
                   <NotificationProvider>
                     <PrayerProvider>
@@ -107,6 +113,7 @@ export default function RootLayout() {
                     </PrayerProvider>
                   </NotificationProvider>
                   </MosqueProvider>
+                  </RamadanProvider>
                 </TrackerProvider>
               </SupporterProvider>
               </LocaleProvider>

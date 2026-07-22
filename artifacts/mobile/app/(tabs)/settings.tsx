@@ -406,6 +406,17 @@ export default function SettingsScreen() {
         </View>
       </Card>
 
+      {/* ── Ramadan ── */}
+      <SectionHeader title={t('ramadan.title').toUpperCase()} />
+      <Card>
+        <SettingRow
+          icon="moon-outline"
+          iconColor={colors.accent}
+          label={t('settings.row.ramadan')}
+          onPress={() => router.push('/ramadan')}
+        />
+      </Card>
+
       {/* ── Mosque ── */}
       <SectionHeader title={t('settings.section.mosque').toUpperCase()} />
       <Card>

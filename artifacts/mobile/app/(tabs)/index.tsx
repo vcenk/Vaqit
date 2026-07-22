@@ -18,6 +18,7 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import { PrayerTimeRow } from '@/components/PrayerTimeRow';
 import { PrayerSourceCard } from '@/components/PrayerSourceCard';
 import { AssuranceBanner } from '@/components/AssuranceBanner';
+import { RamadanBanner } from '@/components/RamadanBanner';
 import { toHijri, formatDateKey } from '@/constants/prayers';
 import { useT } from '@/lib/i18n';
 
@@ -111,6 +112,9 @@ export default function TodayScreen() {
           </Text>
         </Pressable>
       </View>
+
+      {/* Ramadan Mode banner — only during Ramadan */}
+      <RamadanBanner />
 
       {/* Notification assurance status — the moat, made visible */}
       <AssuranceBanner />

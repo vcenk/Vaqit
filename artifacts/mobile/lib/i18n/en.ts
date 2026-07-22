@@ -131,10 +131,34 @@ export const en = {
   'onboarding.enabling': 'Enabling…',
   'onboarding.skip': 'Skip for now',
 
+  // Ramadan
+  'ramadan.title': 'Ramadan',
+  'ramadan.day': 'Day {n}',
+  'ramadan.suhoorEnds': 'Suhoor ends',
+  'ramadan.iftar': 'Iftar',
+  'ramadan.suhoorCountdown': 'Suhoor ends in',
+  'ramadan.iftarCountdown': 'Time to iftar',
+  'ramadan.imsakNote': 'Suhoor ends {n} min before Fajr as a caution margin. Adjust in Settings.',
+  'ramadan.imsakNoteZero': 'Suhoor ends at Fajr (true dawn).',
+  'ramadan.todaysFast': 'Today’s fast',
+  'ramadan.log.fasted': 'Fasted',
+  'ramadan.log.missed': 'Missed',
+  'ramadan.log.traveling': 'Traveling',
+  'ramadan.log.exempt': 'Exempt',
+  'ramadan.fastedDays': '{n} days fasted this Ramadan',
+  'ramadan.compassion': 'A missed fast is between you and Allah — make it up when you can. No streaks, no guilt.',
+  'ramadan.notHereTitle': 'Ramadan isn’t here yet',
+  'ramadan.notHereBody': 'This dashboard lights up during Ramadan with your suhoor and iftar times, a countdown, and a gentle fasting log.',
+  'ramadan.bannerTitle': 'Ramadan Mode',
+  'ramadan.imsakOffset': 'Suhoor caution margin',
+  'settings.row.ramadan': 'Ramadan Mode',
+
   // Common
   'common.done': 'Done',
   'common.cancel': 'Cancel',
   'common.today': 'Today',
+  'common.clear': 'Clear',
+  'common.minutes': 'min',
 } as const;
 
 export type TKey = keyof typeof en;
