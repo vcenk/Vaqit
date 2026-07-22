@@ -16,36 +16,43 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useSupporter } from '@/context/SupporterContext';
 import { TIP_PACKAGES } from '@/lib/billing';
+import { useT, type TKey } from '@/lib/i18n';
 
 const BENEFITS = [
-  { icon: 'heart' as const, title: 'Keep Vaqit ad-free & independent', body: 'No ads, no data selling — your support is what funds that promise.' },
-  { icon: 'color-palette-outline' as const, title: 'Supporter themes & widget styles', body: 'Cosmetic extras. Every worship feature stays free for everyone.' },
-  { icon: 'download-outline' as const, title: 'Exportable prayer journal', body: 'Export your tracker history any time.' },
-  { icon: 'ribbon-outline' as const, title: 'Supporter badge & early access', body: 'A quiet thank-you, plus first look at new features.' },
-  { icon: 'chatbubble-ellipses-outline' as const, title: 'Priority support', body: 'Powered by the diagnostic report, so issues get solved fast.' },
+  { icon: 'heart' as const, key: 'b1' },
+  { icon: 'color-palette-outline' as const, key: 'b2' },
+  { icon: 'download-outline' as const, key: 'b3' },
+  { icon: 'ribbon-outline' as const, key: 'b4' },
+  { icon: 'chatbubble-ellipses-outline' as const, key: 'b5' },
 ];
 
 export default function SupporterScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const { isSupporter, configured, packages, loading, purchase, restore } = useSupporter();
   const [busy, setBusy] = useState<string | null>(null);
+
+  const planTitle = (p: { period: string; title: string }) =>
+    p.period === 'annual' ? t('supporter.plan.annual') : p.period === 'monthly' ? t('supporter.plan.monthly') : p.title;
+  const tipTitle = (id: string) =>
+    id === 'tip_small' ? t('supporter.tip.small') : id === 'tip_medium' ? t('supporter.tip.medium') : id;
 
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 40 : insets.bottom + 24;
 
   const doPurchase = async (id: string) => {
     if (!configured) {
-      Alert.alert('Almost there', 'Supporter checkout isn’t live yet — it opens with our first release. Thank you for wanting to support Vaqit.');
+      Alert.alert(t('supporter.alert.soonTitle'), t('supporter.alert.soonBody'));
       return;
     }
     setBusy(id);
     const r = await purchase(id);
     setBusy(null);
     if (r.ok && r.isSupporter) {
-      Alert.alert('Jazakallahu khayran 🤲', 'You’re now a Vaqit Supporter. Thank you for keeping worship free for everyone.');
+      Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.thanksBody'));
     } else if (r.reason === 'error') {
-      Alert.alert('Something went wrong', 'The purchase didn’t complete. Please try again.');
+      Alert.alert(t('supporter.alert.errTitle'), t('supporter.alert.errBody'));
     }
   };
 
@@ -54,7 +61,10 @@ export default function SupporterScreen() {
     setBusy('restore');
     const r = await restore();
     setBusy(null);
-    Alert.alert(r.isSupporter ? 'Restored' : 'Nothing to restore', r.isSupporter ? 'Your Supporter status is active again.' : 'No previous purchase was found for this account.');
+    Alert.alert(
+      r.isSupporter ? t('supporter.alert.restoredTitle') : t('supporter.alert.nothingTitle'),
+      r.isSupporter ? t('supporter.alert.restoredBody') : t('supporter.alert.nothingBody'),
+    );
   };
 
   return (
@@ -70,29 +80,29 @@ export default function SupporterScreen() {
       {/* Hero */}
       <LinearGradient colors={['#1B6B45', '#0D3825']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[s.hero, { borderRadius: colors.radius + 4 }]}>
         <Ionicons name="heart" size={30} color="#FFFFFF" />
-        <Text style={[s.heroTitle, { fontFamily: 'Inter_700Bold' }]}>Vaqit Supporter</Text>
+        <Text style={[s.heroTitle, { fontFamily: 'Inter_700Bold' }]}>{t('supporter.heroTitle')}</Text>
         <Text style={[s.heroSub, { fontFamily: 'Inter_400Regular' }]}>
-          Worship is free, forever. Supporters fund an ad-free, private, honest prayer app — and unlock a few cosmetic extras as thanks.
+          {t('supporter.heroSub')}
         </Text>
       </LinearGradient>
 
       {isSupporter && (
         <View style={[s.activeCard, { backgroundColor: colors.primary + '18', borderColor: colors.primary + '55', borderRadius: colors.radius }]}>
           <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
-          <Text style={[s.activeText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>You’re a Supporter — thank you 🤲</Text>
+          <Text style={[s.activeText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>{t('supporter.active')}</Text>
         </View>
       )}
 
       {/* Benefits */}
       <View style={s.benefits}>
         {BENEFITS.map(b => (
-          <View key={b.title} style={s.benefitRow}>
+          <View key={b.key} style={s.benefitRow}>
             <View style={[s.benefitIcon, { backgroundColor: colors.primary + '22' }]}>
               <Ionicons name={b.icon} size={18} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={[s.benefitTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{b.title}</Text>
-              <Text style={[s.benefitBody, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{b.body}</Text>
+              <Text style={[s.benefitTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t(`supporter.${b.key}.title` as TKey)}</Text>
+              <Text style={[s.benefitBody, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{t(`supporter.${b.key}.body` as TKey)}</Text>
             </View>
           </View>
         ))}
@@ -101,7 +111,7 @@ export default function SupporterScreen() {
       {/* Plans */}
       {!isSupporter && (
         <>
-          <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>CHOOSE YOUR SUPPORT</Text>
+          <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('supporter.chooseSupport').toUpperCase()}</Text>
           {loading ? (
             <ActivityIndicator color={colors.primary} style={{ marginVertical: 20 }} />
           ) : (
@@ -114,8 +124,8 @@ export default function SupporterScreen() {
               >
                 <View style={{ flex: 1 }}>
                   <Text style={[s.planTitle, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-                    {p.title}
-                    {p.highlight && <Text style={{ color: colors.primary }}>  · best value</Text>}
+                    {planTitle(p)}
+                    {p.highlight && <Text style={{ color: colors.primary }}>  · {t('supporter.bestValue')}</Text>}
                   </Text>
                   <Text style={[s.planPrice, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{p.priceString}</Text>
                 </View>
@@ -127,17 +137,17 @@ export default function SupporterScreen() {
       )}
 
       {/* Sadaqah / tips */}
-      <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>OR GIVE A ONE-TIME SADAQAH</Text>
+      <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('supporter.sadaqah').toUpperCase()}</Text>
       <View style={s.tipRow}>
-        {TIP_PACKAGES.map(t => (
+        {TIP_PACKAGES.map(tip => (
           <Pressable
-            key={t.id}
+            key={tip.id}
             style={[s.tip, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}
-            onPress={() => doPurchase(t.id)}
+            onPress={() => doPurchase(tip.id)}
             disabled={busy !== null}
           >
-            <Text style={[s.tipTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t.title}</Text>
-            <Text style={[s.tipPrice, { color: colors.primary, fontFamily: 'Inter_700Bold' }]}>{t.priceString}</Text>
+            <Text style={[s.tipTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{tipTitle(tip.id)}</Text>
+            <Text style={[s.tipPrice, { color: colors.primary, fontFamily: 'Inter_700Bold' }]}>{tip.priceString}</Text>
           </Pressable>
         ))}
       </View>
@@ -145,12 +155,12 @@ export default function SupporterScreen() {
       {/* Restore + fine print */}
       {configured && (
         <Pressable style={s.restore} onPress={doRestore} disabled={busy !== null}>
-          <Text style={[s.restoreText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>Restore purchases</Text>
+          <Text style={[s.restoreText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>{t('supporter.restore')}</Text>
         </Pressable>
       )}
       {!configured && (
         <Text style={[s.preview, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-          Checkout opens with our first store release. Cancel anytime — no lock-in, ever.
+          {t('supporter.preview')}
         </Text>
       )}
     </ScrollView>

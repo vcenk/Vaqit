@@ -15,7 +15,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import {
   useMosque,
-  SOURCE_TYPE_LABELS,
   type MosqueSourceType,
 } from '@/context/MosqueContext';
 import { usePrayer } from '@/context/PrayerContext';
@@ -27,6 +26,7 @@ import {
   formatTime,
   type PrayerKey,
 } from '@/constants/prayers';
+import { useT, type TKey } from '@/lib/i18n';
 
 const MIN_LIMITS = { min: 0, max: 90 };
 const SOURCE_TYPES: MosqueSourceType[] = ['timetable', 'community', 'personal'];
@@ -34,6 +34,7 @@ const SOURCE_TYPES: MosqueSourceType[] = ['timetable', 'community', 'personal'];
 // ── Mosque start-time entry (HH:MM) ──────────────────────────────────────────
 function StartTimeRow({ prayer }: { prayer: PrayerKey }) {
   const colors = useColors();
+  const t = useT();
   const { mosque, updateStartTime } = useMosque();
   const { todayTimes } = usePrayer();
   const icon = (PRAYER_ICONS[prayer] ?? 'time-outline') as React.ComponentProps<typeof Ionicons>['name'];
@@ -54,7 +55,7 @@ function StartTimeRow({ prayer }: { prayer: PrayerKey }) {
         </Text>
         {calc && (
           <Text style={[row.time, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            Calculated: {formatTime(calc)}
+            {t('mosque.calculated', { time: formatTime(calc) })}
           </Text>
         )}
       </View>
@@ -78,6 +79,7 @@ function StartTimeRow({ prayer }: { prayer: PrayerKey }) {
 // ── Iqamah offset entry ──────────────────────────────────────────────────────
 function OffsetRow({ prayer }: { prayer: PrayerKey }) {
   const colors = useColors();
+  const t = useT();
   const { mosque, updateOffset, getIqamahTime } = useMosque();
   const { todayTimes } = usePrayer();
 
@@ -102,7 +104,7 @@ function OffsetRow({ prayer }: { prayer: PrayerKey }) {
         </Text>
         {iqamahTime && (
           <Text style={[row.time, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-            Adhan {adhanTime ? formatTime(adhanTime) : '—'} → Iqamah {formatTime(iqamahTime)}
+            {t('mosque.adhanIqamah', { adhan: adhanTime ? formatTime(adhanTime) : '—', iqamah: formatTime(iqamahTime) })}
           </Text>
         )}
       </View>
@@ -122,6 +124,7 @@ function OffsetRow({ prayer }: { prayer: PrayerKey }) {
 // ── Calculated vs mosque comparison ──────────────────────────────────────────
 function ComparisonSection() {
   const colors = useColors();
+  const t = useT();
   const { mosque, getMosqueStart, getDiffMinutes } = useMosque();
   const { todayTimes, settings } = usePrayer();
 
@@ -148,14 +151,14 @@ function ComparisonSection() {
   return (
     <>
       <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-        CALCULATED VS YOUR MOSQUE
+        {t('mosque.section.compare').toUpperCase()}
       </Text>
       <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius, padding: 16 }]}>
         <View style={s.compareHeader}>
-          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold', flex: 1.2 }]}>Prayer</Text>
-          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>Calculated</Text>
-          <Text style={[s.compareCol, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>Mosque</Text>
-          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>Diff</Text>
+          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold', flex: 1.2 }]}>{t('mosque.col.prayer')}</Text>
+          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('mosque.col.calculated')}</Text>
+          <Text style={[s.compareCol, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>{t('mosque.col.mosque')}</Text>
+          <Text style={[s.compareCol, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('mosque.col.diff')}</Text>
         </View>
         <View style={[s.divider, { backgroundColor: colors.border, marginVertical: 8 }]} />
         {rows.map(({ p, calc, start, diff }) => {
@@ -195,6 +198,7 @@ function ComparisonSection() {
 
 export default function MosqueTimetableScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const { mosque, updateMosque } = useMosque();
   const [name, setName] = useState(mosque.mosqueName);
@@ -218,25 +222,25 @@ export default function MosqueTimetableScreen() {
       {/* Back */}
       <Pressable style={s.back} onPress={() => router.back()}>
         <Ionicons name="chevron-back" size={20} color={colors.primary} />
-        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>Settings</Text>
+        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>{t('tabs.settings')}</Text>
       </Pressable>
 
       <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-        My Mosque
+        {t('mosque.title')}
       </Text>
       <Text style={[s.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Compare your mosque’s times with the calculation — and understand any difference
+        {t('mosque.subtitle')}
       </Text>
 
       {/* Enable toggle + name */}
-      <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>MOSQUE</Text>
+      <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('mosque.section.mosque').toUpperCase()}</Text>
       <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
         <View style={s.toggleRow}>
           <View style={[s.rowIcon, { backgroundColor: colors.primary + '22' }]}>
             <Ionicons name="business-outline" size={18} color={colors.primary} />
           </View>
           <Text style={[s.rowLabel, { color: colors.foreground, fontFamily: 'Inter_500Medium', flex: 1 }]}>
-            Show mosque times & comparison
+            {t('mosque.showTimes')}
           </Text>
           <Switch
             value={mosque.enabled}
@@ -252,7 +256,7 @@ export default function MosqueTimetableScreen() {
             value={name}
             onChangeText={setName}
             onBlur={saveName}
-            placeholder="Mosque name (optional)"
+            placeholder={t('mosque.namePlaceholder')}
             placeholderTextColor={colors.mutedForeground}
             returnKeyType="done"
             onSubmitEditing={saveName}
@@ -265,7 +269,7 @@ export default function MosqueTimetableScreen() {
         <>
           {/* Provenance */}
           <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-            SOURCE OF THESE TIMES
+            {t('mosque.section.source').toUpperCase()}
           </Text>
           <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius, padding: 12 }]}>
             <View style={s.sourcePills}>
@@ -278,7 +282,7 @@ export default function MosqueTimetableScreen() {
                     onPress={() => updateMosque({ sourceType: st })}
                   >
                     <Text style={[s.sourcePillText, { color: active ? colors.primary : colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-                      {SOURCE_TYPE_LABELS[st]}
+                      {t(`mosque.source.${st}` as TKey)}
                     </Text>
                   </Pressable>
                 );
@@ -286,14 +290,14 @@ export default function MosqueTimetableScreen() {
             </View>
             {lastUpdatedText && (
               <Text style={[s.lastUpdated, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-                Last updated {lastUpdatedText}
+                {t('mosque.lastUpdated', { date: lastUpdatedText })}
               </Text>
             )}
           </View>
 
           {/* Start times */}
           <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-            MOSQUE START TIMES (OPTIONAL)
+            {t('mosque.section.startTimes').toUpperCase()}
           </Text>
           <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
             {TRACKABLE_PRAYERS.map(p => (
@@ -306,7 +310,7 @@ export default function MosqueTimetableScreen() {
 
           {/* Iqamah offsets */}
           <Text style={[s.label, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-            IQAMAH OFFSETS (MINUTES AFTER ADHAN)
+            {t('mosque.section.iqamah').toUpperCase()}
           </Text>
           <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
             {TRACKABLE_PRAYERS.map(p => (
@@ -320,7 +324,7 @@ export default function MosqueTimetableScreen() {
       <View style={[s.infoCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
         <Ionicons name="information-circle-outline" size={16} color={colors.mutedForeground} />
         <Text style={[s.infoText, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-          Enter your mosque’s printed start times to see exactly how they differ from the astronomical calculation, and why. Iqamah times are shown as adhan + offset. Everything stays on your device.
+          {t('mosque.info')}
         </Text>
       </View>
     </ScrollView>

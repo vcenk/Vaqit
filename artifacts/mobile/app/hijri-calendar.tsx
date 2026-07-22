@@ -13,8 +13,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { toHijri } from '@/constants/prayers';
 import { getIslamicDate, HIJRI_MONTH_NAMES } from '@/constants/islamic-dates';
+import { useT, type TKey } from '@/lib/i18n';
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
 interface CalendarDay {
   gregorianDate: Date;
@@ -74,6 +75,7 @@ function getDominantHijriMonth(days: CalendarDay[]): { month: number; year: numb
 
 export default function HijriCalendarScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const now = new Date();
 
@@ -121,7 +123,7 @@ export default function HijriCalendarScreen() {
       {/* Back */}
       <Pressable style={s.back} onPress={() => router.back()}>
         <Ionicons name="chevron-back" size={20} color={colors.primary} />
-        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>Today</Text>
+        <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>{t('common.today')}</Text>
       </Pressable>
 
       {/* Header */}
@@ -146,7 +148,7 @@ export default function HijriCalendarScreen() {
       {(year !== now.getFullYear() || month !== now.getMonth() + 1) && (
         <Pressable style={[s.todayBtn, { backgroundColor: colors.primary + '22', borderRadius: 10 }]} onPress={goToday}>
           <Text style={[s.todayBtnText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>
-            Back to today
+            {t('hijri.backToToday')}
           </Text>
         </Pressable>
       )}
@@ -154,8 +156,8 @@ export default function HijriCalendarScreen() {
       {/* Weekday headers */}
       <View style={[s.grid, s.weekRow]}>
         {WEEKDAYS.map(d => (
-          <Text key={d} style={[s.weekday, { color: d === 'Fri' ? colors.accent : colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-            {d}
+          <Text key={d} style={[s.weekday, { color: d === 'fri' ? colors.accent : colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
+            {t(`hijri.wd.${d}` as TKey)}
           </Text>
         ))}
       </View>
@@ -238,7 +240,7 @@ export default function HijriCalendarScreen() {
       {upcoming.length > 0 && (
         <>
           <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-            UPCOMING THIS MONTH
+            {t('hijri.upcoming').toUpperCase()}
           </Text>
           <View style={[s.upcomingCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
             {upcoming.map(({ date, label }, idx) => (

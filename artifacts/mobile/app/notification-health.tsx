@@ -17,6 +17,7 @@ import { useNotifications } from '@/context/NotificationContext';
 import { usePrayer } from '@/context/PrayerContext';
 import { PRAYER_DISPLAY_NAMES, formatTime } from '@/constants/prayers';
 import type { RiskFlag } from '@/lib/notificationAssurance';
+import { useT } from '@/lib/i18n';
 import {
   openExactAlarmSettings,
   openBatterySettings,
@@ -45,6 +46,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function NotificationHealthScreen() {
   const colors = useColors();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const {
     permissionStatus,
@@ -117,9 +119,9 @@ export default function NotificationHealthScreen() {
         <Text style={[s.backText, { color: colors.primary, fontFamily: 'Inter_500Medium' }]}>Settings</Text>
       </Pressable>
 
-      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>Notification Health</Text>
+      <Text style={[s.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('health.title')}</Text>
       <Text style={[s.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        Proof your athan is armed — and a diagnostic when it isn’t
+        {t('health.subtitle')}
       </Text>
 
       {/* Overall status */}
@@ -130,7 +132,7 @@ export default function NotificationHealthScreen() {
           color={statusTint}
         />
         <View style={{ flex: 1 }}>
-          <Text style={[s.statusHeadline, { color: statusTint, fontFamily: 'Inter_700Bold' }]}>{assurance.headline}</Text>
+          <Text style={[s.statusHeadline, { color: statusTint, fontFamily: 'Inter_700Bold' }]}>{assurance.level === 'ok' ? t('assurance.ready') : t('assurance.actionRequired')}</Text>
           <Text style={[s.statusDetail, { color: colors.foreground, fontFamily: 'Inter_400Regular' }]}>{assurance.detail}</Text>
         </View>
       </View>
@@ -139,7 +141,7 @@ export default function NotificationHealthScreen() {
           so we guide proactively rather than warn falsely). */}
       {Platform.OS === 'android' && (
         <>
-          <SectionLabel>EXACT ALARMS</SectionLabel>
+          <SectionLabel>{t('health.section.exactAlarm').toUpperCase()}</SectionLabel>
           <Card>
             <View style={[row.wrap, { alignItems: 'flex-start' }]}>
               <View style={[row.icon, { backgroundColor: colors.accent + '22', marginTop: 2 }]}>
@@ -147,17 +149,17 @@ export default function NotificationHealthScreen() {
               </View>
               <View style={{ flex: 1, gap: 3 }}>
                 <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
-                  Allow “Alarms &amp; reminders”
+                  {t('health.exactAlarm.title')}
                 </Text>
                 <Text style={[row.sub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', lineHeight: 18 }]}>
-                  On Android 12+, without this permission the system may deliver the athan minutes — or hours — late, especially overnight for Fajr. Tap to allow exact alarms for Vaqit.
+                  {t('health.exactAlarm.body')}
                 </Text>
               </View>
             </View>
             <View style={[s.divider, { backgroundColor: colors.border }]} />
             <Pressable style={[s.actionBtn, { backgroundColor: colors.accent }]} onPress={openExactAlarmSettings}>
               <Ionicons name="alarm" size={18} color="#000000" />
-              <Text style={[s.actionBtnText, { color: '#000000', fontFamily: 'Inter_600SemiBold' }]}>Allow Exact Alarms</Text>
+              <Text style={[s.actionBtnText, { color: '#000000', fontFamily: 'Inter_600SemiBold' }]}>{t('health.exactAlarm.btn')}</Text>
             </Pressable>
           </Card>
         </>
@@ -166,7 +168,7 @@ export default function NotificationHealthScreen() {
       {/* Risks */}
       {risks.length > 0 && (
         <>
-          <SectionLabel>ACTION NEEDED</SectionLabel>
+          <SectionLabel>{t('health.section.actionNeeded').toUpperCase()}</SectionLabel>
           <Card>
             {risks.map((r, idx) => (
               <View key={r.id}>
@@ -180,7 +182,7 @@ export default function NotificationHealthScreen() {
                     {r.fix && (
                       <Pressable style={[s.fixBtn, { backgroundColor: colors.primary }]} onPress={() => runFix(r.fix)}>
                         <Text style={[s.fixText, { color: colors.primaryForeground, fontFamily: 'Inter_600SemiBold' }]}>
-                          {r.fix === 'permission' ? 'Enable notifications' : r.fix === 'reschedule' ? 'Reschedule now' : 'Open system settings'}
+                          {r.fix === 'permission' ? t('health.fix.permission') : r.fix === 'reschedule' ? t('health.fix.reschedule') : t('health.fix.settings')}
                         </Text>
                       </Pressable>
                     )}
@@ -194,16 +196,16 @@ export default function NotificationHealthScreen() {
       )}
 
       {/* Test */}
-      <SectionLabel>TEST</SectionLabel>
+      <SectionLabel>{t('health.section.test').toUpperCase()}</SectionLabel>
       <Card>
         <View style={row.wrap}>
           <View style={[row.icon, { backgroundColor: colors.accent + '22' }]}>
             <Ionicons name="alarm-outline" size={18} color={colors.accent} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_500Medium' }]}>Send test athan</Text>
+            <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_500Medium' }]}>{t('health.sendTest')}</Text>
             <Text style={[row.sub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-              {testSent ? 'Arriving in 5 seconds — stay in the app' : 'Fires a test notification in 5 seconds'}
+              {testSent ? t('health.testSubSent') : t('health.testSub')}
             </Text>
           </View>
         </View>
@@ -213,7 +215,7 @@ export default function NotificationHealthScreen() {
             <Pressable style={[s.actionBtn, { backgroundColor: testSent ? colors.muted : colors.accent }]} onPress={handleTest} disabled={testSent}>
               <Ionicons name={testSent ? 'checkmark-circle' : 'notifications'} size={18} color={testSent ? colors.mutedForeground : '#000000'} />
               <Text style={[s.actionBtnText, { color: testSent ? colors.mutedForeground : '#000000', fontFamily: 'Inter_600SemiBold' }]}>
-                {testSent ? 'Test sent — listen for athan' : 'Send Test Athan'}
+                {testSent ? t('health.testSentBtn') : t('health.sendTestBtn')}
               </Text>
             </Pressable>
           </>
@@ -221,14 +223,14 @@ export default function NotificationHealthScreen() {
       </Card>
 
       {/* Armed alerts */}
-      <SectionLabel>NEXT ALERTS ARMED</SectionLabel>
+      <SectionLabel>{t('health.section.armed').toUpperCase()}</SectionLabel>
       <Card>
         <View style={row.wrap}>
           <View style={[row.icon, { backgroundColor: (scheduledCount > 0 ? colors.primary : colors.mutedForeground) + '22' }]}>
             <Ionicons name="shield-checkmark-outline" size={18} color={scheduledCount > 0 ? colors.primary : colors.mutedForeground} />
           </View>
           <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold', flex: 1 }]}>
-            {scheduledCount > 0 ? `${scheduledCount} notifications armed` : 'Nothing armed yet'}
+            {scheduledCount > 0 ? t('health.nArmed', { n: scheduledCount }) : t('health.nothingArmed')}
           </Text>
         </View>
         {upcoming.length > 0 && <View style={[s.divider, { backgroundColor: colors.border }]} />}
@@ -254,13 +256,13 @@ export default function NotificationHealthScreen() {
         >
           <Ionicons name="refresh-outline" size={18} color={colors.primary} />
           <Text style={[s.actionBtnText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>
-            {scheduling ? 'Rescheduling…' : 'Reschedule All'}
+            {scheduling ? t('health.rescheduling') : t('health.reschedule')}
           </Text>
         </Pressable>
       </Card>
 
       {/* Delivery ledger */}
-      <SectionLabel>DELIVERY LEDGER</SectionLabel>
+      <SectionLabel>{t('health.section.ledger').toUpperCase()}</SectionLabel>
       <Card>
         <View style={row.wrap}>
           <View style={[row.icon, { backgroundColor: colors.primary + '22' }]}>
@@ -268,10 +270,10 @@ export default function NotificationHealthScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
-              {reliability.confirmed} confirmed of {reliability.expected} due
+              {t('health.confirmedOf', { c: reliability.confirmed, e: reliability.expected })}
             </Text>
             <Text style={[row.sub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', lineHeight: 17 }]}>
-              Confirmed while the app was reachable. Background deliveries may fire without being observed here.
+              {t('health.ledgerNote')}
             </Text>
           </View>
         </View>
@@ -292,33 +294,33 @@ export default function NotificationHealthScreen() {
       </Card>
 
       {/* Diagnostic export */}
-      <SectionLabel>SUPPORT</SectionLabel>
+      <SectionLabel>{t('health.section.support').toUpperCase()}</SectionLabel>
       <Card>
         <View style={row.wrap}>
           <View style={[row.icon, { backgroundColor: colors.muted }]}>
             <Ionicons name="document-text-outline" size={18} color={colors.foreground} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>Export diagnostic report</Text>
+            <Text style={[row.label, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t('health.exportTitle')}</Text>
             <Text style={[row.sub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', lineHeight: 17 }]}>
-              A shareable summary so we can explain exactly why an athan did or didn’t fire.
+              {t('health.exportBody')}
             </Text>
           </View>
         </View>
         <View style={[s.divider, { backgroundColor: colors.border }]} />
         <Pressable style={[s.actionBtn, { backgroundColor: colors.muted }]} onPress={exportDiagnostic}>
           <Ionicons name="share-outline" size={18} color={colors.foreground} />
-          <Text style={[s.actionBtnText, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>Export Diagnostic</Text>
+          <Text style={[s.actionBtnText, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t('health.exportBtn')}</Text>
         </Pressable>
       </Card>
 
       {/* Tips */}
-      <SectionLabel>TIPS FOR RELIABILITY</SectionLabel>
+      <SectionLabel>{t('health.section.tips').toUpperCase()}</SectionLabel>
       <Card>
         {[
-          { icon: 'battery-charging-outline' as const, title: 'Disable battery optimization', body: 'On Android, whitelist Vaqit in battery settings so it can schedule notifications overnight — the main cause of missed Fajr.' },
-          { icon: 'moon-outline' as const, title: 'Check Do Not Disturb', body: 'Allow Vaqit to bypass DND, or athan will be silenced during DND hours.' },
-          { icon: 'phone-portrait-outline' as const, title: 'Reboot-safe', body: 'Vaqit re-arms your alarms automatically after a restart — no need to reopen the app.' },
+          { icon: 'battery-charging-outline' as const, title: t('health.tip.battery.title'), body: t('health.tip.battery.body') },
+          { icon: 'moon-outline' as const, title: t('health.tip.dnd.title'), body: t('health.tip.dnd.body') },
+          { icon: 'phone-portrait-outline' as const, title: t('health.tip.reboot.title'), body: t('health.tip.reboot.body') },
         ].map((tip, idx, arr) => (
           <View key={tip.title}>
             <View style={[row.wrap, { alignItems: 'flex-start', paddingVertical: 14 }]}>
@@ -338,7 +340,7 @@ export default function NotificationHealthScreen() {
             <View style={[s.divider, { backgroundColor: colors.border }]} />
             <Pressable style={[s.actionBtn, { backgroundColor: colors.muted }]} onPress={openBatterySettings}>
               <Ionicons name="battery-charging-outline" size={18} color={colors.foreground} />
-              <Text style={[s.actionBtnText, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>Open Battery Settings</Text>
+              <Text style={[s.actionBtnText, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{t('health.openBattery')}</Text>
             </Pressable>
           </>
         )}
