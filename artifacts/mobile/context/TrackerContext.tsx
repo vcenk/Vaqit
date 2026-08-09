@@ -4,6 +4,14 @@ import { formatDateKey, TRACKABLE_PRAYERS, type PrayerKey } from '@/constants/pr
 
 export type PrayerStatus = 'ontime' | 'late' | 'missed' | 'jamaah';
 
+/**
+ * Days a person isn't required to pray are logged with dignity, never as
+ * "missed" (P17 — compassionate by design). Menstruation, travel, and illness
+ * are recognised statuses, not gaps in a streak.
+ */
+export type ExemptReason = 'menstruation' | 'travel' | 'illness';
+export const EXEMPT_REASONS: ExemptReason[] = ['menstruation', 'travel', 'illness'];
+
 export interface DayLog {
   fajr: PrayerStatus | null;
   dhuhr: PrayerStatus | null;
@@ -14,10 +22,18 @@ export interface DayLog {
 
 const EMPTY_DAY: DayLog = { fajr: null, dhuhr: null, asr: null, maghrib: null, isha: null };
 
+const EXEMPT_KEY = 'vaqit_tracker_exempt_v1';
+
 interface TrackerContextValue {
   logs: Record<string, DayLog>;
   logPrayer: (dateKey: string, prayer: PrayerKey, status: PrayerStatus | null) => Promise<void>;
   getDay: (dateKey: string) => DayLog;
+  /** Count of prayers logged with any status on a day (0–5). */
+  getCount: (dateKey: string) => number;
+  /** The exemption reason set for a day, or null for a normal day. */
+  getExempt: (dateKey: string) => ExemptReason | null;
+  /** Set (or clear, with null) a day's exemption — a rest day, not a miss. */
+  setExempt: (dateKey: string, reason: ExemptReason | null) => Promise<void>;
   currentStreak: number;
   longestStreak: number;
 }
@@ -26,6 +42,9 @@ const TrackerContext = createContext<TrackerContextValue>({
   logs: {},
   logPrayer: async () => {},
   getDay: () => ({ ...EMPTY_DAY }),
+  getCount: () => 0,
+  getExempt: () => null,
+  setExempt: async () => {},
   currentStreak: 0,
   longestStreak: 0,
 });
@@ -78,6 +97,7 @@ function computeStreaks(logs: Record<string, DayLog>): { current: number; longes
 
 export function TrackerProvider({ children }: { children: React.ReactNode }) {
   const [logs, setLogs] = useState<Record<string, DayLog>>({});
+  const [exemptDays, setExemptDays] = useState<Record<string, ExemptReason>>({});
   const [currentStreak, setCurrentStreak] = useState(0);
   const [longestStreak, setLongestStreak] = useState(0);
 
@@ -91,6 +111,11 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
           setCurrentStreak(current);
           setLongestStreak(longest);
         } catch {}
+      }
+    });
+    AsyncStorage.getItem(EXEMPT_KEY).then((val) => {
+      if (val) {
+        try { setExemptDays(JSON.parse(val) as Record<string, ExemptReason>); } catch {}
       }
     });
   }, []);
@@ -118,8 +143,33 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
     [logs]
   );
 
+  const getCount = useCallback(
+    (dateKey: string): number => {
+      const day = logs[dateKey];
+      if (!day) return 0;
+      return TRACKABLE_PRAYERS.filter((p) => day[p] !== null).length;
+    },
+    [logs]
+  );
+
+  const getExempt = useCallback(
+    (dateKey: string): ExemptReason | null => exemptDays[dateKey] ?? null,
+    [exemptDays]
+  );
+
+  const setExempt = useCallback(
+    async (dateKey: string, reason: ExemptReason | null) => {
+      const next = { ...exemptDays };
+      if (reason) next[dateKey] = reason;
+      else delete next[dateKey];
+      setExemptDays(next);
+      await AsyncStorage.setItem(EXEMPT_KEY, JSON.stringify(next));
+    },
+    [exemptDays]
+  );
+
   return (
-    <TrackerContext.Provider value={{ logs, logPrayer, getDay, currentStreak, longestStreak }}>
+    <TrackerContext.Provider value={{ logs, logPrayer, getDay, getCount, getExempt, setExempt, currentStreak, longestStreak }}>
       {children}
     </TrackerContext.Provider>
   );

@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Modal,
   Platform,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Switch,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { buildBackup, restoreBackup } from '@/lib/backup';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
@@ -221,6 +225,40 @@ export default function SettingsScreen() {
   const { locale, setLocale, isSystemDefault, clearOverride, t } = useLocale();
 
   const [picker, setPicker] = useState<'method' | 'madhab' | 'highLat' | 'language' | null>(null);
+  const [showRestore, setShowRestore] = useState(false);
+  const [restoreText, setRestoreText] = useState('');
+
+  const handleExport = async () => {
+    try {
+      const json = await buildBackup(new Date().toISOString());
+      await Share.share({ message: json }, { subject: 'Vaqit backup' });
+    } catch {
+      Alert.alert(t('backup.errTitle'), t('backup.exportErr'));
+    }
+  };
+
+  const handleRestore = async () => {
+    try {
+      const { restored } = await restoreBackup(restoreText.trim());
+      setShowRestore(false);
+      setRestoreText('');
+      Alert.alert(
+        t('backup.restoredTitle'),
+        t('backup.restoredBody', { n: restored }),
+        [{
+          text: t('common.done'),
+          onPress: async () => {
+            try {
+              const Updates = await import('expo-updates');
+              await Updates.reloadAsync();
+            } catch { /* dev/Expo Go: user reopens the app manually */ }
+          },
+        }],
+      );
+    } catch {
+      Alert.alert(t('backup.errTitle'), t('backup.restoreErr'));
+    }
+  };
 
   const currentLanguage = isSystemDefault
     ? t('settings.language.systemDefault')
@@ -406,6 +444,32 @@ export default function SettingsScreen() {
         </View>
       </Card>
 
+      {/* ── Backup ── */}
+      <SectionHeader title={t('settings.section.backup').toUpperCase()} />
+      <Card>
+        <SettingRow
+          icon="download-outline"
+          label={t('settings.row.exportData')}
+          onPress={handleExport}
+        />
+        <Divider />
+        <SettingRow
+          icon="cloud-upload-outline"
+          iconColor={colors.accent}
+          label={t('settings.row.restoreData')}
+          onPress={() => setShowRestore(true)}
+        />
+        <Divider />
+        <View style={sr.row}>
+          <View style={[sr.iconWrap, { backgroundColor: colors.muted }]}>
+            <Ionicons name="information-circle-outline" size={18} color={colors.mutedForeground} />
+          </View>
+          <Text style={[s.privacyNote, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', flex: 1 }]}>
+            {t('settings.row.backupNote')}
+          </Text>
+        </View>
+      </Card>
+
       {/* ── Ramadan ── */}
       <SectionHeader title={t('ramadan.title').toUpperCase()} />
       <Card>
@@ -475,6 +539,39 @@ export default function SettingsScreen() {
         onSelect={id => (id === 'system' ? clearOverride() : setLocale(id as 'en' | 'tr' | 'ar'))}
         onClose={() => setPicker(null)}
       />
+
+      {/* Restore-from-backup sheet */}
+      <Modal visible={showRestore} animationType="slide" transparent onRequestClose={() => setShowRestore(false)}>
+        <Pressable style={pm.backdrop} onPress={() => setShowRestore(false)} />
+        <View style={[pm.sheet, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16 }]}>
+          <View style={[pm.handle, { backgroundColor: colors.border }]} />
+          <Text style={[pm.title, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
+            {t('backup.restoreTitle')}
+          </Text>
+          <Text style={[s.privacyNote, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular', paddingHorizontal: 4, marginBottom: 12 }]}>
+            {t('backup.restoreHint')}
+          </Text>
+          <TextInput
+            value={restoreText}
+            onChangeText={setRestoreText}
+            placeholder={t('backup.pastePlaceholder')}
+            placeholderTextColor={colors.mutedForeground}
+            multiline
+            autoCorrect={false}
+            autoCapitalize="none"
+            style={[bk.input, { color: colors.foreground, backgroundColor: colors.background, borderColor: colors.border, fontFamily: 'Inter_400Regular' }]}
+          />
+          <Pressable
+            style={[bk.btn, { backgroundColor: restoreText.trim() ? colors.primary : colors.muted }]}
+            onPress={handleRestore}
+            disabled={!restoreText.trim()}
+          >
+            <Text style={[bk.btnText, { color: restoreText.trim() ? colors.primaryForeground : colors.mutedForeground, fontFamily: 'Inter_700Bold' }]}>
+              {t('backup.restoreBtn')}
+            </Text>
+          </Pressable>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -506,6 +603,21 @@ const offsetBtn: import('react-native').ViewStyle = {
   width: 32, height: 32, borderRadius: 8, alignItems: 'center', justifyContent: 'center',
 };
 const offsetVal: import('react-native').TextStyle = { fontSize: 13 };
+
+const bk = StyleSheet.create({
+  input: {
+    minHeight: 120,
+    maxHeight: 220,
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 13,
+    textAlignVertical: 'top',
+    marginBottom: 14,
+  },
+  btn: { paddingVertical: 15, borderRadius: 14, alignItems: 'center' },
+  btnText: { fontSize: 15 },
+});
 
 const pnr = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, gap: 10 },

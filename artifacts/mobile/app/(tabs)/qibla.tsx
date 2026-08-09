@@ -7,10 +7,19 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
 import { useT } from '@/lib/i18n';
+
+/** Within this many degrees of the Qibla we call it "aligned". */
+const ALIGN_TOLERANCE = 5;
+
+const CARDINALS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+function cardinalOf(bearing: number): string {
+  return CARDINALS[Math.round((((bearing % 360) + 360) % 360) / 45) % 8]!;
+}
 
 const MECCA_LAT = 21.3891;
 const MECCA_LON = 39.8579;
@@ -190,6 +199,19 @@ export default function QiblaScreen() {
 
   const bearingToMecca = Math.round(((qiblaDirection % 360) + 360) % 360);
 
+  // Signed smallest angle between where you point and the Qibla (−180..180).
+  const offset = ((qiblaDirection - heading + 540) % 360) - 180;
+  const aligned = sensorAvailable && Math.abs(offset) <= ALIGN_TOLERANCE;
+
+  // Fire a single gentle haptic when we lock on (not on every heading tick).
+  const wasAlignedRef = useRef(false);
+  useEffect(() => {
+    if (aligned && !wasAlignedRef.current && Platform.OS !== 'web') {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+    }
+    wasAlignedRef.current = aligned;
+  }, [aligned]);
+
   return (
     <View style={[s.container, { backgroundColor: colors.background, paddingTop: topPad, paddingBottom: bottomPad }]}>
       {/* Title */}
@@ -198,8 +220,39 @@ export default function QiblaScreen() {
         {t('qibla.subtitle')}
       </Text>
 
+      {/* Alignment status — rewards the moment of facing the Kaaba */}
+      <View
+        style={[
+          s.statusPill,
+          {
+            backgroundColor: aligned ? colors.primary + '20' : colors.card,
+            borderColor: aligned ? colors.primary + '55' : colors.border,
+          },
+        ]}
+      >
+        <Ionicons
+          name={aligned ? 'checkmark-circle' : 'compass-outline'}
+          size={16}
+          color={aligned ? colors.primary : colors.mutedForeground}
+        />
+        <Text
+          style={[
+            s.statusText,
+            { color: aligned ? colors.primary : colors.mutedForeground, fontFamily: 'Inter_600SemiBold' },
+          ]}
+        >
+          {sensorAvailable ? (aligned ? t('qibla.aligned') : t('qibla.turnHint')) : t('qibla.subtitle')}
+        </Text>
+      </View>
+
       {/* Compass */}
       <View style={s.compassWrap}>
+        {aligned && (
+          <View
+            pointerEvents="none"
+            style={[s.glow, { backgroundColor: colors.primary, shadowColor: colors.primary }]}
+          />
+        )}
         <Animated.View
           style={{
             transform: [{ rotate: compassAnim.interpolate({ inputRange: [-360, 360], outputRange: ['-360deg', '360deg'] }) }],
@@ -237,7 +290,7 @@ export default function QiblaScreen() {
         <View style={[s.infoCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
           <Ionicons name="navigate-outline" size={22} color={colors.primary} />
           <Text style={[s.infoVal, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
-            {bearingToMecca}°
+            {bearingToMecca}° {cardinalOf(bearingToMecca)}
           </Text>
           <Text style={[s.infoLbl, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
             {t('qibla.fromNorth')}
@@ -254,14 +307,17 @@ export default function QiblaScreen() {
         </View>
       </View>
 
-      {!sensorAvailable && Platform.OS !== 'web' && (
+      {!sensorAvailable && Platform.OS !== 'web' ? (
         <Text style={[s.hint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
           {t('qibla.noMagnetometer')}
         </Text>
-      )}
-      {Platform.OS === 'web' && (
+      ) : Platform.OS === 'web' ? (
         <Text style={[s.hint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
           {t('qibla.webCompass')}
+        </Text>
+      ) : (
+        <Text style={[s.hint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
+          {t('qibla.calibrate')}
         </Text>
       )}
     </View>
@@ -271,7 +327,18 @@ export default function QiblaScreen() {
 const s = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', paddingHorizontal: 24 },
   title: { fontSize: 28, alignSelf: 'flex-start', marginBottom: 4 },
-  subtitle: { fontSize: 14, alignSelf: 'flex-start', marginBottom: 40 },
+  subtitle: { fontSize: 14, alignSelf: 'flex-start', marginBottom: 20 },
+  statusPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 999,
+    borderWidth: 1,
+    marginBottom: 24,
+  },
+  statusText: { fontSize: 13.5 },
   compassWrap: {
     width: 280,
     height: 280,
@@ -279,6 +346,17 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     marginBottom: 32,
+  },
+  glow: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    opacity: 0.14,
+    shadowOpacity: 0.6,
+    shadowRadius: 40,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 12,
   },
   needle: {
     position: 'absolute',

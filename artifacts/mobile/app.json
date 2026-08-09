@@ -27,10 +27,16 @@
       "buildNumber": "1",
       "supportsTablet": false,
       "entitlements": {
-        "com.apple.security.application-groups": ["group.com.vaqit.app"]
+        "com.apple.security.application-groups": [
+          "group.com.vaqit.app"
+        ]
       },
       "infoPlist": {
-        "UIBackgroundModes": ["audio", "fetch", "remote-notification"],
+        "UIBackgroundModes": [
+          "audio",
+          "fetch",
+          "remote-notification"
+        ],
         "NSLocationWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
         "NSMotionUsageDescription": "Vaqit uses your device's compass to show the Qibla direction."
@@ -89,6 +95,14 @@
         }
       ],
       "./plugins/withAthanService",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "16.0"
+          }
+        }
+      ],
       ["@bacons/apple-targets"]
     ],
     "experiments": {

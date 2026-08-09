@@ -14,11 +14,15 @@ interface PrayerTimeRowProps {
   status?: PrayerStatus | null;
   /** True when this time was estimated by a high-latitude rule (see source card). */
   approximated?: boolean;
+  /** Small provenance line under the name, e.g. "ISNA · 15°" (the verification wedge). */
+  subtitle?: string;
+  /** Mosque-vs-calculated delta chip, e.g. "mosque +6 min". Empty/omit to hide. */
+  diffLabel?: string | null;
   /** When provided, the row becomes tappable and opens the source card. */
   onPress?: () => void;
 }
 
-export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, approximated, onPress }: PrayerTimeRowProps) {
+export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, approximated, subtitle, diffLabel, onPress }: PrayerTimeRowProps) {
   const colors = useColors();
   const t = useT();
   const name = PRAYER_DISPLAY_NAMES[prayerKey] ?? prayerKey;
@@ -52,17 +56,29 @@ export function PrayerTimeRow({ prayerKey, time, isNext, isCurrent, status, appr
         <Ionicons name={icon} size={18} color={iconColor} />
       </View>
 
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-        <Text style={[styles.name, { color: nameColor, fontFamily: isNext ? 'Inter_600SemiBold' : 'Inter_500Medium' }]}>
-          {name}
-        </Text>
-        {approximated && (
-          <View style={[styles.approxBadge, { backgroundColor: colors.accent + '22' }]}>
-            <Ionicons name="alert-circle-outline" size={11} color={colors.accent} />
-            <Text style={[styles.approxLabel, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
-              {t('today.estimated')}
+      <View style={{ flex: 1 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <Text style={[styles.name, { color: nameColor, fontFamily: isNext ? 'Inter_600SemiBold' : 'Inter_500Medium' }]}>
+            {name}
+          </Text>
+          {approximated && (
+            <View style={[styles.approxBadge, { backgroundColor: colors.accent + '22' }]}>
+              <Ionicons name="alert-circle-outline" size={11} color={colors.accent} />
+              <Text style={[styles.approxLabel, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
+                {t('today.estimated')}
+              </Text>
+            </View>
+          )}
+          {!!diffLabel && (
+            <Text style={[styles.diffLabel, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>
+              · {diffLabel}
             </Text>
-          </View>
+          )}
+        </View>
+        {!!subtitle && (
+          <Text style={[styles.subtitle, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
+            {subtitle}
+          </Text>
         )}
       </View>
 
@@ -106,6 +122,13 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
+  },
+  subtitle: {
+    fontSize: 11.5,
+    marginTop: 1,
+  },
+  diffLabel: {
+    fontSize: 11.5,
   },
   nextBadge: {
     paddingHorizontal: 8,

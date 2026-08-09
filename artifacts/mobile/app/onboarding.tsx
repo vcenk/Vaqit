@@ -113,6 +113,38 @@ function LocationStep({ onNext }: { onNext: () => void }) {
         {t('onboarding.location.subtitle')}
       </Text>
 
+      {/* Permission transparency — earn each grant before the OS asks (P11) */}
+      <View style={[step.grantCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
+        {[
+          { yes: true,  title: t('onboarding.grant.calcTitle'),  body: t('onboarding.grant.calcBody')  },
+          { yes: true,  title: t('onboarding.grant.stayTitle'),  body: t('onboarding.grant.stayBody')  },
+          { yes: false, title: t('onboarding.grant.trackTitle'), body: t('onboarding.grant.trackBody') },
+        ].map((g, i) => (
+          <View
+            key={g.title}
+            style={[
+              step.grantRow,
+              i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+            ]}
+          >
+            <Ionicons
+              name={g.yes ? 'checkmark-circle' : 'close-circle'}
+              size={20}
+              color={g.yes ? colors.primary : colors.mutedForeground}
+              style={{ marginTop: 1 }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={[step.grantTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>
+                {g.title}
+              </Text>
+              <Text style={[step.grantBody, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
+                {g.body}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View>
+
       <View style={step.fieldGroup}>
         {/* Location row */}
         <Pressable
@@ -173,6 +205,10 @@ function LocationStep({ onNext }: { onNext: () => void }) {
         </Text>
         <Ionicons name="arrow-forward" size={18} color={colors.primaryForeground} />
       </Pressable>
+
+      <Text style={[step.manualNote, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
+        {t('onboarding.manualNote')}
+      </Text>
     </View>
   );
 }
@@ -333,6 +369,11 @@ const step = StyleSheet.create({
   btn: { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, borderRadius: 14, marginTop: 8 },
   btnText: { fontSize: 16 },
   skipText: { fontSize: 14, marginTop: 4 },
+  grantCard: { width: '100%' },
+  grantRow: { flexDirection: 'row', gap: 11, paddingHorizontal: 14, paddingVertical: 12 },
+  grantTitle: { fontSize: 13.5 },
+  grantBody: { fontSize: 12.5, marginTop: 2, lineHeight: 17 },
+  manualNote: { fontSize: 12.5, textAlign: 'center', marginTop: 4, paddingHorizontal: 12, lineHeight: 17 },
   fieldGroup: { width: '100%', gap: 8 },
   fieldRow: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 12 },
   fieldLabel: { fontSize: 12 },

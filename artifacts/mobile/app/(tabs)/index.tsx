@@ -14,6 +14,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { usePrayer } from '@/context/PrayerContext';
 import { useTracker } from '@/context/TrackerContext';
+import { useMosque } from '@/context/MosqueContext';
+import { methodLabel } from '@/lib/prayerMeta';
+import type { PrayerKey } from '@/constants/prayers';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { PrayerTimeRow } from '@/components/PrayerTimeRow';
 import { PrayerSourceCard } from '@/components/PrayerSourceCard';
@@ -39,8 +42,42 @@ export default function TodayScreen() {
     refresh,
   } = usePrayer();
   const { getDay } = useTracker();
+  const { mosque, getDiffMinutes } = useMosque();
 
   const [selectedPrayer, setSelectedPrayer] = useState<{ key: string; time: Date } | null>(null);
+
+  // Short method name for the per-row provenance line ("ISNA · 15°").
+  const methodShort = useMemo(() => {
+    const full = methodLabel(settings.calculationMethod);
+    return full.split(/[–—(]/)[0].trim();
+  }, [settings.calculationMethod]);
+
+  // The verification wedge, per row: how this specific time was derived.
+  const rowSubtitle = (key: string): string => {
+    const a = todayMeta?.angles;
+    switch (key) {
+      case 'fajr':
+        return a ? `${methodShort} · ${a.fajrAngle}°` : methodShort;
+      case 'isha':
+        if (a && a.ishaInterval > 0) return `${methodShort} · ${a.ishaInterval} ${t('common.minutes')}`;
+        return a ? `${methodShort} · ${a.ishaAngle}°` : methodShort;
+      case 'asr':
+        return settings.madhab === 'Hanafi' ? 'Hanafi' : 'Standard';
+      case 'sunrise':
+        return t('today.calculated');
+      default:
+        return methodShort;
+    }
+  };
+
+  // Mosque-vs-calculated delta chip (P10), only when the user has entered times.
+  const rowDiff = (key: string, time: Date): string | null => {
+    if (!mosque.enabled || key === 'sunrise') return null;
+    const diff = getDiffMinutes(key as PrayerKey, time);
+    if (diff === null || diff === 0) return null;
+    const sign = diff > 0 ? '+' : '−';
+    return `${t('today.mosqueShort')} ${sign}${Math.abs(diff)} ${t('common.minutes')}`;
+  };
 
   const today = new Date();
   const todayKey = formatDateKey(today);
@@ -172,9 +209,17 @@ export default function TodayScreen() {
 
       {/* Prayer times list */}
       <View style={[s.card, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
-        <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
-          {t('today.prayerTimes').toUpperCase()}
-        </Text>
+        <View style={s.sectionRow}>
+          <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>
+            {t('today.prayerTimes').toUpperCase()}
+          </Text>
+          <View style={s.verifyHint}>
+            <Ionicons name="information-circle-outline" size={13} color={colors.primary} />
+            <Text style={[s.verifyText, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>
+              {t('today.tapToVerify')}
+            </Text>
+          </View>
+        </View>
         {prayerRows.map(({ key, time }, idx) => (
           <View key={key}>
             <PrayerTimeRow
@@ -184,6 +229,8 @@ export default function TodayScreen() {
               isCurrent={currentPrayerKey === key}
               status={key !== 'sunrise' ? (dayLog as unknown as Record<string, 'ontime' | 'late' | 'missed' | 'jamaah' | null>)[key] : undefined}
               approximated={(key === 'fajr' && todayMeta?.fajrApproximated) || (key === 'isha' && todayMeta?.ishaApproximated) || false}
+              subtitle={rowSubtitle(key)}
+              diffLabel={rowDiff(key, time)}
               onPress={() => setSelectedPrayer({ key, time })}
             />
             {idx < prayerRows.length - 1 && (
@@ -192,10 +239,6 @@ export default function TodayScreen() {
           </View>
         ))}
       </View>
-
-      <Text style={[s.tapHint, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>
-        {t('today.tapHint')}
-      </Text>
 
       <PrayerSourceCard
         prayerKey={selectedPrayer?.key ?? null}
@@ -253,7 +296,16 @@ const s = StyleSheet.create({
   progressFill: { backgroundColor: '#4ADE80', borderRadius: 2 },
   progressLabel: { color: '#FFFFFF66', fontSize: 11, marginTop: 6 },
   card: { marginHorizontal: 16, paddingVertical: 8, overflow: 'hidden' },
-  sectionLabel: { fontSize: 11, letterSpacing: 1, paddingHorizontal: 16, paddingBottom: 8, paddingTop: 4 },
+  sectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+    paddingTop: 4,
+  },
+  sectionLabel: { fontSize: 11, letterSpacing: 1 },
+  verifyHint: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  verifyText: { fontSize: 11.5 },
   divider: { height: StyleSheet.hairlineWidth, marginHorizontal: 16 },
-  tapHint: { fontSize: 12, textAlign: 'center', marginTop: 12, paddingHorizontal: 20 },
 });
