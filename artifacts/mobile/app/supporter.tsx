@@ -15,7 +15,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { useSupporter } from '@/context/SupporterContext';
-import { TIP_PACKAGES } from '@/lib/billing';
+import { TIP_PACKAGES, FOUNDING_PACKAGE } from '@/lib/billing';
 import { useT, type TKey } from '@/lib/i18n';
 
 const BENEFITS = [
@@ -37,6 +37,10 @@ export default function SupporterScreen() {
     p.period === 'annual' ? t('supporter.plan.annual') : p.period === 'monthly' ? t('supporter.plan.monthly') : p.title;
   const tipTitle = (id: string) =>
     id === 'tip_small' ? t('supporter.tip.small') : id === 'tip_medium' ? t('supporter.tip.medium') : id;
+
+  // Prefer the live lifetime package when the store is wired; else the fallback.
+  const founding = packages.find(p => p.period === 'lifetime') ?? FOUNDING_PACKAGE;
+  const recurring = packages.filter(p => p.period !== 'lifetime');
 
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 40 : insets.bottom + 24;
@@ -108,6 +112,34 @@ export default function SupporterScreen() {
         ))}
       </View>
 
+      {/* Founding Supporter — one-time, lifetime (launch lever) */}
+      {!isSupporter && !loading && (
+        <Pressable
+          style={[s.founding, { backgroundColor: colors.card, borderColor: colors.accent, borderRadius: colors.radius + 2 }]}
+          onPress={() => doPurchase(founding.id)}
+          disabled={busy !== null}
+        >
+          <View style={[s.foundingBadge, { backgroundColor: colors.accent }]}>
+            <Ionicons name="ribbon" size={12} color="#000000" />
+            <Text style={[s.foundingBadgeText, { fontFamily: 'Inter_700Bold' }]}>{t('supporter.founding.badge')}</Text>
+          </View>
+          <Text style={[s.foundingTitle, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('supporter.founding.title')}</Text>
+          <Text style={[s.foundingTagline, { color: colors.accent, fontFamily: 'Inter_600SemiBold' }]}>{t('supporter.founding.tagline')}</Text>
+          <Text style={[s.foundingSub, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{t('supporter.founding.sub')}</Text>
+          <View style={s.foundingFooter}>
+            <Text style={[s.foundingPrice, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>
+              {founding.priceString}
+              <Text style={[s.foundingOnce, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>  {t('supporter.founding.once')}</Text>
+            </Text>
+            {busy === founding.id
+              ? <ActivityIndicator color={colors.accent} />
+              : <View style={[s.foundingCta, { backgroundColor: colors.accent }]}>
+                  <Text style={[s.foundingCtaText, { fontFamily: 'Inter_700Bold' }]}>{t('supporter.founding.cta')}</Text>
+                </View>}
+          </View>
+        </Pressable>
+      )}
+
       {/* Plans */}
       {!isSupporter && (
         <>
@@ -115,7 +147,7 @@ export default function SupporterScreen() {
           {loading ? (
             <ActivityIndicator color={colors.primary} style={{ marginVertical: 20 }} />
           ) : (
-            packages.map(p => (
+            recurring.map(p => (
               <Pressable
                 key={p.id}
                 style={[s.plan, { backgroundColor: colors.card, borderColor: p.highlight ? colors.primary : colors.border, borderWidth: p.highlight ? 2 : 1, borderRadius: colors.radius }]}
@@ -181,6 +213,17 @@ const s = StyleSheet.create({
   benefitTitle: { fontSize: 15 },
   benefitBody: { fontSize: 13, lineHeight: 18, marginTop: 2 },
   sectionLabel: { fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', paddingHorizontal: 20, paddingTop: 24, paddingBottom: 10 },
+  founding: { marginHorizontal: 16, marginTop: 20, padding: 18, borderWidth: 2 },
+  foundingBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start', paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999, marginBottom: 10 },
+  foundingBadgeText: { color: '#000000', fontSize: 10.5, letterSpacing: 0.5, textTransform: 'uppercase' },
+  foundingTitle: { fontSize: 19 },
+  foundingTagline: { fontSize: 14, marginTop: 3 },
+  foundingSub: { fontSize: 13, lineHeight: 18, marginTop: 8 },
+  foundingFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 },
+  foundingPrice: { fontSize: 22 },
+  foundingOnce: { fontSize: 12 },
+  foundingCta: { paddingHorizontal: 16, paddingVertical: 11, borderRadius: 12 },
+  foundingCtaText: { color: '#000000', fontSize: 13.5 },
   plan: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, marginBottom: 10, padding: 16 },
   planTitle: { fontSize: 16 },
   planPrice: { fontSize: 14, marginTop: 2 },

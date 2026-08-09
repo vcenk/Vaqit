@@ -37,6 +37,19 @@ export const FALLBACK_PACKAGES: BillingPackage[] = [
   { id: 'supporter_monthly', title: 'Monthly',  priceString: '$3.99 / mo',  period: 'monthly' },
 ];
 
+/**
+ * One-time "Founding Supporter" — pay once, Supporter for life. A launch lever
+ * to bank early goodwill cash and reward superfans (docs: 05-monetization).
+ * When the store is configured, the live lifetime package overrides this.
+ */
+export const FOUNDING_PACKAGE: BillingPackage = {
+  id: 'supporter_lifetime',
+  title: 'Founding Supporter',
+  priceString: '$49.99',
+  period: 'lifetime',
+  highlight: true,
+};
+
 /** One-time sadaqah / tip options (no entitlement — pure support). */
 export const TIP_PACKAGES: BillingPackage[] = [
   { id: 'tip_small',  title: 'Small tip',   priceString: '$2.99',  period: 'tip' },
