@@ -496,6 +496,14 @@ export default function SettingsScreen() {
       <SectionHeader title={t('settings.section.support').toUpperCase()} />
       <Card>
         <SettingRow
+          icon="calculator-outline"
+          iconColor={colors.accent}
+          label={t('settings.row.zakat')}
+          value={t('settings.row.zakatHint')}
+          onPress={() => router.push('/zakat')}
+        />
+        <Divider />
+        <SettingRow
           icon={isSupporter ? 'heart' : 'heart-outline'}
           iconColor="#E11D48"
           label={isSupporter ? t('settings.row.supporterActive') : t('settings.row.becomeSupporter')}

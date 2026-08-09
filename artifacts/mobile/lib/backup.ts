@@ -23,6 +23,7 @@ export const BACKUP_KEYS = [
   'vaqit_mosque_v1',
   'vaqit_notif_settings_v1',
   'vaqit_locale_v1',
+  'vaqit_zakat_v1',
   'vaqit_onboarding_done',
 ] as const;
 

@@ -75,6 +75,10 @@ function RootLayoutNav() {
         name="ramadan"
         options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
       />
+      <Stack.Screen
+        name="zakat"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
     </Stack>
   );
 }
