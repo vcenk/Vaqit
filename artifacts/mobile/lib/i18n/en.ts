@@ -44,6 +44,9 @@ export const en = {
   'settings.section.support': 'Support Vaqit',
   'settings.section.about': 'About',
   'settings.section.backup': 'Backup',
+  'settings.section.learn': 'Learn',
+  'settings.row.foundations': 'Foundations',
+  'settings.row.foundationsHint': 'Why we believe & practise',
   'settings.language.title': 'App Language',
   'settings.language.systemDefault': 'System default',
   // Settings — rows
@@ -337,6 +340,23 @@ export const en = {
   'zakat.giving.body': 'Vaqit runs on supporters, never ads or your data. A sadaqah here supports the app and is entirely separate from the zakat above.',
   'zakat.giving.sadaqah': 'Give a sadaqah',
   'zakat.giving.supporter': 'Become a Supporter',
+
+  // Foundations (topical "why" content)
+  'foundations.title': 'Foundations',
+  'foundations.subtitle': 'Short, sourced answers to the questions people actually ask.',
+  'foundations.pendingBanner': 'Draft content, under scholar review before launch. Every answer shows its sources.',
+  'foundations.cat.worship': 'Worship',
+  'foundations.cat.wealth': 'Wealth & work',
+  'foundations.cat.food': 'Food & daily life',
+  'foundations.cat.beliefs': 'Belief',
+  'foundations.pendingBadge': 'Pending review',
+  'foundations.sources': 'Sources',
+  'foundations.wisdoms': 'Wisdoms sometimes mentioned',
+  'foundations.consultNote': 'Scholars may differ on the details — for a ruling that binds you, ask a qualified scholar.',
+  'foundations.reportIssue': 'Report an issue',
+  'foundation.quran': 'Qur’an',
+  'foundation.hadith': 'Hadith',
+  'foundation.scholar': 'Scholarly note',
 
   // Common
   'common.done': 'Done',

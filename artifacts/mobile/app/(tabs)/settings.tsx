@@ -421,6 +421,18 @@ export default function SettingsScreen() {
         />
       </Card>
 
+      {/* ── Learn ── */}
+      <SectionHeader title={t('settings.section.learn').toUpperCase()} />
+      <Card>
+        <SettingRow
+          icon="sparkles-outline"
+          iconColor={colors.accent}
+          label={t('settings.row.foundations')}
+          value={t('settings.row.foundationsHint')}
+          onPress={() => router.push('/foundations')}
+        />
+      </Card>
+
       {/* ── Privacy ── */}
       <SectionHeader title={t('settings.section.privacy').toUpperCase()} />
       <Card>
