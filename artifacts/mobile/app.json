@@ -24,6 +24,7 @@
     },
     "ios": {
       "bundleIdentifier": "online.vaqit.app",
+      "appleTeamId": "NAC8L7HCJL",
       "buildNumber": "1",
       "supportsTablet": false,
       "entitlements": {
