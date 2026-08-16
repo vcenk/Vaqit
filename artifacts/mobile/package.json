@@ -63,6 +63,7 @@
     "expo-intent-launcher": "~13.0.8",
     "expo-notifications": "~0.32.17",
     "expo-updates": "~29.0.19",
+    "react-native-purchases": "^10.7.1",
     "shared-defaults": "file:./modules/shared-defaults"
   }
 }
