@@ -360,6 +360,15 @@ export const en = {
   'foundation.hadith': 'Hadith',
   'foundation.scholar': 'Scholarly note',
 
+  // Ayah of the day
+  'ayah.today': 'Today’s ayah',
+  'ayah.title': 'Ayah of the Day',
+  'ayah.reflection': 'Reflection',
+  'ayah.tomorrowNote': 'A new ayah arrives each day, delivered on your device.',
+  'ayah.settingsTitle': 'Ayah of the Day',
+  'ayah.timeLabel': 'Notify me at',
+  'ayah.viewToday': 'View today’s ayah',
+
   // Common
   'common.done': 'Done',
   'common.cancel': 'Cancel',

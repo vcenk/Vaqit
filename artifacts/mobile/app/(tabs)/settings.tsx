@@ -214,6 +214,63 @@ function PrayerNotifRow({ prayer }: { prayer: PrayerKey }) {
   );
 }
 
+// ── Ayah of the day ───────────────────────────────────────────────────────────
+const AYAH_TIME_PRESETS = [{ h: 6, m: 0 }, { h: 8, m: 0 }, { h: 13, m: 0 }, { h: 20, m: 0 }, { h: 21, m: 0 }];
+const fmtTime = (h: number, m: number) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+function DailyAyahRow() {
+  const colors = useColors();
+  const t = useT();
+  const { dailyAyah, updateDailyAyah, requestPermission, permissionStatus } = useNotifications();
+
+  const toggle = async (val: boolean) => {
+    if (val && permissionStatus !== 'granted') {
+      const ok = await requestPermission();
+      if (!ok) return;
+    }
+    await updateDailyAyah({ enabled: val });
+  };
+
+  return (
+    <View>
+      <View style={pnr.row}>
+        <View style={[pnr.iconWrap, { backgroundColor: colors.muted }]}>
+          <Ionicons name="book-outline" size={16} color={colors.mutedForeground} />
+        </View>
+        <Text style={[pnr.name, { color: colors.foreground, fontFamily: 'Inter_500Medium' }]}>{t('ayah.settingsTitle')}</Text>
+        <Switch
+          value={dailyAyah.enabled}
+          onValueChange={toggle}
+          trackColor={{ true: colors.primary, false: colors.border }}
+          thumbColor="#FFFFFF"
+        />
+      </View>
+      {dailyAyah.enabled && (
+        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+          <Text style={[pnr.reminderLabel, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{t('ayah.timeLabel')}</Text>
+          <View style={pnr.reminderPills}>
+            {AYAH_TIME_PRESETS.map(({ h, m }) => {
+              const active = dailyAyah.hour === h && dailyAyah.minute === m;
+              return (
+                <Pressable
+                  key={fmtTime(h, m)}
+                  style={[pnr.pill, { backgroundColor: active ? colors.primary + '22' : colors.muted, borderColor: active ? colors.primary : 'transparent', borderWidth: 1.5, borderRadius: 8 }]}
+                  onPress={() => updateDailyAyah({ hour: h, minute: m })}
+                >
+                  <Text style={[pnr.pillText, { color: active ? colors.primary : colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{fmtTime(h, m)}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <Pressable onPress={() => router.push('/daily-ayah')} style={{ paddingTop: 12 }}>
+            <Text style={{ color: colors.primary, fontSize: 13.5, fontFamily: 'Inter_600SemiBold' }}>{t('ayah.viewToday')} ›</Text>
+          </Pressable>
+        </View>
+      )}
+    </View>
+  );
+}
+
 // ── Main Settings screen ──────────────────────────────────────────────────────
 export default function SettingsScreen() {
   const colors = useColors();
@@ -431,6 +488,8 @@ export default function SettingsScreen() {
           value={t('settings.row.foundationsHint')}
           onPress={() => router.push('/foundations')}
         />
+        <Divider />
+        <DailyAyahRow />
       </Card>
 
       {/* ── Privacy ── */}

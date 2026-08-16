@@ -8,6 +8,7 @@ import React, {
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
+import { router } from 'expo-router';
 import {
   PRAYER_DISPLAY_NAMES,
   TRACKABLE_PRAYERS,
@@ -35,7 +36,16 @@ import {
 const NOTIF_SETTINGS_KEY = 'vaqit_notif_settings_v1';
 const LEDGER_KEY = 'vaqit_notif_ledger_v1';
 const FIRED_KEY = 'vaqit_notif_fired_v1';
+const DAILY_AYAH_KEY = 'vaqit_dailyayah_v1';
 const MAX_FIRED_LOG = 100;
+
+/** Opt-in "Ayah of the day" — one local repeating notification at a set time. */
+export interface DailyAyahSettings {
+  enabled: boolean;
+  hour: number;   // 0–23, local
+  minute: number; // 0–59
+}
+const DEFAULT_DAILY_AYAH: DailyAyahSettings = { enabled: false, hour: 8, minute: 0 };
 
 export interface PrayerNotifConfig {
   enabled: boolean;
@@ -103,6 +113,8 @@ function computeTimes(settings: PrayerSettings, date: Date): PrayerTimesData | n
 interface NotifContextValue {
   notifSettings: NotificationSettings;
   updatePrayerNotif: (prayer: PrayerKey, config: Partial<PrayerNotifConfig>) => Promise<void>;
+  dailyAyah: DailyAyahSettings;
+  updateDailyAyah: (partial: Partial<DailyAyahSettings>) => Promise<void>;
   permissionStatus: 'granted' | 'denied' | 'undetermined';
   requestPermission: () => Promise<boolean>;
   scheduleAll: (prayerSettings: PrayerSettings) => Promise<number>;
@@ -122,6 +134,8 @@ interface NotifContextValue {
 const NotifContext = createContext<NotifContextValue>({
   notifSettings: DEFAULT,
   updatePrayerNotif: async () => {},
+  dailyAyah: DEFAULT_DAILY_AYAH,
+  updateDailyAyah: async () => {},
   permissionStatus: 'undetermined',
   requestPermission: async () => false,
   scheduleAll: async () => 0,
@@ -139,6 +153,7 @@ const NotifContext = createContext<NotifContextValue>({
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifSettings, setNotifSettings] = useState<NotificationSettings>(DEFAULT);
+  const [dailyAyah, setDailyAyah] = useState<DailyAyahSettings>(DEFAULT_DAILY_AYAH);
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [scheduledCount, setScheduledCount] = useState(0);
   const [ledger, setLedger] = useState<LedgerEntry[]>([]);
@@ -151,6 +166,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     AsyncStorage.getItem(NOTIF_SETTINGS_KEY).then(val => {
       if (val) {
         try { setNotifSettings(JSON.parse(val)); } catch {}
+      }
+    });
+    AsyncStorage.getItem(DAILY_AYAH_KEY).then(val => {
+      if (val) {
+        try { setDailyAyah({ ...DEFAULT_DAILY_AYAH, ...JSON.parse(val) }); } catch {}
       }
     });
     if (Platform.OS !== 'web') {
@@ -186,6 +206,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           enableVibrate: true,
           lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
         }),
+        Notifications.setNotificationChannelAsync('daily_ayah', {
+          name: 'Ayah of the Day',
+          importance: Notifications.AndroidImportance.DEFAULT,
+          sound: 'default',
+          enableVibrate: true,
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+        }),
       ]).catch(() => {});
     }
   }, []);
@@ -206,6 +233,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       });
     });
 
+    // Tapping the "Ayah of the day" notification opens the ayah screen.
+    const responseSub = Notifications.addNotificationResponseReceivedListener(resp => {
+      const data = resp.notification?.request?.content?.data as { type?: string } | undefined;
+      if (data?.type === 'daily-ayah') {
+        try { router.push('/daily-ayah'); } catch {}
+      }
+    });
+
     if (Platform.OS === 'android') {
       Notifications.getNotificationChannelAsync('athan_fajr').then(ch => {
         if (ch) {
@@ -216,7 +251,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       }).catch(() => {});
     }
 
-    return () => sub.remove();
+    return () => { sub.remove(); responseSub.remove(); };
   }, []);
 
   const refreshScheduledCount = useCallback(async () => {
@@ -235,6 +270,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     setNotifSettings(updated);
     await AsyncStorage.setItem(NOTIF_SETTINGS_KEY, JSON.stringify(updated));
   }, [notifSettings]);
+
+  const updateDailyAyah = useCallback(async (partial: Partial<DailyAyahSettings>) => {
+    const updated = { ...dailyAyah, ...partial };
+    setDailyAyah(updated);
+    await AsyncStorage.setItem(DAILY_AYAH_KEY, JSON.stringify(updated));
+  }, [dailyAyah]);
 
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (Platform.OS === 'web') return false;
@@ -311,12 +352,33 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
           }
         }
       }
+      // Ayah of the day — one repeating daily notification (deliberately NOT a
+      // rolling window, so it never eats into the 64-slot prayer budget). The
+      // body is generic; the actual ayah is computed when the screen opens.
+      if (dailyAyah.enabled) {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Ayah of the day',
+            body: 'A verse to reflect on today — tap to read 🌙',
+            data: { type: 'daily-ayah' },
+            sound: 'default',
+            ...(Platform.OS === 'android' ? { channelId: 'daily_ayah' } : {}),
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.DAILY,
+            hour: dailyAyah.hour,
+            minute: dailyAyah.minute,
+          },
+        });
+        count++;
+      }
+
       setScheduledCount(count);
       setLedger(newLedger);
       await AsyncStorage.setItem(LEDGER_KEY, JSON.stringify(newLedger));
       return count;
     } catch { return 0; }
-  }, [notifSettings, permissionStatus]);
+  }, [notifSettings, permissionStatus, dailyAyah]);
 
   const sendTestNotification = useCallback(async () => {
     if (Platform.OS === 'web') return;
@@ -390,6 +452,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     <NotifContext.Provider value={{
       notifSettings,
       updatePrayerNotif,
+      dailyAyah,
+      updateDailyAyah,
       permissionStatus,
       requestPermission,
       scheduleAll,

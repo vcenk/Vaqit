@@ -340,6 +340,14 @@ export const tr: Record<TKey, string> = {
   'foundation.hadith': 'Hadis',
   'foundation.scholar': 'İlmî not',
 
+  'ayah.today': 'Bugünün ayeti',
+  'ayah.title': 'Günün Ayeti',
+  'ayah.reflection': 'Tefekkür',
+  'ayah.tomorrowNote': 'Her gün cihazına yeni bir ayet gelir.',
+  'ayah.settingsTitle': 'Günün Ayeti',
+  'ayah.timeLabel': 'Bildirim saati',
+  'ayah.viewToday': 'Bugünün ayetini gör',
+
   'common.done': 'Tamam',
   'common.cancel': 'İptal',
   'common.today': 'Bugün',

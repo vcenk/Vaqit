@@ -25,12 +25,12 @@ import { LocaleProvider } from '@/context/LocaleContext';
 /** Sits inside both PrayerProvider and NotificationProvider; reschedules whenever location/method changes. */
 function NotificationScheduler() {
   const { settings } = usePrayer();
-  const { scheduleAll, permissionStatus } = useNotifications();
+  const { scheduleAll, permissionStatus, dailyAyah } = useNotifications();
   useEffect(() => {
     if (permissionStatus === 'granted') {
       scheduleAll(settings);
     }
-  }, [settings.latitude, settings.longitude, settings.calculationMethod, settings.madhab, settings.highLatitudeRule, permissionStatus]);
+  }, [settings.latitude, settings.longitude, settings.calculationMethod, settings.madhab, settings.highLatitudeRule, permissionStatus, dailyAyah]);
   return null;
 }
 
@@ -85,6 +85,10 @@ function RootLayoutNav() {
       />
       <Stack.Screen
         name="foundation"
+        options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="daily-ayah"
         options={{ headerShown: false, presentation: 'card', animation: 'slide_from_right' }}
       />
     </Stack>

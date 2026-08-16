@@ -343,6 +343,14 @@ export const ar: Record<TKey, string> = {
   'foundation.hadith': 'الحديث',
   'foundation.scholar': 'ملاحظة علمية',
 
+  'ayah.today': 'آية اليوم',
+  'ayah.title': 'آية اليوم',
+  'ayah.reflection': 'تأمل',
+  'ayah.tomorrowNote': 'تصلك آية جديدة كل يوم على جهازك.',
+  'ayah.settingsTitle': 'آية اليوم',
+  'ayah.timeLabel': 'نبّهني عند',
+  'ayah.viewToday': 'عرض آية اليوم',
+
   'common.done': 'تم',
   'common.cancel': 'إلغاء',
   'common.today': 'اليوم',
