@@ -7,15 +7,13 @@
  * in every environment (web preview, Expo Go, dev client, production) and the
  * real payment provider can be swapped without touching screens.
  *
- * ── ACTIVATION (when you're ready to charge) ──────────────────────────────────
- * 1. `pnpm --filter @workspace/mobile add react-native-purchases`
- * 2. Create products in App Store Connect + Google Play, then a RevenueCat
- *    project; put the public SDK keys in app.json:
- *      "extra": { "revenueCatApiKeyIos": "appl_xxx", "revenueCatApiKeyAndroid": "goog_xxx" }
- * 3. Replace the body of `loadRevenueCat()` below with a real static import:
- *      import Purchases from 'react-native-purchases';
- *    and map offerings/entitlements to the shapes here.
- * Until then, `isConfigured` is false and the paywall explains it's coming soon.
+ * ── ACTIVATION ────────────────────────────────────────────────────────────────
+ * Done: `react-native-purchases` is installed and the iOS key is in app.json
+ * (`extra.revenueCatApiKeyIos`). Android needs `extra.revenueCatApiKeyAndroid`
+ * (`goog_…`) once the Play app exists. A platform without a key stays in
+ * preview mode: `isBillingConfigured()` is false and the paywall says checkout
+ * isn't live yet — nothing charges by accident. Store-side setup (products,
+ * entitlement, offering) lives in docs/10-store-and-revenuecat-setup.md.
  */
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
@@ -24,7 +22,8 @@ export const SUPPORTER_ENTITLEMENT = 'supporter';
 
 /** A purchasable option, shown on the paywall. */
 export interface BillingPackage {
-  id: string;              // RevenueCat package identifier
+  id: string;              // RevenueCat package identifier (what we purchase by)
+  productId: string;       // store product ID (supporter_annual, tip_small, …) — stable
   title: string;
   priceString: string;    // display price (live when configured, else fallback)
   period: 'monthly' | 'annual' | 'lifetime' | 'tip';
@@ -33,8 +32,8 @@ export interface BillingPackage {
 
 /** Fallback pricing shown before/while live offerings load (docs: 05-monetization). */
 export const FALLBACK_PACKAGES: BillingPackage[] = [
-  { id: 'supporter_annual',  title: 'Yearly',   priceString: '$24.99 / yr', period: 'annual', highlight: true },
-  { id: 'supporter_monthly', title: 'Monthly',  priceString: '$3.99 / mo',  period: 'monthly' },
+  { id: 'supporter_annual',  productId: 'supporter_annual',  title: 'Yearly',  priceString: '$24.99 / yr', period: 'annual', highlight: true },
+  { id: 'supporter_monthly', productId: 'supporter_monthly', title: 'Monthly', priceString: '$3.99 / mo',  period: 'monthly' },
 ];
 
 /**
@@ -44,6 +43,7 @@ export const FALLBACK_PACKAGES: BillingPackage[] = [
  */
 export const FOUNDING_PACKAGE: BillingPackage = {
   id: 'supporter_lifetime',
+  productId: 'supporter_lifetime',
   title: 'Founding Supporter',
   priceString: '$49.99',
   period: 'lifetime',
@@ -52,8 +52,8 @@ export const FOUNDING_PACKAGE: BillingPackage = {
 
 /** One-time sadaqah / tip options (no entitlement — pure support). */
 export const TIP_PACKAGES: BillingPackage[] = [
-  { id: 'tip_small',  title: 'Small tip',   priceString: '$2.99',  period: 'tip' },
-  { id: 'tip_medium', title: 'Generous tip', priceString: '$9.99', period: 'tip' },
+  { id: 'tip_small',  productId: 'tip_small',  title: 'Small tip',    priceString: '$2.99', period: 'tip' },
+  { id: 'tip_medium', productId: 'tip_medium', title: 'Generous tip', priceString: '$9.99', period: 'tip' },
 ];
 
 export interface PurchaseResult {
@@ -84,6 +84,12 @@ async function loadRevenueCat(): Promise<any | null> {
     const specifier = 'react-native-purchases';
     const mod: any = await import(specifier);
     const Purchases = mod?.default ?? mod;
+    // RevenueCat's debug log names the exact store misconfiguration (missing
+    // product, unsigned agreement) behind an empty offering — worth having
+    // while the store side is still being wired up.
+    if (__DEV__ && mod?.LOG_LEVEL?.DEBUG) {
+      try { await Purchases.setLogLevel(mod.LOG_LEVEL.DEBUG); } catch {}
+    }
     await Purchases.configure({ apiKey: apiKey()! });
     return Purchases;
   } catch {
@@ -93,6 +99,38 @@ async function loadRevenueCat(): Promise<any | null> {
 
 function entitlementActive(customerInfo: any): boolean {
   return Boolean(customerInfo?.entitlements?.active?.[SUPPORTER_ENTITLEMENT]);
+}
+
+/**
+ * What kind of option this is. Standard RevenueCat package types answer it
+ * directly; tips are CUSTOM packages, so fall back to the product IDs we
+ * created in the stores (docs: 10-store-and-revenuecat-setup).
+ */
+function periodOf(pkg: any): BillingPackage['period'] {
+  switch (String(pkg?.packageType ?? '').toUpperCase()) {
+    case 'ANNUAL': return 'annual';
+    case 'MONTHLY': return 'monthly';
+    case 'LIFETIME': return 'lifetime';
+  }
+  const id = `${pkg?.product?.identifier ?? pkg?.identifier ?? ''}`.toLowerCase();
+  if (id.includes('tip')) return 'tip';
+  if (id.includes('lifetime')) return 'lifetime';
+  if (id.includes('annual') || id.includes('year')) return 'annual';
+  // Unknown: treat as a recurring plan — never as the Founding card or a tip,
+  // where a mislabelled package would misrepresent what the tap does.
+  return 'monthly';
+}
+
+function toBillingPackage(pkg: any): BillingPackage {
+  const period = periodOf(pkg);
+  return {
+    id: pkg?.identifier,
+    productId: pkg?.product?.identifier ?? pkg?.identifier,
+    title: pkg?.product?.title ?? pkg?.identifier,
+    priceString: pkg?.product?.priceString ?? '',
+    period,
+    highlight: period === 'annual',
+  };
 }
 
 export interface BillingApi {
@@ -124,13 +162,7 @@ export async function createBilling(): Promise<BillingApi> {
         const offerings = await Purchases.getOfferings();
         const pkgs = offerings?.current?.availablePackages ?? [];
         if (pkgs.length === 0) return FALLBACK_PACKAGES;
-        return pkgs.map((p: any): BillingPackage => ({
-          id: p.identifier,
-          title: p.product?.title ?? p.identifier,
-          priceString: p.product?.priceString ?? '',
-          period: p.packageType === 'ANNUAL' ? 'annual' : p.packageType === 'MONTHLY' ? 'monthly' : 'lifetime',
-          highlight: p.packageType === 'ANNUAL',
-        }));
+        return pkgs.map(toBillingPackage);
       } catch {
         return FALLBACK_PACKAGES;
       }
@@ -141,7 +173,12 @@ export async function createBilling(): Promise<BillingApi> {
     purchase: async (packageId: string) => {
       try {
         const offerings = await Purchases.getOfferings();
-        const pkg = (offerings?.current?.availablePackages ?? []).find((p: any) => p.identifier === packageId);
+        // Match on the package identifier or the store product ID, so the
+        // hard-coded fallback IDs still resolve whatever the offering names its
+        // packages ($rc_annual, custom tip packages, …).
+        const pkg = (offerings?.current?.availablePackages ?? []).find(
+          (p: any) => p.identifier === packageId || p.product?.identifier === packageId,
+        );
         if (!pkg) return { ok: false, isSupporter: false, reason: 'error' };
         const { customerInfo } = await Purchases.purchasePackage(pkg);
         return { ok: true, isSupporter: entitlementActive(customerInfo) };

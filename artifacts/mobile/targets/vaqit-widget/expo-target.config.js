@@ -11,7 +11,10 @@
 module.exports = {
   type: "widget",
   name: "VaqitWidget",
-  deploymentTarget: "16.0",
+  // 17.0, not the app's 16.0: the widget views use `containerBackground`, which
+  // iOS 17 requires of widgets and doesn't exist before it. The app still runs
+  // on iOS 16 — only the widget needs 17.
+  deploymentTarget: "17.0",
   colors: {
     $accent: "#4ADE80",
     $background: "#0C1422",

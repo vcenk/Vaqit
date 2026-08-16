@@ -35,17 +35,21 @@ export default function SupporterScreen() {
 
   const planTitle = (p: { period: string; title: string }) =>
     p.period === 'annual' ? t('supporter.plan.annual') : p.period === 'monthly' ? t('supporter.plan.monthly') : p.title;
-  const tipTitle = (id: string) =>
-    id === 'tip_small' ? t('supporter.tip.small') : id === 'tip_medium' ? t('supporter.tip.medium') : id;
+  const tipTitle = (p: { productId: string; title: string }) =>
+    p.productId === 'tip_small' ? t('supporter.tip.small')
+      : p.productId === 'tip_medium' ? t('supporter.tip.medium')
+      : p.title;
 
-  // Prefer the live lifetime package when the store is wired; else the fallback.
+  // Prefer the live packages when the store is wired; else the fallbacks.
   const founding = packages.find(p => p.period === 'lifetime') ?? FOUNDING_PACKAGE;
-  const recurring = packages.filter(p => p.period !== 'lifetime');
+  const recurring = packages.filter(p => p.period === 'monthly' || p.period === 'annual');
+  const liveTips = packages.filter(p => p.period === 'tip');
+  const tips = liveTips.length > 0 ? liveTips : TIP_PACKAGES;
 
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = Platform.OS === 'web' ? 40 : insets.bottom + 24;
 
-  const doPurchase = async (id: string) => {
+  const doPurchase = async (id: string, isTip = false) => {
     if (!configured) {
       Alert.alert(t('supporter.alert.soonTitle'), t('supporter.alert.soonBody'));
       return;
@@ -55,6 +59,9 @@ export default function SupporterScreen() {
     setBusy(null);
     if (r.ok && r.isSupporter) {
       Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.thanksBody'));
+    } else if (r.ok && isTip) {
+      // Tips grant no entitlement — thank the giver anyway.
+      Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.tipThanksBody'));
     } else if (r.reason === 'error') {
       Alert.alert(t('supporter.alert.errTitle'), t('supporter.alert.errBody'));
     }
@@ -65,6 +72,12 @@ export default function SupporterScreen() {
     setBusy('restore');
     const r = await restore();
     setBusy(null);
+    // A failed restore must not read as "you own nothing" — that would tell a
+    // paying supporter their purchase is gone when the call merely errored.
+    if (!r.ok) {
+      Alert.alert(t('supporter.alert.errTitle'), t('supporter.alert.restoreErrBody'));
+      return;
+    }
     Alert.alert(
       r.isSupporter ? t('supporter.alert.restoredTitle') : t('supporter.alert.nothingTitle'),
       r.isSupporter ? t('supporter.alert.restoredBody') : t('supporter.alert.nothingBody'),
@@ -171,14 +184,14 @@ export default function SupporterScreen() {
       {/* Sadaqah / tips */}
       <Text style={[s.sectionLabel, { color: colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{t('supporter.sadaqah').toUpperCase()}</Text>
       <View style={s.tipRow}>
-        {TIP_PACKAGES.map(tip => (
+        {tips.map(tip => (
           <Pressable
             key={tip.id}
             style={[s.tip, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}
-            onPress={() => doPurchase(tip.id)}
+            onPress={() => doPurchase(tip.id, true)}
             disabled={busy !== null}
           >
-            <Text style={[s.tipTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{tipTitle(tip.id)}</Text>
+            <Text style={[s.tipTitle, { color: colors.foreground, fontFamily: 'Inter_600SemiBold' }]}>{tipTitle(tip)}</Text>
             <Text style={[s.tipPrice, { color: colors.primary, fontFamily: 'Inter_700Bold' }]}>{tip.priceString}</Text>
           </Pressable>
         ))}
