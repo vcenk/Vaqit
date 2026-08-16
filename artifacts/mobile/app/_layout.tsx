@@ -25,12 +25,12 @@ import { LocaleProvider } from '@/context/LocaleContext';
 /** Sits inside both PrayerProvider and NotificationProvider; reschedules whenever location/method changes. */
 function NotificationScheduler() {
   const { settings } = usePrayer();
-  const { scheduleAll, permissionStatus, dailyAyah } = useNotifications();
+  const { scheduleAll, permissionStatus, dailyAyah, zakatReminder } = useNotifications();
   useEffect(() => {
     if (permissionStatus === 'granted') {
       scheduleAll(settings);
     }
-  }, [settings.latitude, settings.longitude, settings.calculationMethod, settings.madhab, settings.highLatitudeRule, permissionStatus, dailyAyah]);
+  }, [settings.latitude, settings.longitude, settings.calculationMethod, settings.madhab, settings.highLatitudeRule, permissionStatus, dailyAyah, zakatReminder]);
   return null;
 }
 

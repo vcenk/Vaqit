@@ -4,6 +4,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -14,7 +15,13 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColors } from '@/hooks/useColors';
+import { useNotifications } from '@/context/NotificationContext';
 import { useT, type TKey } from '@/lib/i18n';
+
+const MONTH_SHORT = Array.from({ length: 12 }, (_, i) =>
+  new Date(2001, i, 1).toLocaleDateString(undefined, { month: 'short' }),
+);
+const daysInMonth = (month1: number) => new Date(2001, month1, 0).getDate();
 
 const ZAKAT_KEY = 'vaqit_zakat_v1';
 const ZAKAT_RATE = 0.025;
@@ -85,12 +92,33 @@ export default function ZakatScreen() {
   const t = useT();
   const insets = useSafeAreaInsets();
   const [st, setSt] = useState<ZakatState>(EMPTY);
+  const { zakatReminder, updateZakatReminder, requestPermission, permissionStatus } = useNotifications();
 
   useEffect(() => {
     AsyncStorage.getItem(ZAKAT_KEY).then((v) => {
       if (v) { try { setSt({ ...EMPTY, ...JSON.parse(v) }); } catch {} }
     });
   }, []);
+
+  const reminderDate = new Date(2001, zakatReminder.month - 1, zakatReminder.day)
+    .toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+
+  const toggleReminder = async (val: boolean) => {
+    if (val) {
+      if (permissionStatus !== 'granted') {
+        const ok = await requestPermission();
+        if (!ok) return;
+      }
+      const today = new Date();
+      await updateZakatReminder({ enabled: true, month: today.getMonth() + 1, day: today.getDate() });
+    } else {
+      await updateZakatReminder({ enabled: false });
+    }
+  };
+
+  const pickMonth = (m1: number) => {
+    updateZakatReminder({ month: m1, day: Math.min(zakatReminder.day, daysInMonth(m1)) });
+  };
 
   const update = (patch: Partial<ZakatState>) => {
     setSt((prev) => {
@@ -216,6 +244,35 @@ export default function ZakatScreen() {
           <Text style={[s.disclaimerText, { color: colors.foreground, fontFamily: 'Inter_400Regular' }]}>{t('zakat.disclaimer')}</Text>
         </View>
 
+        {/* Yearly reminder — remember your zakat */}
+        <View style={[s.reminderCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
+          <View style={s.reminderHead}>
+            <View style={[s.reminderIcon, { backgroundColor: colors.accent + '22' }]}>
+              <Ionicons name="notifications-outline" size={18} color={colors.accent} />
+            </View>
+            <Text style={[s.reminderTitle, { color: colors.foreground, fontFamily: 'Inter_700Bold' }]}>{t('zakat.reminder.title')}</Text>
+            <Switch value={zakatReminder.enabled} onValueChange={toggleReminder} trackColor={{ true: colors.primary, false: colors.border }} thumbColor="#FFFFFF" />
+          </View>
+          <Text style={[s.reminderBody, { color: colors.mutedForeground, fontFamily: 'Inter_400Regular' }]}>{t('zakat.reminder.body')}</Text>
+          {zakatReminder.enabled && (
+            <>
+              <Text style={[s.reminderOn, { color: colors.primary, fontFamily: 'Inter_600SemiBold' }]}>{t('zakat.reminder.on', { date: reminderDate })}</Text>
+              <Text style={[s.reminderPickLabel, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{t('zakat.reminder.pickMonth')}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 2 }}>
+                {MONTH_SHORT.map((mLabel, i) => {
+                  const m1 = i + 1;
+                  const active = zakatReminder.month === m1;
+                  return (
+                    <Pressable key={m1} onPress={() => pickMonth(m1)} style={[s.monthPill, { backgroundColor: active ? colors.primary + '22' : colors.muted, borderColor: active ? colors.primary : 'transparent', borderWidth: 1.5 }]}>
+                      <Text style={[s.monthPillText, { color: active ? colors.primary : colors.mutedForeground, fontFamily: 'Inter_600SemiBold' }]}>{mLabel}</Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </>
+          )}
+        </View>
+
         {/* Sadaqah funnel — keep it ethically separate from zakat */}
         <View style={[s.givingCard, { backgroundColor: colors.card, borderRadius: colors.radius }]}>
           <View style={s.givingHead}>
@@ -263,6 +320,15 @@ const s = StyleSheet.create({
   hint: { fontSize: 12, lineHeight: 17, paddingBottom: 12 },
   disclaimer: { flexDirection: 'row', gap: 10, padding: 14, marginTop: 8, marginBottom: 16, alignItems: 'flex-start' },
   disclaimerText: { flex: 1, fontSize: 12.5, lineHeight: 18 },
+  reminderCard: { padding: 18, marginBottom: 12 },
+  reminderHead: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 8 },
+  reminderIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  reminderTitle: { fontSize: 15.5, flex: 1 },
+  reminderBody: { fontSize: 13, lineHeight: 19 },
+  reminderOn: { fontSize: 13.5, marginTop: 12 },
+  reminderPickLabel: { fontSize: 12, marginTop: 12, marginBottom: 8 },
+  monthPill: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, minWidth: 46, alignItems: 'center' },
+  monthPillText: { fontSize: 12.5 },
   givingCard: { padding: 18 },
   givingHead: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 },
   givingIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },

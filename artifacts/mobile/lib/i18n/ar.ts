@@ -324,6 +324,10 @@ export const ar: Record<TKey, string> = {
   'zakat.giving.body': 'يعمل Vaqit بدعم الداعمين، لا بالإعلانات ولا ببياناتك. الصدقة هنا تدعم التطبيق وهي منفصلة تمامًا عن الزكاة أعلاه.',
   'zakat.giving.sadaqah': 'تصدّق',
   'zakat.giving.supporter': 'كن داعمًا',
+  'zakat.reminder.title': 'ذكّرني كل عام',
+  'zakat.reminder.body': 'الزكاة تجب مرة كل عام هجري. سنرسل تذكيرًا لطيفًا لمراجعة حسابك — على جهازك، بلا حساب.',
+  'zakat.reminder.on': 'سنذكّرك قرابة {date} كل عام.',
+  'zakat.reminder.pickMonth': 'شهر التذكير',
 
   'foundations.title': 'الأسس',
   'foundations.subtitle': 'إجابات قصيرة وموثّقة للأسئلة التي يطرحها الناس فعلًا.',

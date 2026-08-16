@@ -340,6 +340,10 @@ export const en = {
   'zakat.giving.body': 'Vaqit runs on supporters, never ads or your data. A sadaqah here supports the app and is entirely separate from the zakat above.',
   'zakat.giving.sadaqah': 'Give a sadaqah',
   'zakat.giving.supporter': 'Become a Supporter',
+  'zakat.reminder.title': 'Remind me every year',
+  'zakat.reminder.body': 'Zakat is due once a lunar year. We’ll send a gentle reminder to review your calculation — on your device, no account.',
+  'zakat.reminder.on': 'We’ll remind you around {date} each year.',
+  'zakat.reminder.pickMonth': 'Reminder month',
 
   // Foundations (topical "why" content)
   'foundations.title': 'Foundations',

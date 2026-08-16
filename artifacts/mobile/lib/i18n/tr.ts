@@ -321,6 +321,10 @@ export const tr: Record<TKey, string> = {
   'zakat.giving.body': 'Vaqit reklamla ya da verinle değil, destekçilerle yaşar. Buradaki sadaka uygulamayı destekler ve yukarıdaki zekâttan tamamen ayrıdır.',
   'zakat.giving.sadaqah': 'Sadaka ver',
   'zakat.giving.supporter': 'Destekçi Ol',
+  'zakat.reminder.title': 'Her yıl bana hatırlat',
+  'zakat.reminder.body': 'Zekât kameri yılda bir kez farzdır. Hesabını gözden geçirmen için nazik bir hatırlatma göndeririz — cihazında, hesap gerekmez.',
+  'zakat.reminder.on': 'Her yıl {date} civarında hatırlatırız.',
+  'zakat.reminder.pickMonth': 'Hatırlatma ayı',
 
   'foundations.title': 'Temeller',
   'foundations.subtitle': 'İnsanların gerçekten sorduğu sorulara kısa, kaynaklı yanıtlar.',

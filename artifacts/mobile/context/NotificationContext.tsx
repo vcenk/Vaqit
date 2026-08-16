@@ -47,6 +47,15 @@ export interface DailyAyahSettings {
 }
 const DEFAULT_DAILY_AYAH: DailyAyahSettings = { enabled: false, hour: 8, minute: 0 };
 
+const ZAKAT_REMINDER_KEY = 'vaqit_zakat_reminder_v1';
+/** Opt-in yearly Zakat reminder, on a date the user sets (their Hawl / zakat date). */
+export interface ZakatReminderSettings {
+  enabled: boolean;
+  month: number; // 1–12
+  day: number;   // 1–31
+}
+const DEFAULT_ZAKAT_REMINDER: ZakatReminderSettings = { enabled: false, month: 1, day: 1 };
+
 export interface PrayerNotifConfig {
   enabled: boolean;
   preReminder: number; // minutes before; 0 = disabled
@@ -115,6 +124,8 @@ interface NotifContextValue {
   updatePrayerNotif: (prayer: PrayerKey, config: Partial<PrayerNotifConfig>) => Promise<void>;
   dailyAyah: DailyAyahSettings;
   updateDailyAyah: (partial: Partial<DailyAyahSettings>) => Promise<void>;
+  zakatReminder: ZakatReminderSettings;
+  updateZakatReminder: (partial: Partial<ZakatReminderSettings>) => Promise<void>;
   permissionStatus: 'granted' | 'denied' | 'undetermined';
   requestPermission: () => Promise<boolean>;
   scheduleAll: (prayerSettings: PrayerSettings) => Promise<number>;
@@ -136,6 +147,8 @@ const NotifContext = createContext<NotifContextValue>({
   updatePrayerNotif: async () => {},
   dailyAyah: DEFAULT_DAILY_AYAH,
   updateDailyAyah: async () => {},
+  zakatReminder: DEFAULT_ZAKAT_REMINDER,
+  updateZakatReminder: async () => {},
   permissionStatus: 'undetermined',
   requestPermission: async () => false,
   scheduleAll: async () => 0,
@@ -154,6 +167,7 @@ const NotifContext = createContext<NotifContextValue>({
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifSettings, setNotifSettings] = useState<NotificationSettings>(DEFAULT);
   const [dailyAyah, setDailyAyah] = useState<DailyAyahSettings>(DEFAULT_DAILY_AYAH);
+  const [zakatReminder, setZakatReminder] = useState<ZakatReminderSettings>(DEFAULT_ZAKAT_REMINDER);
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [scheduledCount, setScheduledCount] = useState(0);
   const [ledger, setLedger] = useState<LedgerEntry[]>([]);
@@ -171,6 +185,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     AsyncStorage.getItem(DAILY_AYAH_KEY).then(val => {
       if (val) {
         try { setDailyAyah({ ...DEFAULT_DAILY_AYAH, ...JSON.parse(val) }); } catch {}
+      }
+    });
+    AsyncStorage.getItem(ZAKAT_REMINDER_KEY).then(val => {
+      if (val) {
+        try { setZakatReminder({ ...DEFAULT_ZAKAT_REMINDER, ...JSON.parse(val) }); } catch {}
       }
     });
     if (Platform.OS !== 'web') {
@@ -238,6 +257,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       const data = resp.notification?.request?.content?.data as { type?: string } | undefined;
       if (data?.type === 'daily-ayah') {
         try { router.push('/daily-ayah'); } catch {}
+      } else if (data?.type === 'zakat-reminder') {
+        try { router.push('/zakat'); } catch {}
       }
     });
 
@@ -276,6 +297,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     setDailyAyah(updated);
     await AsyncStorage.setItem(DAILY_AYAH_KEY, JSON.stringify(updated));
   }, [dailyAyah]);
+
+  const updateZakatReminder = useCallback(async (partial: Partial<ZakatReminderSettings>) => {
+    const updated = { ...zakatReminder, ...partial };
+    setZakatReminder(updated);
+    await AsyncStorage.setItem(ZAKAT_REMINDER_KEY, JSON.stringify(updated));
+  }, [zakatReminder]);
 
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (Platform.OS === 'web') return false;
@@ -373,12 +400,32 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         count++;
       }
 
+      // Yearly Zakat reminder — scheduled for the next occurrence of the user's
+      // zakat date (re-armed on each app open, so it stays in the future).
+      if (zakatReminder.enabled) {
+        let due = new Date(now.getFullYear(), zakatReminder.month - 1, zakatReminder.day, 9, 0, 0);
+        if (due.getTime() <= now.getTime()) {
+          due = new Date(now.getFullYear() + 1, zakatReminder.month - 1, zakatReminder.day, 9, 0, 0);
+        }
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: 'Zakat reminder',
+            body: 'It’s around your yearly Zakat time — tap to review your calculation 🤲',
+            data: { type: 'zakat-reminder' },
+            sound: 'default',
+            ...(Platform.OS === 'android' ? { channelId: 'reminder' } : {}),
+          },
+          trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: due },
+        });
+        count++;
+      }
+
       setScheduledCount(count);
       setLedger(newLedger);
       await AsyncStorage.setItem(LEDGER_KEY, JSON.stringify(newLedger));
       return count;
     } catch { return 0; }
-  }, [notifSettings, permissionStatus, dailyAyah]);
+  }, [notifSettings, permissionStatus, dailyAyah, zakatReminder]);
 
   const sendTestNotification = useCallback(async () => {
     if (Platform.OS === 'web') return;
@@ -454,6 +501,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       updatePrayerNotif,
       dailyAyah,
       updateDailyAyah,
+      zakatReminder,
+      updateZakatReminder,
       permissionStatus,
       requestPermission,
       scheduleAll,
