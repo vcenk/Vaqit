@@ -217,6 +217,8 @@ export const ar: Record<TKey, string> = {
   'supporter.tip.medium': 'مبلغ سخي',
   'supporter.plan.annual': 'سنوي',
   'supporter.plan.monthly': 'شهري',
+  'supporter.per.month': '/ شهريًا',
+  'supporter.per.year': '/ سنويًا',
   'supporter.alert.soonTitle': 'اقتربنا',
   'supporter.alert.soonBody': 'دفع الداعم غير مفعّل بعد — سيُفتح مع أول إصدار لنا. شكرًا لرغبتك في دعم Vaqit.',
   'supporter.alert.thanksTitle': 'جزاك الله خيرًا 🤲',

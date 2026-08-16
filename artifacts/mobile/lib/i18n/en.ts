@@ -229,6 +229,8 @@ export const en = {
   'supporter.tip.medium': 'Generous tip',
   'supporter.plan.annual': 'Yearly',
   'supporter.plan.monthly': 'Monthly',
+  'supporter.per.month': '/ mo',
+  'supporter.per.year': '/ yr',
   'supporter.alert.soonTitle': 'Almost there',
   'supporter.alert.soonBody': 'Supporter checkout isn’t live yet — it opens with our first release. Thank you for wanting to support Vaqit.',
   'supporter.alert.thanksTitle': 'Jazakallahu khayran 🤲',

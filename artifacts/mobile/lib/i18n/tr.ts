@@ -214,6 +214,8 @@ export const tr: Record<TKey, string> = {
   'supporter.tip.medium': 'Cömert bağış',
   'supporter.plan.annual': 'Yıllık',
   'supporter.plan.monthly': 'Aylık',
+  'supporter.per.month': '/ ay',
+  'supporter.per.year': '/ yıl',
   'supporter.alert.soonTitle': 'Neredeyse hazır',
   'supporter.alert.soonBody': 'Destekçi ödemesi henüz aktif değil — ilk sürümümüzle açılacak. Vaqit’i desteklemek istediğiniz için teşekkürler.',
   'supporter.alert.thanksTitle': 'Cezâkallahu hayran 🤲',

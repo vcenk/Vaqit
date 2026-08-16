@@ -30,10 +30,14 @@ export interface BillingPackage {
   highlight?: boolean;
 }
 
-/** Fallback pricing shown before/while live offerings load (docs: 05-monetization). */
+/**
+ * Fallback pricing shown before/while live offerings load (docs: 05-monetization).
+ * Bare amounts, like the store's own `priceString` — the paywall appends the
+ * billing period, so live and fallback prices read identically.
+ */
 export const FALLBACK_PACKAGES: BillingPackage[] = [
-  { id: 'supporter_annual',  productId: 'supporter_annual',  title: 'Yearly',  priceString: '$24.99 / yr', period: 'annual', highlight: true },
-  { id: 'supporter_monthly', productId: 'supporter_monthly', title: 'Monthly', priceString: '$3.99 / mo',  period: 'monthly' },
+  { id: 'supporter_annual',  productId: 'supporter_annual',  title: 'Yearly',  priceString: '$24.99', period: 'annual', highlight: true },
+  { id: 'supporter_monthly', productId: 'supporter_monthly', title: 'Monthly', priceString: '$3.99',  period: 'monthly' },
 ];
 
 /**

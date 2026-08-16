@@ -35,6 +35,11 @@ export default function SupporterScreen() {
 
   const planTitle = (p: { period: string; title: string }) =>
     p.period === 'annual' ? t('supporter.plan.annual') : p.period === 'monthly' ? t('supporter.plan.monthly') : p.title;
+  // Store prices are bare amounts — a subscription must show what it renews at.
+  const planPrice = (p: { period: string; priceString: string }) =>
+    p.period === 'annual' ? `${p.priceString} ${t('supporter.per.year')}`
+      : p.period === 'monthly' ? `${p.priceString} ${t('supporter.per.month')}`
+      : p.priceString;
   const tipTitle = (p: { productId: string; title: string }) =>
     p.productId === 'tip_small' ? t('supporter.tip.small')
       : p.productId === 'tip_medium' ? t('supporter.tip.medium')
@@ -172,7 +177,7 @@ export default function SupporterScreen() {
                     {planTitle(p)}
                     {p.highlight && <Text style={{ color: colors.primary }}>  · {t('supporter.bestValue')}</Text>}
                   </Text>
-                  <Text style={[s.planPrice, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{p.priceString}</Text>
+                  <Text style={[s.planPrice, { color: colors.mutedForeground, fontFamily: 'Inter_500Medium' }]}>{planPrice(p)}</Text>
                 </View>
                 {busy === p.id ? <ActivityIndicator color={colors.primary} /> : <Ionicons name="chevron-forward" size={20} color={colors.primary} />}
               </Pressable>
