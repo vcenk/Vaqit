@@ -8,7 +8,7 @@
 //
 // Data flow:
 //   PrayerContext (JS) → SharedDefaultsModule (Swift bridge) →
-//   UserDefaults(suiteName: "group.com.vaqit.app") →
+//   UserDefaults(suiteName: "group.online.vaqit.app") →
 //   Widget providers read the JSON on every timeline refresh.
 //
 // HOW TO BUILD
@@ -21,7 +21,7 @@ import SwiftUI
 
 // MARK: - App Group constants
 
-private let kAppGroupSuite  = "group.com.vaqit.app"
+private let kAppGroupSuite  = "group.online.vaqit.app"
 private let kWidgetTimesKey = "vaqit_widget_times"
 
 // MARK: - Shared data model

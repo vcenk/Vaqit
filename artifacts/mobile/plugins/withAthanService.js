@@ -24,7 +24,7 @@ function addAthanService(androidManifest) {
     application.service = [];
   }
 
-  const serviceName = 'com.vaqit.app.VaqitAthanService';
+  const serviceName = 'online.vaqit.app.VaqitAthanService';
   const alreadyDeclared = application.service.some(
     (s) => s.$?.['android:name'] === serviceName
   );

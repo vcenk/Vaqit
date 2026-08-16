@@ -14,7 +14,7 @@ import { Linking, Platform } from 'react-native';
 import * as IntentLauncher from 'expo-intent-launcher';
 import * as Application from 'expo-application';
 
-const pkg = Application.applicationId ?? 'com.vaqit.app';
+const pkg = Application.applicationId ?? 'online.vaqit.app';
 
 async function launch(action: string, params?: IntentLauncher.IntentLauncherParams): Promise<void> {
   if (Platform.OS !== 'android') {

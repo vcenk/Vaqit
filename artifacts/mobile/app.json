@@ -23,12 +23,12 @@
       "policy": "appVersion"
     },
     "ios": {
-      "bundleIdentifier": "com.vaqit.app",
+      "bundleIdentifier": "online.vaqit.app",
       "buildNumber": "1",
       "supportsTablet": false,
       "entitlements": {
         "com.apple.security.application-groups": [
-          "group.com.vaqit.app"
+          "group.online.vaqit.app"
         ]
       },
       "infoPlist": {
@@ -43,7 +43,7 @@
       }
     },
     "android": {
-      "package": "com.vaqit.app",
+      "package": "online.vaqit.app",
       "versionCode": 1,
       "permissions": [
         "ACCESS_FINE_LOCATION",
