@@ -332,6 +332,8 @@ export const ar: Record<TKey, string> = {
   'foundations.cat.wealth': 'المال والعمل',
   'foundations.cat.food': 'الطعام والحياة اليومية',
   'foundations.cat.beliefs': 'العقيدة',
+  'foundations.cat.character': 'الأخلاق',
+  'foundations.cat.family': 'الأسرة',
   'foundations.pendingBadge': 'قيد المراجعة',
   'foundations.sources': 'المصادر',
   'foundations.wisdoms': 'حِكَم تُذكر أحيانًا',

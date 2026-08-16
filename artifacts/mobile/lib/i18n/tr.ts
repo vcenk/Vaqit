@@ -329,6 +329,8 @@ export const tr: Record<TKey, string> = {
   'foundations.cat.wealth': 'Mal & çalışma',
   'foundations.cat.food': 'Yemek & günlük hayat',
   'foundations.cat.beliefs': 'İnanç',
+  'foundations.cat.character': 'Ahlak',
+  'foundations.cat.family': 'Aile',
   'foundations.pendingBadge': 'İnceleme bekliyor',
   'foundations.sources': 'Kaynaklar',
   'foundations.wisdoms': 'Bazen anılan hikmetler',

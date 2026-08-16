@@ -349,6 +349,8 @@ export const en = {
   'foundations.cat.wealth': 'Wealth & work',
   'foundations.cat.food': 'Food & daily life',
   'foundations.cat.beliefs': 'Belief',
+  'foundations.cat.character': 'Character',
+  'foundations.cat.family': 'Family',
   'foundations.pendingBadge': 'Pending review',
   'foundations.sources': 'Sources',
   'foundations.wisdoms': 'Wisdoms sometimes mentioned',

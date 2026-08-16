@@ -26,7 +26,7 @@ export interface FoundationSource {
   text: string;
 }
 
-export type FoundationCategory = 'worship' | 'wealth' | 'food' | 'beliefs';
+export type FoundationCategory = 'worship' | 'wealth' | 'food' | 'beliefs' | 'character' | 'family';
 
 export interface FoundationTopic {
   id: string;
@@ -49,6 +49,8 @@ export const FOUNDATION_CATEGORY_ICON: Record<FoundationCategory, string> = {
   wealth: 'cash-outline',
   food: 'restaurant-outline',
   beliefs: 'sparkles-outline',
+  character: 'heart-outline',
+  family: 'people-outline',
 };
 
 export const FOUNDATION_TOPICS: FoundationTopic[] = [
@@ -164,6 +166,156 @@ export const FOUNDATION_TOPICS: FoundationTopic[] = [
         translator: 'Sahih International',
         text: 'The month of Ramadan [is that] in which was revealed the Qur’an, a guidance for the people.',
       },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'hajj',
+    category: 'worship',
+    icon: 'compass-outline',
+    question: 'Why perform Hajj?',
+    summary: 'A once-in-a-lifetime pilgrimage that gathers Muslims as equals before Allah.',
+    intro:
+      'Hajj is the pilgrimage to the Kaaba in Makkah, obligatory once for every Muslim who is able. It answers a call that goes back to the Prophet Ibrahim, strips away rank and wealth so all stand equal in simple garments, and renews a person’s devotion to Allah.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 3:97', translator: 'Sahih International', text: 'And [due] to Allah from the people is a pilgrimage to the House — for whoever is able to find thereto a way.' },
+      { kind: 'quran', ref: 'Qur’an 22:27', translator: 'Sahih International', text: 'And proclaim to the people the Hajj [pilgrimage]; they will come to you on foot and on every lean camel.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'zakat',
+    category: 'wealth',
+    icon: 'cash-outline',
+    question: 'Why give zakat?',
+    summary: 'It purifies wealth and returns a due share to those in need — a right, not a favour.',
+    intro:
+      'Zakat is a yearly portion of eligible wealth (about 2.5%) given to those entitled to it. It purifies wealth and the heart from greed, and treats a share of what one has as a right owed to the poor rather than charity given as a favour.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 9:103', translator: 'Sahih International', text: 'Take, [O Muhammad], from their wealth a charity by which you purify them and cause them increase.' },
+      { kind: 'quran', ref: 'Qur’an 2:110', translator: 'Sahih International', text: 'And establish prayer and give zakah, and whatever good you put forward for yourselves — you will find it with Allah.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'alcohol',
+    category: 'food',
+    icon: 'wine-outline',
+    question: 'Why is alcohol forbidden?',
+    summary: 'Intoxicants cloud the mind and turn people from prayer — the Qur’an calls them to be avoided.',
+    intro:
+      'Intoxicants (khamr) are forbidden because they cloud the mind, turn a person away from prayer and the remembrance of Allah, and breed harm and enmity. The Qur’an names them, together with gambling, as something to be avoided entirely.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 5:90', translator: 'Sahih International', text: 'O you who have believed, indeed, intoxicants, gambling, [sacrificing on] stone altars… are but defilement from the work of Satan, so avoid it.' },
+      { kind: 'quran', ref: 'Qur’an 2:219', translator: 'Sahih International', text: 'In them is great sin and [yet, some] benefit for people. But their sin is greater than their benefit.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'gambling',
+    category: 'wealth',
+    icon: 'dice-outline',
+    question: 'Why is gambling forbidden?',
+    summary: 'Unearned gain at another’s loss breeds harm and enmity, and distracts from prayer.',
+    intro:
+      'Gambling (maysir) is forbidden because it seeks gain at another’s loss without real work or shared risk, and it breeds addiction, enmity, and neglect of prayer. The Qur’an pairs it with intoxicants as the work of Satan to be avoided.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 5:90–91', translator: 'Sahih International', text: '…intoxicants and gambling… Satan only wants to cause between you animosity and hatred… and to avert you from the remembrance of Allah and from prayer.' },
+      { kind: 'quran', ref: 'Qur’an 2:219', translator: 'Sahih International', text: 'They ask you about wine and gambling. Say, “In them is great sin…”' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'purpose-of-life',
+    category: 'beliefs',
+    icon: 'sparkles-outline',
+    question: 'What is the purpose of life?',
+    summary: 'To know and worship Allah — and to be tested in doing what is best.',
+    intro:
+      'In Islam, the purpose of life is to know Allah and to worship Him — a worship that includes prayer but also honesty, kindness, and every good deed done for His sake. Life is described as a test of who acts best.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 51:56', translator: 'Sahih International', text: 'And I did not create the jinn and mankind except to worship Me.' },
+      { kind: 'quran', ref: 'Qur’an 67:2', translator: 'Sahih International', text: '[He] who created death and life to test you [as to] which of you is best in deed.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'hope-in-mercy',
+    category: 'beliefs',
+    icon: 'heart-circle-outline',
+    question: 'Why should I never lose hope in Allah’s mercy?',
+    summary: 'The Qur’an tells those who have sinned not to despair — Allah forgives all sins.',
+    intro:
+      'No matter what a person has done, Islam forbids despair of Allah’s mercy. The door of turning back (tawbah) is always open, and the Qur’an addresses even those who have wronged themselves with reassurance rather than rejection.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 39:53', translator: 'Sahih International', text: 'Say, “O My servants who have transgressed against themselves, do not despair of the mercy of Allah. Indeed, Allah forgives all sins.”' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'parents',
+    category: 'family',
+    icon: 'people-outline',
+    question: 'Why does Islam stress kindness to parents?',
+    summary: 'Right after worshipping Allah, the Qur’an commands good treatment of parents.',
+    intro:
+      'Honouring one’s parents is placed by the Qur’an directly after the worship of Allah. Even a word of impatience is discouraged; instead a believer is asked to lower the wing of humility and mercy toward them, especially in their old age.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 17:23', translator: 'Sahih International', text: 'And your Lord has decreed that you worship none but Him, and to parents, good treatment…' },
+      { kind: 'quran', ref: 'Qur’an 31:14', translator: 'Sahih International', text: 'And We have enjoined upon man [care] for his parents.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'marriage',
+    category: 'family',
+    icon: 'heart-outline',
+    question: 'Why does Islam encourage marriage?',
+    summary: 'A bond of tranquillity, affection, and mercy — described as a sign of Allah.',
+    intro:
+      'Marriage in Islam is a means of tranquillity, companionship, and building a family in a lawful, dignified way. The Qur’an describes the love and mercy placed between spouses as one of the signs of Allah.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 30:21', translator: 'Sahih International', text: 'And of His signs is that He created for you from yourselves mates that you may find tranquillity in them; and He placed between you affection and mercy.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'backbiting',
+    category: 'character',
+    icon: 'chatbubble-ellipses-outline',
+    question: 'Why is backbiting forbidden?',
+    summary: 'Speaking ill of an absent person is likened to eating their flesh.',
+    intro:
+      'Backbiting (gheebah) — saying about someone, in their absence, what they would dislike — is firmly forbidden. The Qur’an gives a striking image to show how ugly it is, and pairs the prohibition with a call to avoid suspicion and spying.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 49:12', translator: 'Sahih International', text: 'And do not backbite one another. Would one of you like to eat the flesh of his dead brother? You would detest it.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'honesty',
+    category: 'character',
+    icon: 'shield-checkmark-outline',
+    question: 'Why does Islam emphasise honesty?',
+    summary: 'Truthfulness is commanded, and a believer is asked to stand with the truthful.',
+    intro:
+      'Truthfulness is a core Muslim trait: in speech, dealings, and promises. The Qur’an ties being conscious of Allah to standing with the truthful and speaking words that are upright.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 9:119', translator: 'Sahih International', text: 'O you who have believed, fear Allah and be with those who are true.' },
+      { kind: 'quran', ref: 'Qur’an 33:70', translator: 'Sahih International', text: 'O you who have believed, fear Allah and speak words of appropriate justice.' },
+    ],
+    reviewStatus: 'pending',
+  },
+  {
+    id: 'patience',
+    category: 'character',
+    icon: 'hourglass-outline',
+    question: 'Why is patience (sabr) so valued?',
+    summary: 'Patience and prayer are named as the believer’s source of strength.',
+    intro:
+      'Patience (sabr) — steadiness through hardship, restraint from wrong, and perseverance in good — is deeply praised in Islam. The Qur’an pairs it with prayer as the way to seek help, and promises that Allah is with the patient.',
+    sources: [
+      { kind: 'quran', ref: 'Qur’an 2:153', translator: 'Sahih International', text: 'O you who have believed, seek help through patience and prayer. Indeed, Allah is with the patient.' },
     ],
     reviewStatus: 'pending',
   },

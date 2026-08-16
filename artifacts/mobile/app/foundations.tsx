@@ -11,7 +11,7 @@ import {
   type FoundationTopic,
 } from '@/constants/foundations';
 
-const CATEGORY_ORDER: FoundationCategory[] = ['worship', 'food', 'wealth', 'beliefs'];
+const CATEGORY_ORDER: FoundationCategory[] = ['beliefs', 'worship', 'character', 'family', 'wealth', 'food'];
 
 export default function FoundationsScreen() {
   const colors = useColors();
