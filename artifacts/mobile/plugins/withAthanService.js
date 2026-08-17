@@ -12,7 +12,10 @@
  * "./plugins/withAthanService". No manual steps needed.
  */
 
-const { withAndroidManifest } = require('@expo/config-plugins');
+// Import via `expo/config-plugins`, not `@expo/config-plugins` directly: the
+// latter is a transitive dep and isn't resolvable in this pnpm workspace, so
+// EAS CLI fails to load this plugin (local `expo prebuild` happens to survive it).
+const { withAndroidManifest } = require('expo/config-plugins');
 
 /**
  * @param {import('@expo/config-plugins').AndroidManifest} androidManifest

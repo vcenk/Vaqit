@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Vaqit — Prayer Companion",
-    "slug": "mobile",
+    "slug": "vaqit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
       "backgroundColor": "#0C1422"
     },
     "updates": {
-      "url": "https://u.expo.dev/REPLACE-WITH-EAS-PROJECT-ID",
+      "url": "https://u.expo.dev/fb881a3d-19bd-489c-a95d-413b9bc38d10",
       "enabled": false,
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD"
@@ -104,7 +104,9 @@
           }
         }
       ],
-      ["@bacons/apple-targets"]
+      [
+        "@bacons/apple-targets"
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -112,7 +114,28 @@
     },
     "extra": {
       "revenueCatApiKeyIos": "appl_xibxFOhkFnxCsCtopWrnxOInmao",
-      "revenueCatApiKeyAndroid": ""
-    }
+      "revenueCatApiKeyAndroid": "",
+      "eas": {
+        "projectId": "fb881a3d-19bd-489c-a95d-413b9bc38d10",
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "bundleIdentifier": "online.vaqit.app.widget",
+                  "targetName": "VaqitWidget",
+                  "entitlements": {
+                    "com.apple.security.application-groups": [
+                      "group.online.vaqit.app"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "owner": "cenkkara"
   }
 }
