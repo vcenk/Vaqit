@@ -25,7 +25,7 @@
     "ios": {
       "bundleIdentifier": "online.vaqit.app",
       "appleTeamId": "NAC8L7HCJL",
-      "buildNumber": "1",
+      "buildNumber": "3",
       "supportsTablet": false,
       "entitlements": {
         "com.apple.security.application-groups": [
@@ -40,7 +40,8 @@
         ],
         "NSLocationWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Vaqit needs your location to calculate accurate prayer times and the Qibla direction for your city.",
-        "NSMotionUsageDescription": "Vaqit uses your device's compass to show the Qibla direction."
+        "NSMotionUsageDescription": "Vaqit uses your device's compass to show the Qibla direction.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
