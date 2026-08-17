@@ -62,11 +62,12 @@ export default function SupporterScreen() {
     setBusy(id);
     const r = await purchase(id);
     setBusy(null);
-    if (r.ok && r.isSupporter) {
-      Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.thanksBody'));
-    } else if (r.ok && isTip) {
-      // Tips grant no entitlement — thank the giver anyway.
+    // Tip first: a tip grants no entitlement, but an existing Supporter giving
+    // sadaqah would otherwise be told they'd just become one.
+    if (r.ok && isTip) {
       Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.tipThanksBody'));
+    } else if (r.ok && r.isSupporter) {
+      Alert.alert(t('supporter.alert.thanksTitle'), t('supporter.alert.thanksBody'));
     } else if (r.reason === 'error') {
       Alert.alert(t('supporter.alert.errTitle'), t('supporter.alert.errBody'));
     }
